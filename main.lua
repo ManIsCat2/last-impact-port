@@ -1,0 +1,3 @@
+-- name: Last Impact
+-- incompatible: romhack
+-- description: A port of Last Impact by Kaze Emanuar (Thanks Kaze)\n\nPorted By:\nI'mYourCat\nxLuigiGamerx\nWoissil
