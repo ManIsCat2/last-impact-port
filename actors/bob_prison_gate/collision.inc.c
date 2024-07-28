@@ -1,0 +1,13 @@
+const Collision bob_prison_gate_collision[] = {
+	COL_INIT(),
+	COL_VERTEX_INIT(4),
+	COL_VERTEX(178, 1296, -880),
+	COL_VERTEX(-179, -159, 885),
+	COL_VERTEX(-179, 1296, 885),
+	COL_VERTEX(178, -159, -880),
+	COL_TRI_INIT(SURFACE_DEFAULT, 2),
+	COL_TRI(0, 1, 2),
+	COL_TRI(1, 0, 3),
+	COL_TRI_STOP(),
+	COL_END()
+};

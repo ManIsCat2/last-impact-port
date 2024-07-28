@@ -39,7 +39,7 @@ bhvFuzzy = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fuzzy_init, bhv_fuzzy
 
 ---@param o Object
 function bhv_bob_cloud_platform_init(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE 
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1600
     o.collisionData = smlua_collision_util_get("bob_cloud_platform_collision")
     cur_obj_set_home_once()
@@ -56,3 +56,49 @@ function bhv_bob_cloud_platform_loop(o)
 end
 
 hook_behavior(id_bhvCutOutObject, OBJ_LIST_SURFACE, true, bhv_bob_cloud_platform_init, bhv_bob_cloud_platform_loop)
+
+---@param o Object
+function bhv_bob_prison_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1600
+    o.collisionData = smlua_collision_util_get("bob_prison_gate_collision")
+end
+
+---@param o Object
+function bhv_bob_prison_gate_loop(o)
+    load_object_collision_model()
+end
+
+hook_behavior(id_bhvBitfsSinkingPlatforms, OBJ_LIST_SURFACE, true, bhv_bob_prison_gate_init, bhv_bob_prison_gate_loop)
+
+---@param o Object
+function bhv_parent_rabbit_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oInteractType = INTERACT_TEXT
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.hitboxRadius = 256
+    o.hitboxHeight = 256
+    o.oIntangibleTimer = 0
+    o.oAnimations = gObjectAnimations.mips_seg6_anims_06015634
+    cur_obj_init_animation(0)
+end
+
+MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
+
+---@param o Object
+function bhv_parent_rabbit_loop(o)
+    obj_set_model_extended(o, MODEL_RABBIT)
+
+    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+        gMarioStates[0].action = ACT_READING_NPC_DIALOG
+        if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
+            o.oInteractStatus = 0
+        end
+    end
+
+    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
+        obj_scale(o, 3)
+    end
+end
+
+id_bhvParentAndChildRabbit = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_parent_rabbit_init, bhv_parent_rabbit_loop)
