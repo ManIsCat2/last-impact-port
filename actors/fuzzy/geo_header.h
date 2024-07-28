@@ -1,0 +1,14 @@
+extern const GeoLayout fuzzy_geo[];
+extern Lights1 fuzzy_face_lights;
+extern Lights1 fuzzy_Material_1_f3d_lights;
+extern u8 fuzzy__0_i8[];
+extern u8 fuzzy__1_rgba16[];
+extern Vtx fuzzy_000_displaylist_mesh_layer_1_vtx_0[136];
+extern Gfx fuzzy_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx fuzzy_001_displaylist_mesh_layer_4_vtx_0[12];
+extern Gfx fuzzy_001_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_fuzzy_face[];
+extern Gfx mat_fuzzy_Material_1_f3d[];
+extern Gfx mat_revert_fuzzy_Material_1_f3d[];
+extern Gfx fuzzy_000_displaylist_mesh_layer_1[];
+extern Gfx fuzzy_001_displaylist_mesh_layer_4[];

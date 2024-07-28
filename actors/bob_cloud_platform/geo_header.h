@@ -1,0 +1,12 @@
+extern const GeoLayout bob_cloud_platform_geo[];
+extern Lights1 bob_cloud_platform_Material_0_001_f3d_lights;
+extern Lights1 bob_cloud_platform_Material_1_f3d_001_lights;
+extern u8 bob_cloud_platform__0_rgba16[];
+extern u8 bob_cloud_platform__1_rgba16[];
+extern Vtx bob_cloud_platform_000_displaylist_mesh_layer_1_vtx_0[149];
+extern Gfx bob_cloud_platform_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bob_cloud_platform_000_displaylist_mesh_layer_1_vtx_1[64];
+extern Gfx bob_cloud_platform_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_bob_cloud_platform_Material_0_001_f3d[];
+extern Gfx mat_bob_cloud_platform_Material_1_f3d_001[];
+extern Gfx bob_cloud_platform_000_displaylist_mesh_layer_1[];
