@@ -7,4 +7,17 @@ movtexqc_register('bob_1_Movtex_0', 9, 1, 0)
 --   Uncomment and replace <id>, <offset> and <count> with the proper values
 --   if you want to have scroll textures in your mod.
 --[[
+add_scroll_target(<id>, "VB_bbh_1_0xe07da20", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe0417c0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe040140", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe03eac0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe0471c0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe039480", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe05e7d0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe03d440", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe0427b0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe060a80", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe05d060", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe05b8f0", <offset>, <count>)
+add_scroll_target(<id>, "VB_rr_1_0xe05a180", <offset>, <count>)
 --]]

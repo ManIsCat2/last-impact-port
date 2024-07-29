@@ -168,3 +168,47 @@ function bhv_taptap_loop(o)
 end
 
 bhvTapTap = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_taptap_init, bhv_taptap_loop)
+
+--[[
+[0021ADBC / 13000FBC] 00 09 0000 // Start Behavior (Object type = 9) --OBJ_LIST_SURFACE
+[0021ADC0 / 13000FC0] 11 01 0041 // (Set bits) obj->_0x8C |= 0x0041 -- OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+[0021ADC4 / 13000FC4] 27 26 00 00 07017590 // (Set word) obj->_0x120 = 0x07017590 --oAnimations
+[0021ADCC / 13000FCC] 28 00 00 00 // Set obj->_0x3C from (obj->_0x120 + 0x0) -- ANIMATE()
+[0021ADD0 / 13000FD0] 0E 43 0500 // (Set value) obj->_0x194 = (float)1280 --oCollisionDistance
+[0021ADD4 / 13000FD4] 2A 00 00 00 070176D0 // Set collision address (obj->_0x218) from address 0x070176D0
+[0021ADDC / 13000FDC] 23 00 00 00 0050 0100 // Set Collision sphere size (XZ radius = 80, Y radius = 256)
+[0021ADE4 / 13000FE4] 0E 2A 0002 // (Set value) obj->_0x130 = (float)2 //oINTERACTTYPE
+[0021ADE8 / 13000FE8] 08 00 00 00 // Start of loop
+[0021ADEC / 13000FEC]    0C 00 00 00 803839CC // Call ASM function 0x803839CC --
+[0021ADF4 / 13000FF4]    0C 00 00 00 802AEF10 // Call ASM function 0x802AEF10 --load_object_collison_model
+[0021ADFC / 13000FFC]    09 00 00 00 // End of loop]]
+
+---@param o Object
+function bhv_flower_generator_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1280
+    o.oInteractType = INTERACT_GRABBABLE --???
+    o.hitboxRadius = 80
+    o.hitboxHeight = 256
+    o.collisionData = smlua_collision_util_get("bob_flower_generator_collision")
+    smlua_anim_util_set_animation(o, "anim_flower_generator")
+end
+
+---@param o Object
+function bhv_flower_generator_loop(o)
+    load_object_collision_model()
+
+    if o.oAction == 0 then
+        o.header.gfx.animInfo.curAnim.loopEnd = 0
+        if (cur_obj_was_attacked_or_ground_pounded()) == 1 then
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.header.gfx.animInfo.curAnim.loopEnd = 88
+        if o.oTimer == 88 then
+            o.oAction = 0
+        end
+    end
+end
+
+bhvFlowerGenerator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_flower_generator_init, bhv_flower_generator_loop)

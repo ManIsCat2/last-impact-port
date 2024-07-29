@@ -1,12 +1,13 @@
--- name: SM64: Last Impact
+-- name: SM64 Last Impact
 -- incompatible: romhack
--- description: Port of Last Impact by Kaze Emanuar (Thanks Kaze)\n\nPorted By:\nI'mYourCat\nxLuigiGamerx\nWoissil
+-- description: Port of Last Impact by Kaze Emanuar (Thanks Kaze)\n\nPorted By:\nI'mYourCat\nxLuigiGamerx\nWoissil\nEmeraldSniper\nFearl
 
 gMarioStateExtras = {}
 for i = 0, (MAX_PLAYERS - 1) do
     gMarioStateExtras[i] = {}
     local e = gMarioStateExtras[i]
     e.fuzzied = false
+    e.fuzziedtimer = 0
 end
 
 vec3f_set(gLevelValues.starPositions.KoopaBobStarPos, 3030, 4500, -4600)
@@ -33,7 +34,13 @@ function fuzzy_dizziness(m)
     local e = gMarioStateExtras[m.playerIndex]
 
     if e.fuzzied and m.playerIndex == 0 then
-        
+        e.fuzziedtimer = e.fuzziedtimer + 1
+        m.faceAngle.y = m.faceAngle.y + 0x200
+        local fuzzytimer_max = 15 * 30
+        if e.fuzziedtimer >= fuzzytimer_max then
+            e.fuzziedtimer = 0
+            e.fuzzied = false
+        end
     end
 end
 
