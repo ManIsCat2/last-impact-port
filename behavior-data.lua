@@ -211,7 +211,7 @@ function bhv_flower_generator_loop(o)
 
         if o.oTimer == 40 then
             o.oDoorUnk100 = 27184
-            spawn_sync_object(bhvWhiteFlower, MODEL_WHITE_FLOWER,-3428, o.oPosY + 500, -4409,
+            spawn_sync_object(bhvWhiteFlower, MODEL_WHITE_FLOWER, -3428, o.oPosY + 500, -4409,
                 function(obj) obj.parentObj = o end)
         end
         if o.oTimer == 88 then
@@ -247,3 +247,53 @@ function bhv_white_flower_loop(o)
 end
 
 bhvWhiteFlower = hook_behavior(nil, OBJ_LIST_POLELIKE, true, bhv_white_flower_init, bhv_white_flower_loop)
+
+--[[
+[00219EC0 / 130000C0] 00 04 0000 // Start Behavior (Object type = 4)
+[00219EC4 / 130000C4] 11 01 2449 // (Set bits) obj->_0x8C |= 0x2449
+[00219EC8 / 130000C8] 27 26 00 00 007EF5E0 // (Set word) obj->_0x120 = 0x007EF5E0
+[00219ED0 / 130000D0] 28 00 00 00 // Set obj->_0x3C from (obj->_0x120 + 0x0)
+[00219ED4 / 130000D4] 10 2A 0008 // (Set value) obj->_0x130 = 8
+[00219ED8 / 130000D8] 10 3E 0002 // (Set value) obj->_0x180 = 2
+[00219EDC / 130000DC] 23 00 00 00 0050 00A0 // Set Collision sphere size (XZ radius = 80, Y radius = 160)
+[00219EE4 / 130000E4] 08 00 00 00 // Start of loop
+[00219EE8 / 130000E8]    0C 00 00 00 802A5E84 // Call ASM function 0x802A5E84
+[00219EF0 / 130000F0]    10 05 0000 // (Set value) obj->_0x9C = 0
+[00219EF4 / 130000F4]    10 2B 0000 // (Set value) obj->_0x134 = 0
+[00219EF8 / 130000F8]    09 00 00 00 // End of loop]]
+
+---@param o Object
+function bhv_pink_piranha_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
+    o.oInteractType = INTERACT_BOUNCE_TOP
+    o.oDamageOrCoinValue = 2
+    o.hitboxHeight = 300
+    o.hitboxRadius = 130
+    --o.hitboxDownOffset = 70
+    o.oIntangibleTimer = 0
+    o.oGraphYOffset = 150
+    --o.oForwardVel = 22
+end
+
+---@param o Object
+function bhv_pink_piranha_loop(o)
+    obj_mark_for_deletion(o) -----not coded for now
+    if o.oInteractStatus ~= 0 then
+        o.oInteractStatus = 0
+    end
+
+    if o.oDistanceToMario < 1000 then
+        o.oFaceAngleYaw = o.oAngleToMario + 32768
+    end
+
+    if o.oAction == 1 then
+        o.oSubAction = o.oSubAction + 1
+
+        if o.oSubAction > 30 then
+            obj_mark_for_deletion(o)
+            spawn_mist_particles()
+        end
+    end
+end
+
+bhvPinkPiranha = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pink_piranha_init, bhv_pink_piranha_loop)
