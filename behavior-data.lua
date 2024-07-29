@@ -50,7 +50,7 @@ function bhv_bob_cloud_platform_loop(o)
     load_object_collision_model()
     o.oVelY = approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
     if cur_obj_is_mario_on_platform() == 1 then
-        o.oVelY = o.oVelY - 0.5
+        o.oVelY = o.oVelY - 1.0
     end
     object_step()
 end
