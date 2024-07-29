@@ -236,7 +236,7 @@ end
 
 ---@param o Object
 function bhv_white_flower_loop(o)
-    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x300
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x66
     o.oMoveAngleYaw = o.parentObj.oDoorUnk100
     bhv_pole_base_loop()
     o.oPosY = o.oPosY - 1.6
