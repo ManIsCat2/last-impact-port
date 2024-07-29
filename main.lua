@@ -35,7 +35,7 @@ function fuzzy_dizziness(m)
 
     if e.fuzzied and m.playerIndex == 0 then
         e.fuzziedtimer = e.fuzziedtimer + 1
-        m.faceAngle.y = m.faceAngle.y + 0x200
+        m.faceAngle.y = m.faceAngle.y + 0x240
         local fuzzytimer_max = 15 * 30
         if e.fuzziedtimer >= fuzzytimer_max then
             e.fuzziedtimer = 0

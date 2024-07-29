@@ -1,0 +1,14 @@
+extern const GeoLayout bob_white_flower_geo[];
+extern Lights1 bob_white_flower_f3dlite_material_002_lights;
+extern Lights1 bob_white_flower_f3dlite_material_lights;
+extern u8 bob_white_flower__07018900_ci8[];
+extern u8 bob_white_flower__07018900_pal_rgba16[];
+extern Vtx bob_white_flower_000_displaylist_mesh_layer_1_vtx_0[160];
+extern Gfx bob_white_flower_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bob_white_flower_000_displaylist_mesh_layer_1_vtx_1[46];
+extern Gfx bob_white_flower_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_bob_white_flower_f3dlite_material_002[];
+extern Gfx mat_revert_bob_white_flower_f3dlite_material_002[];
+extern Gfx mat_bob_white_flower_f3dlite_material[];
+extern Gfx mat_revert_bob_white_flower_f3dlite_material[];
+extern Gfx bob_white_flower_000_displaylist_mesh_layer_1[];

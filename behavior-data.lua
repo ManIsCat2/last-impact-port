@@ -29,6 +29,7 @@ function bhv_fuzzy_loop(o)
 
         if (obj_check_hitbox_overlap(o, m.marioObj)) then
             gMarioStateExtras[i].fuzzied = true
+            gMarioStateExtras[i].fuzziedtimer = 0
             spawn_mist_particles()
             obj_mark_for_deletion(o)
         end
@@ -194,6 +195,8 @@ function bhv_flower_generator_init(o)
     smlua_anim_util_set_animation(o, "anim_flower_generator")
 end
 
+MODEL_WHITE_FLOWER = smlua_model_util_get_id("bob_white_flower_geo")
+
 ---@param o Object
 function bhv_flower_generator_loop(o)
     load_object_collision_model()
@@ -205,6 +208,12 @@ function bhv_flower_generator_loop(o)
         end
     elseif o.oAction == 1 then
         o.header.gfx.animInfo.curAnim.loopEnd = 88
+
+        if o.oTimer == 40 then
+            o.oDoorUnk100 = 27184
+            spawn_sync_object(bhvWhiteFlower, MODEL_WHITE_FLOWER,-3428, o.oPosY + 500, -4409,
+                function(obj) obj.parentObj = o end)
+        end
         if o.oTimer == 88 then
             o.oAction = 0
         end
@@ -212,3 +221,29 @@ function bhv_flower_generator_loop(o)
 end
 
 bhvFlowerGenerator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_flower_generator_init, bhv_flower_generator_loop)
+
+
+---@param o Object
+function bhv_white_flower_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.oInteractType = INTERACT_POLE
+    o.hitboxHeight = 270
+    o.hitboxRadius = 60
+    o.hitboxDownOffset = 70
+    o.oIntangibleTimer = 0
+    o.oForwardVel = 22
+end
+
+---@param o Object
+function bhv_white_flower_loop(o)
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x300
+    o.oMoveAngleYaw = o.parentObj.oDoorUnk100
+    bhv_pole_base_loop()
+    o.oPosY = o.oPosY - 1.6
+
+    if o.oTimer > 750 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvWhiteFlower = hook_behavior(nil, OBJ_LIST_POLELIKE, true, bhv_white_flower_init, bhv_white_flower_loop)
