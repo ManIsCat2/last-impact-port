@@ -132,7 +132,7 @@ function bhv_taptap_init(o)
     o.oFriction = 1
     o.oBuoyancy = 1
     o.oGraphYOffset = 51
-    o.header.gfx.animInfo.animAccel = 65536 * 1.55
+    o.header.gfx.animInfo.animAccel = 65536 * 2
 end
 
 ---@param o Object
