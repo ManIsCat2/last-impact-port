@@ -117,6 +117,9 @@ function on_hud_render_behind()
     djui_hud_set_font(FONT_HUD)
     djui_hud_set_color(255, 255, 255, 255)
 
+    local inStarSelect = obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, id_bhvActSelector) ~= nil
+    if inStarSelect then return end
+
     hud_hide()
 
     base_hud()
