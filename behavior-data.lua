@@ -128,7 +128,7 @@ function bhv_taptap_init(o)
     o.oInteractType = INTERACT_DAMAGE
     cur_obj_set_home_once()
     o.oGravity = 3
-    o.oForwardVel = 4
+    o.oForwardVel = 4.1
     o.oFriction = 1
     o.oBuoyancy = 1
     o.oGraphYOffset = 51
@@ -141,13 +141,13 @@ function bhv_taptap_loop(o)
     o.oInteractStatus = 0
 
     if o.oAction == 0 then
-        if o.oDistanceToMario < 450 then
+        if o.oDistanceToMario < 1100 then
             o.oSubAction = 1
         end
 
         if o.oSubAction == 1 then
             o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, o.oAngleToMario, 500)
-            if o.oDistanceToMario > 600 then
+            if o.oDistanceToMario > 1250 then
                 o.oSubAction = 0
             end
         elseif o.oSubAction == 0 then
