@@ -73,7 +73,7 @@ function bhv_bob_prison_gate_loop(o)
         o.oPosY = o.oPosY - 10
     end
 
-    if o.oPosY < -4230 then
+    if o.oPosY < -3900 then
         obj_mark_for_deletion(nearkey)
         obj_mark_for_deletion(o)
     end
@@ -83,14 +83,18 @@ hook_behavior(id_bhvBitfsSinkingPlatforms, OBJ_LIST_SURFACE, true, bhv_bob_priso
 
 ---@param o Object
 function bhv_parent_rabbit_init(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    o.oInteractType = INTERACT_TEXT
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE |OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.oInteractionSubtype = INT_SUBTYPE_NPC
     if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
+        o.oInteractType = INTERACT_TEXT
         o.hitboxRadius = 256
         o.hitboxHeight = 256
-        o.oIntangibleTimer = 0
+    else
+        o.oMoveAngleYaw = -25182
+        o.hitboxRadius = 120
+        o.hitboxHeight = 120
     end
+    o.oIntangibleTimer = 0
     o.oAnimations = gObjectAnimations.mips_seg6_anims_06015634
     cur_obj_init_animation(0)
 end
@@ -100,16 +104,55 @@ MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
 ---@param o Object
 function bhv_parent_rabbit_loop(o)
     obj_set_model_extended(o, MODEL_RABBIT)
+    neargate = obj_get_nearest_object_with_behavior_id(o, id_bhvBitfsSinkingPlatforms)
 
-    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
-        gMarioStates[0].action = ACT_READING_NPC_DIALOG
-        if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
-            o.oInteractStatus = 0
+    if o.oAction == 0 then
+        if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+            gMarioStates[0].action = ACT_READING_NPC_DIALOG
+            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
+                o.oInteractStatus = 0
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oSubAction = o.oSubAction + 1
+        o.oPosY = find_floor_height(o.oPosX, o.oPosY, o.oPosZ)
+        cur_obj_init_animation(1)
+        if o.oSubAction >= 115 then
+            o.oMoveAngleYaw = -18704
+        end
+
+        if o.oSubAction >= 200 then
+            o.oForwardVel = 0
+            o.oPosX = -286
+            o.oPosY = -2655
+            o.oPosZ = -12644
+            o.oMoveAngleYaw = 320
+            o.oSubAction = 0
+            o.oAction = 0
+            cur_obj_init_animation(0)
         end
     end
 
     if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
         obj_scale(o, 3)
+    end
+
+    if neargate and neargate.oPosY < -3890 and o.oBehParams2ndByte == 12 then
+        o.oAction = 1
+        o.oForwardVel = 40
+    end
+
+    if o.oBehParams2ndByte == 12 and o.oAction == 0 then
+        if o.oPosX == -286 and o.oPosY == -2655 and o.oPosZ == -12644 then
+            if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
+                gMarioStates[0].action = ACT_READING_NPC_DIALOG
+                if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 36) ~= 0 then
+                    neareastplayer = nearest_mario_state_to_object(o)
+                    spawn_default_star(neareastplayer.pos.x, neareastplayer.pos.y + 230, neareastplayer.pos.z)
+                    o.oAction = 2
+                end
+            end
+        end
     end
 end
 
