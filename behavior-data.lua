@@ -1,3 +1,13 @@
+local repack = function(value, pack_fmt, unpack_fmt)
+    return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
+end
+
+---@param m MarioState
+---@return boolean
+local function is_bubbled(m)
+    return m.action == ACT_BUBBLED
+end
+
 ---@param o Object
 local function wiggler_loop(o)
     if o.oWigglerTextStatus == WIGGLER_TEXT_STATUS_SHOWING_DIALOG then
@@ -410,7 +420,7 @@ end
 
 ---@param o Object
 function bhv_launch_star_loop(o)
-    cur_obj_scale(2)
+    cur_obj_scale(1.8)
     mState = gMarioStates[0]
     if obj_check_hitbox_overlap(mState.marioObj, o) and o.oAction == 0 then
         if o.oSubAction == 0 then
@@ -433,3 +443,62 @@ function bhv_launch_star_loop(o)
 end
 
 bhvLaunchStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_launch_star_init, bhv_launch_star_loop)
+
+bhvFakeStar = hook_behavior(nil, OBJ_LIST_LEVEL, true,
+    function(o)
+        o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    end,
+
+    function(o)
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 0x660
+    end)
+
+local NOTEBLOCK_ACT_IDLE = 0
+local NOTEBLOCK_ACT_BOUNCING = 1
+
+---@param o Object
+function bhv_noteblock_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("col_Noteblock_MOP_0xaa6444")
+    cur_obj_set_home_once()
+    obj_scale(o, 0.64)
+end
+
+---@param obj Object
+function bhv_noteblock_loop(obj)
+    load_object_collision_model()
+    local m = gMarioStates[0]
+    local y_spd = 64
+
+    if cur_obj_is_mario_on_platform() == 1 and not is_bubbled(m) then
+        if m.controller.buttonDown & A_BUTTON ~= 0 then
+            y_spd = y_spd + 12 * 3
+            spawn_mist_particles()
+        end
+        set_mario_action(m, ACT_DOUBLE_JUMP, 0)
+
+        -- Calculates y speed
+        local intermediate_y_spd = repack(y_spd, "f", "I")
+        intermediate_y_spd = intermediate_y_spd + (obj.oBehParams2ndByte << 16)
+        y_spd = repack(intermediate_y_spd, "I", "f")
+        m.vel.y = y_spd
+
+        obj.oAction = NOTEBLOCK_ACT_BOUNCING
+    end
+
+    if obj.oAction == NOTEBLOCK_ACT_BOUNCING then
+        if obj.oTimer == 4 then
+            obj.oAction = NOTEBLOCK_ACT_IDLE
+            obj.oPosY = obj.oHomeY
+        else
+            -- Moves the noteblock slightly up and down, to give it a "bounce"
+            if obj.oTimer > 2 then
+                obj.oPosY = obj.oHomeY + (obj.oTimer % 3) * 6
+            else
+                obj.oPosY = obj.oHomeY - obj.oTimer * 6
+            end
+        end
+    end
+end
+
+bhvNoteblock_MOP = hook_behavior(nil, OBJ_LIST_SURFACE, false, bhv_noteblock_init, bhv_noteblock_loop)
