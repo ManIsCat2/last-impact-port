@@ -68,6 +68,15 @@ end
 ---@param o Object
 function bhv_bob_prison_gate_loop(o)
     load_object_collision_model()
+    nearkey = obj_get_nearest_object_with_behavior_id(o, bhvTapTapKey)
+    if nearkey and nearkey.oAction == 1 then
+        o.oPosY = o.oPosY - 10
+    end
+
+    if o.oPosY < -4230 then
+        obj_mark_for_deletion(nearkey)
+        obj_mark_for_deletion(o)
+    end
 end
 
 hook_behavior(id_bhvBitfsSinkingPlatforms, OBJ_LIST_SURFACE, true, bhv_bob_prison_gate_init, bhv_bob_prison_gate_loop)
@@ -77,9 +86,11 @@ function bhv_parent_rabbit_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oInteractType = INTERACT_TEXT
     o.oInteractionSubtype = INT_SUBTYPE_NPC
-    o.hitboxRadius = 256
-    o.hitboxHeight = 256
-    o.oIntangibleTimer = 0
+    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
+        o.hitboxRadius = 256
+        o.hitboxHeight = 256
+        o.oIntangibleTimer = 0
+    end
     o.oAnimations = gObjectAnimations.mips_seg6_anims_06015634
     cur_obj_init_animation(0)
 end
@@ -133,7 +144,10 @@ function bhv_taptap_init(o)
     o.oBuoyancy = 1
     o.oGraphYOffset = 51
     o.header.gfx.animInfo.animAccel = 65536 * 2
+    network_init_object(o, true, {"oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oNumLootCoins", "oAction", "oFaceAngleYaw"})
 end
+
+MODEL_TAPTAP_KEY = smlua_model_util_get_id("taptap_key_geo")
 
 ---@param o Object
 function bhv_taptap_loop(o)
@@ -155,12 +169,17 @@ function bhv_taptap_loop(o)
             o.oMoveAngleYaw = o.oMoveAngleYaw + 400
         end
     elseif o.oAction == 1 then
-        o.oGraphYOffset = o.oGraphYOffset - 6
+        o.oGraphYOffset = o.oGraphYOffset - 4
         o.oForwardVel = 0
         o.oBowserUnk106 = o.oBowserUnk106 + 1
         if o.oBowserUnk106 > 80 then
-            o.oNumLootCoins = 2
-            obj_explode_and_spawn_coins(46.0, 1);
+            if o.oBehParams2ndByte == 1 then
+                o.oNumLootCoins = 2
+                obj_explode_and_spawn_coins(46.0, 1);
+            else
+                spawn_sync_object(bhvTapTapKey, MODEL_TAPTAP_KEY, o.oPosX, o.oPosY, o.oPosZ, nil)
+                obj_mark_for_deletion(o)
+            end
         end
     end
 
@@ -170,6 +189,29 @@ function bhv_taptap_loop(o)
 end
 
 bhvTapTap = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_taptap_init, bhv_taptap_loop)
+
+---@param o Object
+function bhv_taptap_key_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 70
+    o.hitboxHeight = 70
+    o.oIntangibleTimer = 0
+end
+
+---@param o Object
+function bhv_taptap_key_loop(o)
+    o.oPosY = o.oPosY + math.sin(o.oTimer * 0.07) * 2
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x120
+    if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
+        if o.oAction == 0 then
+            play_puzzle_jingle()
+        end
+        cur_obj_disable_rendering()
+        o.oAction = 1
+    end
+end
+
+bhvTapTapKey = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_taptap_key_init, bhv_taptap_key_loop)
 
 --[[
 [0021ADBC / 13000FBC] 00 09 0000 // Start Behavior (Object type = 9) --OBJ_LIST_SURFACE
@@ -189,9 +231,10 @@ bhvTapTap = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_taptap_init, bhv_tap
 function bhv_flower_generator_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1280
-    o.oInteractType = INTERACT_GRABBABLE --???
-    o.hitboxRadius = 80
+    o.oInteractType = INTERACT_BREAKABLE
+    o.hitboxRadius = 160
     o.hitboxHeight = 256
+    o.oIntangibleTimer = 0
     o.collisionData = smlua_collision_util_get("bob_flower_generator_collision")
     smlua_anim_util_set_animation(o, "anim_flower_generator")
 end
