@@ -325,11 +325,18 @@ end
 ---@param o Object
 function bhv_white_flower_loop(o)
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x66
+    o.oFaceAnglePitch = 0
+    o.oFaceAngleRoll = 0
     o.oMoveAngleYaw = o.parentObj.oDoorUnk100
     bhv_pole_base_loop()
     o.oPosY = o.oPosY - 1.6
 
-    if o.oTimer > 750 then
+    if o.oTimer > 15 and o.oTimer < 90 then
+        o.oPosX = -3214
+        o.oPosY = 650
+        o.oPosZ = -4576
+    end
+    if o.oTimer > 700 then
         obj_mark_for_deletion(o)
     end
 end
