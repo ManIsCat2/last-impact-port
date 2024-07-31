@@ -392,3 +392,44 @@ function bhv_pink_piranha_loop(o)
 end
 
 bhvPinkPiranha = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pink_piranha_init, bhv_pink_piranha_loop)
+
+--[[
+[0021DAFC / 13003CFC] 00 04 0000 // Start Behavior (Object type = 4)
+[0021DB00 / 13003D00] 08 00 00 00 // Start of loop
+[0021DB04 / 13003D04]    0C 00 00 00 802F71E0 // Call ASM function 0x802F71E0
+[0021DB0C / 13003D0C]    09 00 00 00 // End of loop
+]]
+
+---@param o Object
+function bhv_launch_star_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 200
+    o.hitboxHeight = 200
+    o.oIntangibleTimer = 0
+end
+
+---@param o Object
+function bhv_launch_star_loop(o)
+    cur_obj_scale(2)
+    mState = gMarioStates[0]
+    if obj_check_hitbox_overlap(mState.marioObj, o) and o.oAction == 0 then
+        if o.oSubAction == 0 then
+            pos = {}
+            pos.x = o.oPosX
+            pos.y = o.oPosY
+            pos.z = o.oPosZ
+            vec3f_copy(mState.pos, pos)
+            o.oSubAction = 1
+        end
+        set_mario_action(mState, ACT_SHOT_FROM_CANNON, 0)
+        mState.vel.y = ((o.oBehParams >> 24) & 0XFF)
+        mState.forwardVel = o.oBehParams2ndByte
+        mState.faceAngle.y = o.oFaceAngleYaw
+    end
+
+    if dist_between_objects(mState.marioObj, o) > 300 then
+        o.oSubAction = 0
+    end
+end
+
+bhvLaunchStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_launch_star_init, bhv_launch_star_loop)
