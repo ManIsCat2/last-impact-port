@@ -144,7 +144,8 @@ function bhv_taptap_init(o)
     o.oBuoyancy = 1
     o.oGraphYOffset = 51
     o.header.gfx.animInfo.animAccel = 65536 * 2
-    network_init_object(o, true, {"oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oNumLootCoins", "oAction", "oFaceAngleYaw"})
+    network_init_object(o, true,
+        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oNumLootCoins", "oAction", "oFaceAngleYaw" })
 end
 
 MODEL_TAPTAP_KEY = smlua_model_util_get_id("taptap_key_geo")
@@ -174,11 +175,11 @@ function bhv_taptap_loop(o)
         o.oBowserUnk106 = o.oBowserUnk106 + 1
         if o.oBowserUnk106 > 80 then
             if o.oBehParams2ndByte == 1 then
-                o.oNumLootCoins = 2
-                obj_explode_and_spawn_coins(46.0, 1);
-            else
                 spawn_sync_object(bhvTapTapKey, MODEL_TAPTAP_KEY, o.oPosX, o.oPosY, o.oPosZ, nil)
                 obj_mark_for_deletion(o)
+            else
+                o.oNumLootCoins = 2
+                obj_explode_and_spawn_coins(46.0, 1);
             end
         end
     end
