@@ -502,3 +502,16 @@ function bhv_noteblock_loop(obj)
 end
 
 bhvNoteblock_MOP = hook_behavior(nil, OBJ_LIST_SURFACE, false, bhv_noteblock_init, bhv_noteblock_loop)
+
+function bhv_crystal_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 3000
+    o.collisionData = smlua_collision_util_get("cave_crystal_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+function bhv_crystal_loop(o)
+    load_object_collision_model()
+end
+
+bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, bhv_crystal_loop)

@@ -4,6 +4,7 @@
 movtexqc_register('bob_1_Movtex_0', 9, 1, 0)
 movtexqc_register('castle_inside_1_Movtex_0', 6, 1, 0)
 movtexqc_register('castle_inside_1_Movtex_1', 6, 1, 0)
+movtexqc_register('ccm_1_Movtex_0', 5, 1, 0)
 
 
 -- Scroll Textures

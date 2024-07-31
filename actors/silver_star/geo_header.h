@@ -1,0 +1,14 @@
+extern const GeoLayout silver_star_geo[];
+extern Lights1 silver_star_f3dlite_material_001_lights;
+extern u8 silver_star__0_i8[];
+extern u8 silver_star_star_eye_rgba16_ia8[];
+extern Vtx silver_star_000_displaylist_mesh_layer_1_vtx_0[13];
+extern Gfx silver_star_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx silver_star_000_displaylist_mesh_layer_4_vtx_0[12];
+extern Gfx silver_star_000_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_silver_star_f3dlite_material[];
+extern Gfx mat_revert_silver_star_f3dlite_material[];
+extern Gfx mat_silver_star_f3dlite_material_001[];
+extern Gfx mat_revert_silver_star_f3dlite_material_001[];
+extern Gfx silver_star_000_displaylist_mesh_layer_1[];
+extern Gfx silver_star_000_displaylist_mesh_layer_4[];
