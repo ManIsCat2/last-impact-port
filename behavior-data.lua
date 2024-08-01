@@ -410,37 +410,60 @@ bhvPinkPiranha = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pink_piranha_in
 [0021DB0C / 13003D0C]    09 00 00 00 // End of loop
 ]]
 
+LAUNCH_STAR_ACT_IDLE = 0
+LAUNCH_STAR_ACT_LAUNCH = 1
+
+local playerLaunched = false
+
 ---@param o Object
 function bhv_launch_star_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.hitboxRadius = 200
     o.hitboxHeight = 200
     o.oIntangibleTimer = 0
+    o.oAction = LAUNCH_STAR_ACT_IDLE
+    o.oTimer = 0
 end
 
 ---@param o Object
 function bhv_launch_star_loop(o)
-    cur_obj_scale(1.8)
-    mState = gMarioStates[0]
-    if obj_check_hitbox_overlap(mState.marioObj, o) and o.oAction == 0 then
-        if o.oSubAction == 0 then
-            pos = {}
-            pos.x = o.oPosX
-            pos.y = o.oPosY
-            pos.z = o.oPosZ
-            vec3f_copy(mState.pos, pos)
-            o.oSubAction = 1
-        end
-        set_mario_action(mState, ACT_SHOT_FROM_CANNON, 0)
-        mState.vel.y = ((o.oBehParams >> 24) & 0XFF)
-        mState.forwardVel = o.oBehParams2ndByte
-        mState.faceAngle.y = o.oFaceAngleYaw
+    local m = gMarioStates[0]
+    if obj_check_hitbox_overlap(m.marioObj, o) and o.oAction == LAUNCH_STAR_ACT_IDLE and m.action ~= ACT_SHOT_FROM_CANNON then
+        o.oTimer = 0
+        m.vel.y = 0
+        o.oAction = LAUNCH_STAR_ACT_LAUNCH
+        playerLaunched = true
     end
 
-    if dist_between_objects(mState.marioObj, o) > 300 then
-        o.oSubAction = 0
+    if o.oAction == LAUNCH_STAR_ACT_LAUNCH then
+        if o.oTimer == 0 then
+            pos = {x = o.oPosX, y = o.oPosY, z = o.oPosZ}
+            vec3f_copy(m.pos, pos)
+            set_mario_action(m, ACT_GROUND_POUND, 0)
+        end
+
+        if m.vel.y < -50 then
+            set_mario_action(m, ACT_SHOT_FROM_CANNON, 0)
+            yVel = (o.oBehParams >> 24) & 0XFF
+            forwardVel = o.oBehParams2ndByte
+            m.vel.y = yVel
+            m.forwardVel = forwardVel % 8 == 0 and forwardVel or forwardVel + 2
+            m.faceAngle.y = o.oFaceAngleYaw
+            o.oAction = LAUNCH_STAR_ACT_IDLE
+        end
     end
 end
+
+local function launch_star_update(m)
+    if m.playerIndex ~= 0 then return end
+
+    if playerLaunched == true and m.action & ACT_FLAG_AIR == 0 then
+        set_mario_action(m, ACT_TRIPLE_JUMP_LAND, 0)
+        playerLaunched = false
+    end
+end
+
+hook_event(HOOK_MARIO_UPDATE, launch_star_update)
 
 bhvLaunchStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_launch_star_init, bhv_launch_star_loop)
 
