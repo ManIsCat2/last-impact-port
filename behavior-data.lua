@@ -556,7 +556,7 @@ end
 ---@param o Object
 function bhv_yellow_falling_rock_loop(o)
     if o.oAction == 0 then
-        if dist_between_objects(o, nearest_player_to_object(o)) < 400 then
+        if dist_between_objects(o, nearest_player_to_object(o)) < 1350 then
             o.oAction = 1
         end
     elseif o.oAction == 1 then
