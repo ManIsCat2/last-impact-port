@@ -531,7 +531,7 @@ bhvSilverStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_silver_star_init
 --[[
 [0021B224 / 13001424] 00 04 0000 // Start Behavior (Object type = 4)
 [0021B228 / 13001428] 11 01 0009 // (Set bits) obj->_0x8C |= 0x0009
-[0021B22C / 1300142C] 23 00 00 00 00C0 00C0 // Set Collision sphere size (XZ radius = 192, Y radius = 192)
+[0021B22C / 1300142C] 23 00 00 00 00C0 00C0 // Set Collision sphere size (XZ radius = 210, Y radius = 192)
 [0021B234 / 13001434] 10 2A 0008 // (Set value) obj->_0x130 = 8
 [0021B238 / 13001438] 10 3E 0001 // (Set value) obj->_0x180 = 1
 [0021B23C / 1300143C] 0E 15 0020 // (Set value) obj->_0xDC = (float)32 //oGraphYOffset
@@ -543,10 +543,9 @@ bhvSilverStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_silver_star_init
 ---@param o Object
 function bhv_yellow_falling_rock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    o.hitboxRadius = 192
+    o.hitboxRadius = 210
     o.hitboxHeight = 192
     o.oGravity = 5
-    o.oFriction = 1
     o.oDamageOrCoinValue = 1
     o.oInteractType = INTERACT_DAMAGE
     o.oIntangibleTimer = 0
@@ -560,12 +559,39 @@ function bhv_yellow_falling_rock_loop(o)
             o.oAction = 1
         end
     elseif o.oAction == 1 then
-        object_step()
-        if o.oPosY == o.oFloorHeight then
+        result = object_step()
+        if result & OBJ_COL_FLAG_GROUNDED == 1 then
             cur_obj_play_sound_2(SOUND_GENERAL_BIG_POUND)
             obj_mark_for_deletion(o)
         end
     end
 end
 
-bhvYellowFallingRock = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_yellow_falling_rock_init, bhv_yellow_falling_rock_loop)
+bhvYellowFallingRock = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_yellow_falling_rock_init,
+    bhv_yellow_falling_rock_loop)
+
+
+---@param o Object
+function bhv_bee_npc_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oInteractType = INTERACT_TEXT
+    o.hitboxRadius = 100
+    o.hitboxHeight = 200
+    o.hitboxDownOffset = 160
+    o.oIntangibleTimer = 0
+    smlua_anim_util_set_animation(o, "anim_bee_npc_idle")
+end
+
+---@param o Object
+function bhv_bee_npc_loop(o)
+    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
+    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+        gMarioStates[0].action = ACT_READING_NPC_DIALOG
+        if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
+            o.oInteractStatus = 0
+        end
+    end
+end
+
+bhvBeeNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_bee_npc_init, bhv_bee_npc_loop)

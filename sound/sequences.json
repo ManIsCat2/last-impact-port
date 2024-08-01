@@ -11,12 +11,12 @@
     "06_level_hot": ["0F"],
     "07_level_boss_koopa": ["12"],
     "08_level_snow": ["0B"],
-    "09_level_slide": ["0D"],
+	"09_Seq_SM64 Last Impact V1_custom": ["25"],
+    "09_level_slide": null,
     "0A_level_spooky": ["10", "21"],
 	"0B_Seq_SM64 Last Impact V1_custom": ["25"],
     "0B_event_piranha_plant": null,
-	"0C_Seq_SM64 Last Impact V1_custom": ["15"],
-    "0C_level_underground": null,
+    "0C_level_underground": ["15"],
 	"0D_Seq_SM64 Last Impact V1_custom": ["25"],
     "0D_menu_star_select": null,
 	"0E_Seq_SM64 Last Impact V1_custom": ["25"],
@@ -55,5 +55,6 @@
 	"21_Seq_SM64 Last Impact V1_custom": ["24"],
     "21_menu_file_select": null,
     "22_cutscene_lakitu": {"ifdef": ["VERSION_US", "VERSION_EU", "VERSION_SH"], "banks": ["1B"]},
-	"24_Seq_SM64 Last Impact V1_custom": ["25"]
+	"2D_Seq_SM64 Last Impact V1_custom": ["25"],
+	"36_Seq_SM64 Last Impact V1_custom": ["22"]
 }
