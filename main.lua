@@ -1,6 +1,6 @@
 -- name: \\#FF4500\\SM64 Last Impact
 -- incompatible: romhack
--- description: Port of Last Impact by Kaze Emanuar.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x\n\\#0000FF\\Woissil\n\\#105099\\Emeraldsniper\n\\#A9A9A9\\Fearl
+-- description: Port of Last Impact by Kaze Emanuar.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x\n\\#0000FF\\Woissil\n\\#105009\\Emeraldsniper\n\\#A9A9A9\\Fearl
 
 gMarioStateExtras = {}
 for i = 0, (MAX_PLAYERS - 1) do
