@@ -16,6 +16,6 @@ gLevelValues.pssSlideStarTime = 630
 gLevelValues.metalCapDuration = 900
 gLevelValues.wingCapDuration = 2700
 gLevelValues.vanishCapDuration = 900
-gLevelValues.metalCapDurationCotmc = 0
+gLevelValues.metalCapDurationCotmc = 1
 gLevelValues.wingCapDurationTotwc = 0
 gLevelValues.vanishCapDurationVcutm = 0

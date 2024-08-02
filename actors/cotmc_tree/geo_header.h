@@ -1,0 +1,14 @@
+extern const GeoLayout cotmc_tree_geo[];
+extern Lights1 cotmc_tree_Material_0_f3d_lights;
+extern Lights1 cotmc_tree_Material_1_f3d_lights;
+extern u8 cotmc_tree__0_rgba16[];
+extern u8 cotmc_tree__1_rgba16[];
+extern Vtx cotmc_tree_000_displaylist_mesh_layer_4_vtx_0[384];
+extern Gfx cotmc_tree_000_displaylist_mesh_layer_4_tri_0[];
+extern Vtx cotmc_tree_000_displaylist_mesh_layer_1_vtx_0[78];
+extern Gfx cotmc_tree_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_cotmc_tree_Material_0_f3d[];
+extern Gfx mat_revert_cotmc_tree_Material_0_f3d[];
+extern Gfx mat_cotmc_tree_Material_1_f3d[];
+extern Gfx cotmc_tree_000_displaylist_mesh_layer_4[];
+extern Gfx cotmc_tree_000_displaylist_mesh_layer_1[];

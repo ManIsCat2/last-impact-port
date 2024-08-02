@@ -631,3 +631,34 @@ function bhv_lilypad_loop(o)
 end
 
 bhvLilyPad = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_lilypad_init, bhv_lilypad_loop)
+
+--[[
+[0021A078 / 13000278] 00 04 0000 // Start Behavior (Object type = 4)
+[0021A07C / 1300027C] 23 00 00 00 00A0 0360 // Set Collision sphere size (XZ radius = 160, Y radius = 864)
+[0021A084 / 13000284] 0E 45 4BFF // (Set value) obj->_0x19C = (float)19455
+[0021A088 / 13000288] 0E 2A 0002 // (Set value) obj->_0x130 = (float)2
+[0021A08C / 1300028C] 08 00 00 00 // Start of loop
+[0021A090 / 13000290]    10 05 0000 // (Set value) obj->_0x9C = 0
+[0021A094 / 13000294]    10 2B 0000 // (Set value) obj->_0x134 = 0
+[0021A098 / 13000298]    09 00 00 00 // End of loop
+]]
+
+---@param o Object
+function bhv_cotmc_tree_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 160
+    o.hitboxHeight = 864
+    o.oIntangibleTimer = 0
+    --o.oAnimations = gObjectAnimations.goomba_seg8_anims_0801DA4C
+    --o.oGraphYOffset = 200
+    --o.oCollisionDistance = 19455 --kaze what the fuck
+    --o.oInteractType = INTERACT_BREAKABLE
+    --o.collisionData = smlua_collision_util_get("cotmc_tree_collision")
+end
+
+---@param o Object
+function bhv_cotmc_tree_loop(o)
+    djui_chat_message_create("GG")
+end
+
+bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, bhv_cotmc_tree_loop)
