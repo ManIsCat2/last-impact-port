@@ -154,10 +154,26 @@ function bhv_beesuit_loop(obj)
     object_step()
     for i = 0, 15 do
         local m = gMarioStates[i]
-        if obj_check_hitbox_overlap(m.marioObj, obj) then
-            obj_mark_for_deletion(obj)
-            cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
-            gPlayerSyncTable[i].powerup = BEE
+        if obj.oAction == 0 then
+            if obj_check_hitbox_overlap(m.marioObj, obj) then
+                obj.oAction = 1
+                cur_obj_hide()
+                obj.oTimer = 0
+                cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
+                gPlayerSyncTable[i].powerup = BEE
+            end
+        end
+    end
+
+    if obj.oAction == 1 then
+        obj.hitboxRadius = 0
+        obj.hitboxHeight = 0
+        if obj.oTimer > 200 then
+            obj.oTimer = 0
+            obj.oAction = 0
+            cur_obj_unhide()
+            obj.hitboxRadius = 30
+            obj.hitboxHeight = 30
         end
     end
 end
