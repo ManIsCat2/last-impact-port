@@ -436,7 +436,7 @@ function bhv_launch_star_loop(o)
 
     if o.oAction == LAUNCH_STAR_ACT_LAUNCH then
         if o.oTimer == 0 then
-            pos = {x = o.oPosX, y = o.oPosY, z = o.oPosZ}
+            pos = { x = o.oPosX, y = o.oPosY, z = o.oPosZ }
             vec3f_copy(m.pos, pos)
             set_mario_action(m, ACT_GROUND_POUND, 0)
         end
@@ -617,3 +617,17 @@ function bhv_bee_npc_loop(o)
 end
 
 bhvBeeNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_bee_npc_init, bhv_bee_npc_loop)
+
+---@param o Object
+function bhv_lilypad_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 800
+    o.collisionData = smlua_collision_util_get("lilypad_collision")
+end
+
+---@param o Object
+function bhv_lilypad_loop(o)
+    load_object_collision_model()
+end
+
+bhvLilyPad = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_lilypad_init, bhv_lilypad_loop)
