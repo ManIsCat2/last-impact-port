@@ -1,0 +1,13 @@
+extern const GeoLayout bee_shroom_geo[];
+extern Lights1 bee_shroom_Eyes_lights;
+extern Lights1 bee_shroom_Head_lights;
+extern u8 bee_shroom__3585FCA9_c_rgba16[];
+extern u8 bee_shroom__5360322A_c_rgba16[];
+extern Vtx bee_shroom_Bee_Shroom_mesh_layer_1_vtx_0[79];
+extern Gfx bee_shroom_Bee_Shroom_mesh_layer_1_tri_0[];
+extern Vtx bee_shroom_Bee_Shroom_mesh_layer_1_vtx_1[153];
+extern Gfx bee_shroom_Bee_Shroom_mesh_layer_1_tri_1[];
+extern Gfx mat_bee_shroom_Eyes[];
+extern Gfx mat_bee_shroom_Head[];
+extern Gfx bee_shroom_Bee_Shroom_mesh_layer_1[];
+extern Gfx bee_shroom_material_revert_render_settings[];

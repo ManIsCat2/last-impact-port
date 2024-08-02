@@ -421,7 +421,6 @@ function bhv_launch_star_init(o)
     o.hitboxRadius = 200
     o.hitboxHeight = 200
     o.oIntangibleTimer = 0
-    o.oAction = LAUNCH_STAR_ACT_IDLE
     o.oTimer = 0
 end
 

@@ -123,6 +123,8 @@ function on_hud_render_behind()
     hud_hide()
 
     base_hud()
+    if gPlayerSyncTable[0].powerup ~= BEE then return end
+    djui_hud_render_texture(energyMeter[gPlayerSyncTable[0].curEnergy].energy, xMid - 62, 4, 1, 1)
     --new_file_hud() unused
 end
 
