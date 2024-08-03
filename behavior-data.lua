@@ -662,3 +662,34 @@ function bhv_cotmc_tree_loop(o)
 end
 
 bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, bhv_cotmc_tree_loop)
+
+function bhv_gummy_bear_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1200
+    o.header.gfx.skipInViewCheck = true
+end
+
+---animstatebyparam2
+function bhv_gummy_bear_loop(o)
+    load_object_collision_model()
+    o.oAnimState = o.oBehParams2ndByte
+end
+
+bhvGummyBear = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_gummy_bear_init, bhv_gummy_bear_loop)
+
+---param2 = 0 is donut, param2 = 1 is candy cane
+function bhv_hmc_static_obj_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    if o.oBehParams2ndByte == 0 then
+        o.collisionData = smlua_collision_util_get("donut_collision")
+    elseif o.oBehParams2ndByte == 1 then
+        o.collisionData = smlua_collision_util_get("candy_cane_collision")
+    end
+end
+
+function bhv_hmc_static_obj_loop(o)
+    load_object_collision_model()
+end
+
+bhvCollisionHmcStaticObject = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc_static_obj_init, bhv_hmc_static_obj_loop)
