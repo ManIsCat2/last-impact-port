@@ -8,6 +8,38 @@ local function is_bubbled(m)
     return m.action == ACT_BUBBLED
 end
 
+function spawn_object(parent, model, behaviorId)
+    local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
+    if not obj then return nil end
+
+    obj_copy_pos_and_angle(obj, parent)
+    return obj
+end
+
+---@param clampFloor boolean
+---@param o Object
+function move_obj_with_physics(clampFloor, o)
+    local bounciness = o.oBounciness
+    o.oVelY = o.oVelY + o.oGravity
+    if o.oVelY < -70.0 then
+        o.oVelY = -70.0
+    end
+    o.oPosY = o.oPosY + o.oVelY
+    o.oMoveFlags = o.oMoveFlags & ~OBJ_MOVE_ON_GROUND
+
+    if o.oPosY < find_floor_height(o.oPosX, o.oPosY + 70.0, o.oPosZ) and clampFloor then
+        o.oPosY = find_floor_height(o.oPosX, o.oPosY + 70.0, o.oPosZ)
+        o.oVelY = o.oVelY * bounciness / 100.0
+        o.oMoveFlags = o.oMoveFlags | (OBJ_MOVE_ON_GROUND)
+    end
+
+    o.oPosX = o.oPosX + o.oForwardVel * sins(o.oMoveAngleYaw)
+    o.oPosZ = o.oPosZ + o.oForwardVel * coss(o.oMoveAngleYaw)
+
+    -- wall collision
+    cur_obj_resolve_wall_collisions()
+end
+
 ---@param o Object
 local function wiggler_loop(o)
     if o.oWigglerTextStatus == WIGGLER_TEXT_STATUS_SHOWING_DIALOG then
@@ -183,7 +215,7 @@ id_bhvParentAndChildRabbit = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_par
 
 ---@param o Object
 function bhv_taptap_init(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO |
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_DIST_TO_MARIO |
         OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
     o.oDamageOrCoinValue = 2
     o.hitboxRadius = 80
@@ -215,7 +247,8 @@ function bhv_taptap_loop(o)
         end
 
         if o.oSubAction == 1 then
-            o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, o.oAngleToMario, 500)
+            o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
+                500)
             if o.oDistanceToMario > 1250 then
                 o.oSubAction = 0
             end
@@ -693,3 +726,97 @@ function bhv_hmc_static_obj_loop(o)
 end
 
 bhvCollisionHmcStaticObject = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc_static_obj_init, bhv_hmc_static_obj_loop)
+
+MODEL_OCTOOMBA_ROCK = smlua_model_util_get_id("octoomba_rock_geo")
+
+---@param o Object
+function bhv_octooomba_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
+    o.oInteractType = INTERACT_BOUNCE_TOP2
+    o.hitboxHeight = 100
+    o.hitboxRadius = 100
+    o.oIntangibleTimer = 0
+    o.oDamageOrCoinValue = 2
+    o.oGravity = 3
+    o.oFriction = 1
+    o.oBuoyancy = 1
+    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction" })
+end
+
+---@param o Object
+function bhv_octooomba_loop(o)
+    smlua_anim_util_set_animation(o, "anim_octoomba")
+    --djui_chat_message_create(tostring(o.oDistanceToMario))
+    object_step()
+
+    if o.oAction == 0 then
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
+            0x200)
+        if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+            o.oTimer = 0
+            o.oAction = 1
+        else
+            o.oInteractStatus = 0
+        end
+
+        if o.oDistanceToMario < 750 then --scared
+            o.oForwardVel = 5
+            o.oSubAction = o.oSubAction + 1
+            o.oMoveAngleYaw = obj_angle_to_object(o, nearest_player_to_object(o)) + 32768
+        end
+
+        if o.oDistanceToMario > 1300 then
+            o.oForwardVel = 0
+        end
+
+        if o.oSubAction > 120 then
+            o.oHiddenBlueCoinSwitch = spawn_object(o, MODEL_OCTOOMBA_ROCK, bhvOctoombaRock)
+            o.oHiddenBlueCoinSwitch.oAction = 1
+            o.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch = o
+            o.oSubAction = 0
+        end
+    elseif o.oAction == 1 then
+        o.oForwardVel = 0
+        obj_scale_xyz(o, 1, 0.1, 1)
+        if o.oTimer > 25 then
+            spawn_mist_particles()
+            obj_mark_for_deletion(o)
+            cur_obj_play_sound_1(SOUND_OBJ_DEFAULT_DEATH)
+        end
+    end
+end
+
+bhvOctoomba = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_octooomba_init, bhv_octooomba_loop)
+---@param o Object
+function octoomba_rock_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oDamageOrCoinValue = 2
+    o.oIntangibleTimer = 0
+    o.hitboxHeight = 110
+    o.hitboxRadius = 110
+    o.oGraphYOffset = 40
+    o.oGravity = -3
+    o.oFriction = 1
+    spawn_mist_particles()
+    cur_obj_set_home_once()
+    o.oInteractType = INTERACT_DAMAGE
+end
+
+function octoomba_rock_loop(o)
+    local floor = o.oFloor
+    o.oForwardVel = 15
+    move_obj_with_physics(true, o)
+    o.oFaceAnglePitch = o.oFaceAnglePitch + 1300
+    o.oMoveAngleYaw = obj_angle_to_object(o.oHiddenBlueCoinSwitch, nearest_player_to_object(o))
+    if o.oTimer > (4 * 30) then -- 4 seconds
+        obj_mark_for_deletion(o)
+        spawn_mist_particles()
+    end
+
+    if o.oInteractStatus ~= 0 then
+        obj_mark_for_deletion(o)
+        spawn_mist_particles()
+    end
+end
+
+bhvOctoombaRock = hook_behavior(nil, OBJ_LIST_GENACTOR, true, octoomba_rock_init, octoomba_rock_loop)
