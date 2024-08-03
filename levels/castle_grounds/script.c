@@ -49,7 +49,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		WARP_NODE(0x15, LEVEL_WMOTR, 0x01,0x0A , WARP_NO_CHECKPOINT),
 		WARP_NODE(0x16, LEVEL_TOTWC, 0x01,0x0A , WARP_NO_CHECKPOINT),
 		WARP_NODE(64, LEVEL_BBH, 1, 10, 0),
-		OBJECT(MODEL_NONE, 1039, -100, 608, 0, 0, 0, 0x000A0000, bhvSpinAirborneWarp),
+		OBJECT(MODEL_NONE, -546, -487, -3495, 0, 0, 0, 0x000A0000, bhvSpinAirborneWarp),
 		OBJECT(MODEL_BITS_WARP_PIPE, 303,9,-9068,0,0,0,(64 << 16), bhvWarpPipe),
 		OBJECT(MODEL_NONE ,-4398,-788,747,0,0,0,0x500A0000, bhvWarp),
 		OBJECT(MODEL_BITS_WARP_PIPE, ,4117,-427,-7098,0,0,0,0x000B0000, bhvWarpPipe),
@@ -59,7 +59,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(E_MODEL_GOOMBA,2131,-668,-4545,0,0,0,0x00000000, bhvBossGoombaTwo),
 		OBJECT(E_MODEL_GOOMBA,1920,-666,-4707,0,0,0,0x00000000, bhvBossGoombaThree),
 		OBJECT(E_MODEL_BREAKABLE_BOX_SMALL,-2333,-641,-7127,0,0,0,0x00000000, id_bhvBreakableBoxSmall),*/
-		MARIO_POS(0x01, 0, 1039, 41, 608),
+		MARIO_POS(0x01, 0, -546, -487, -3495),
 		TERRAIN(castle_grounds_area_1_collision),
 		MACRO_OBJECTS(castle_grounds_area_1_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, SEQ_SOUND_PLAYER),
@@ -69,7 +69,7 @@ const LevelScript level_castle_grounds_entry[] = {
 	END_AREA(),
 
 	FREE_LEVEL_POOL(),
-	MARIO_POS(0x01, 0, 1039, 41, 608),
+	MARIO_POS(0x01, 0, -546, -487, -3495),
 	CALL(0, lvl_init_or_update),
 	CALL_LOOP(1, lvl_init_or_update),
 	CLEAR_LEVEL(),
