@@ -839,7 +839,7 @@ function bhv_crocodile_loop(o)
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x160)
     if o.oAction == 0 then
         smlua_anim_util_set_animation(o, "anim_croc_idle")
-        if o.oDistanceToMario < 460 then
+        if o.oDistanceToMario < 625 then
             cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
             o.oAction = 1
             o.oTimer = 0
