@@ -1,0 +1,25 @@
+#include "src/game/envfx_snow.h"
+
+const GeoLayout crocodile_geo[] = {
+	GEO_NODE_START(),
+	GEO_OPEN_NODE(),
+		GEO_CULLING_RADIUS(4000),
+		GEO_OPEN_NODE(),
+			GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, crocodile_000_offset_mesh_layer_1),
+			GEO_OPEN_NODE(),
+				GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 120, crocodile_000_offset_001_mesh_layer_1),
+				GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 120, crocodile_001_offset_mesh_layer_1),
+				GEO_OPEN_NODE(),
+					GEO_DISPLAY_LIST(LAYER_ALPHA, crocodile_001_offset_mesh_layer_4),
+				GEO_CLOSE_NODE(),
+				GEO_ANIMATED_PART(LAYER_OPAQUE, -147, -52, -20, crocodile_002_offset_mesh_layer_1),
+				GEO_ANIMATED_PART(LAYER_OPAQUE, 147, -52, -20, crocodile_003_offset_mesh_layer_1),
+				GEO_ANIMATED_PART(LAYER_OPAQUE, 0, -32, -163, crocodile_004_offset_mesh_layer_1),
+				GEO_OPEN_NODE(),
+					GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, -217, crocodile_000_offset_002_mesh_layer_1),
+				GEO_CLOSE_NODE(),
+			GEO_CLOSE_NODE(),
+		GEO_CLOSE_NODE(),
+	GEO_CLOSE_NODE(),
+	GEO_END(),
+};

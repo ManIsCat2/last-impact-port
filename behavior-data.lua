@@ -16,6 +16,7 @@ function spawn_object(parent, model, behaviorId)
     return obj
 end
 
+---function from SM64: Through the ages
 ---@param clampFloor boolean
 ---@param o Object
 function move_obj_with_physics(clampFloor, o)
@@ -802,6 +803,7 @@ function octoomba_rock_init(o)
     o.oInteractType = INTERACT_DAMAGE
 end
 
+---@param o Object
 function octoomba_rock_loop(o)
     local floor = o.oFloor
     o.oForwardVel = 15
@@ -820,3 +822,36 @@ function octoomba_rock_loop(o)
 end
 
 bhvOctoombaRock = hook_behavior(nil, OBJ_LIST_GENACTOR, true, octoomba_rock_init, octoomba_rock_loop)
+
+---@param o Object
+function bhv_crocodile_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
+    o.oDamageOrCoinValue = 2
+    o.oIntangibleTimer = 0
+    o.hitboxHeight = 70
+    o.hitboxRadius = 360
+    o.oInteractType = INTERACT_DAMAGE
+    network_init_object(o, true, {"oAction", "oTimer"})
+end
+
+---@param o Object
+function bhv_crocodile_loop(o)
+    o.oInteractStatus = 0
+    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x160)
+    if o.oAction == 0 then
+        smlua_anim_util_set_animation(o, "anim_croc_idle")
+        if o.oDistanceToMario < 460 then
+            cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
+            o.oAction = 1
+            o.oTimer = 0
+        end
+    elseif o.oAction == 1 then
+        smlua_anim_util_set_animation(o, "anim_croc_attack")
+        if o.oTimer > 50 then
+            o.oAction = 0
+        end
+    end
+end
+
+--bhvCrocodile
+hook_behavior(id_bhvCcmTouchedStarSpawn, OBJ_LIST_GENACTOR, true, bhv_crocodile_init, bhv_crocodile_loop)
