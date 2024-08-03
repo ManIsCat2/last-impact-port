@@ -751,8 +751,7 @@ function bhv_octooomba_loop(o)
     object_step()
 
     if o.oAction == 0 then
-        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
-            0x200)
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x200)
         if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
             o.oTimer = 0
             o.oAction = 1
