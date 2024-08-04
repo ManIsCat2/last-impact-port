@@ -231,7 +231,7 @@ function bhv_taptap_init(o)
     o.oGraphYOffset = 51
     o.header.gfx.animInfo.animAccel = 65536 * 2
     network_init_object(o, true,
-        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oNumLootCoins", "oAction", "oFaceAngleYaw" })
+        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oNumLootCoins", "oAction", "oFaceAngleYaw", "oBowserUnk106" })
 end
 
 MODEL_TAPTAP_KEY = smlua_model_util_get_id("taptap_key_geo")
@@ -751,7 +751,8 @@ function bhv_octooomba_loop(o)
     object_step()
 
     if o.oAction == 0 then
-        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x200)
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
+            0x200)
         if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
             o.oTimer = 0
             o.oAction = 1
@@ -759,13 +760,13 @@ function bhv_octooomba_loop(o)
             o.oInteractStatus = 0
         end
 
-        if o.oDistanceToMario < 750 then --scared
+        if dist_between_objects(o, nearest_player_to_object(o)) < 750 then --scared
             o.oForwardVel = 5
             o.oSubAction = o.oSubAction + 1
             o.oMoveAngleYaw = obj_angle_to_object(o, nearest_player_to_object(o)) + 32768
         end
 
-        if o.oDistanceToMario > 1300 then
+        if dist_between_objects(o, nearest_player_to_object(o)) > 1300 then
             o.oForwardVel = 0
         end
 
@@ -800,6 +801,7 @@ function octoomba_rock_init(o)
     spawn_mist_particles()
     cur_obj_set_home_once()
     o.oInteractType = INTERACT_DAMAGE
+    o.oMoveAngleYaw = obj_angle_to_object(o.oHiddenBlueCoinSwitch, nearest_player_to_object(o))
 end
 
 ---@param o Object
@@ -808,7 +810,6 @@ function octoomba_rock_loop(o)
     o.oForwardVel = 15
     move_obj_with_physics(true, o)
     o.oFaceAnglePitch = o.oFaceAnglePitch + 1300
-    o.oMoveAngleYaw = obj_angle_to_object(o.oHiddenBlueCoinSwitch, nearest_player_to_object(o))
     if o.oTimer > (4 * 30) then -- 4 seconds
         obj_mark_for_deletion(o)
         spawn_mist_particles()
@@ -830,7 +831,7 @@ function bhv_crocodile_init(o)
     o.hitboxHeight = 70
     o.hitboxRadius = 360
     o.oInteractType = INTERACT_DAMAGE
-    network_init_object(o, true, {"oAction", "oTimer"})
+    network_init_object(o, true, { "oAction", "oTimer" })
 end
 
 ---@param o Object
@@ -839,7 +840,7 @@ function bhv_crocodile_loop(o)
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x160)
     if o.oAction == 0 then
         smlua_anim_util_set_animation(o, "anim_croc_idle")
-        if o.oDistanceToMario < 625 then
+        if dist_between_objects(o, nearest_player_to_object(o)) < 625 then
             cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
             o.oAction = 1
             o.oTimer = 0
@@ -854,3 +855,49 @@ end
 
 --bhvCrocodile
 hook_behavior(id_bhvCcmTouchedStarSpawn, OBJ_LIST_GENACTOR, true, bhv_crocodile_init, bhv_crocodile_loop)
+
+---@param o Object
+function bhv_spinning_star_custom_loop(o)
+    --djui_chat_message_create(tostring(o.oAnimState))
+    if (o.oBehParams >> 8) & 0xFF == 25 and o.oOpacity == 0 then
+        local colresult = 0
+        colresult = object_step()
+        o.oGravity = 3.4
+        o.oFriction = 1
+        o.oBounciness = 5
+        o.oForwardVel = 15
+
+        if colresult & OBJ_COL_FLAG_GROUNDED == 1 then
+            cur_obj_play_sound_2(SOUND_ENV_STAR)
+            o.oVelY = 60
+            o.oAnimState = o.oAnimState + 1
+            o.oMoveAngleYaw = math.random(65536)
+        end
+
+        if o.oAnimState >= 4 then
+            cur_obj_hide()
+            cur_obj_become_intangible()
+            o.oAnimState = 0
+            --Bounced = true
+            o.oOpacity = 1
+            o.oSubAction = 0
+        end
+    end
+
+    if o.oOpacity == 1 then
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > (5 * 30) then -- 5 seconds
+            cur_obj_unhide()
+            cur_obj_become_tangible()
+            o.oSubAction = 0
+            o.oAnimState = 0
+            o.oOpacity = 0
+            o.oPosX = math.random(-17874, -4089)
+            o.oPosZ = math.random(-17881, -1084)
+            o.oPosY = -499 + math.random(50, 100)
+        end
+    end
+end
+
+--bhvSpinningStar (BBH)
+hook_behavior(id_bhvStar, OBJ_LIST_GENACTOR, false, nil, bhv_spinning_star_custom_loop)
