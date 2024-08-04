@@ -1,23 +1,3 @@
-Gfx castle_grounds_dl__6DAF90F6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__6DAF90F6_c_rgba16[] = {
-	#include "levels/castle_grounds/_6DAF90F6_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__7AACDDC6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__7AACDDC6_c_rgba16[] = {
-	#include "levels/castle_grounds/_7AACDDC6_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__3AB42901_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__3AB42901_c_rgba16[] = {
-	#include "levels/castle_grounds/_3AB42901_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__68B65F3B_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__68B65F3B_c_rgba16[] = {
-	#include "levels/castle_grounds/_68B65F3B_c.rgba16.inc.c"
-};
-
 Gfx castle_grounds_dl__4277B019_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__4277B019_c_rgba16[] = {
 	#include "levels/castle_grounds/_4277B019_c.rgba16.inc.c"
