@@ -8,6 +8,38 @@ local function is_bubbled(m)
     return m.action == ACT_BUBBLED
 end
 
+local function obj_rotate_pitch_toward(o, target, increment)
+    local startPitch = o.oMoveAnglePitch
+    o.oMoveAnglePitch = approach_s16_symmetric(o.oMoveAnglePitch, target, increment)
+    o.oFaceAnglePitch = approach_s16_symmetric(o.oFaceAnglePitch, target, increment)
+
+    o.oAngleVelPitch = o.oMoveAnglePitch - startPitch
+
+    return o.oAngleVelPitch == 0
+end
+
+local function obj_pitch_angle_to_object(obj1, obj2)
+    if obj1 == nil or obj2 == nil then
+        return 0
+    end
+
+    local z1, x1, y1, z2, x2, y2, h, v
+    local angle
+
+    z1 = obj1.oPosZ
+    z2 = obj2.oPosZ
+    x1 = obj1.oPosX
+    x2 = obj2.oPosX
+    y1 = obj1.oPosY
+    y2 = obj2.oPosY
+
+    h = math.sqrt((z2 - z1) ^ 2 + (x2 - x1) ^ 2)
+    v = y2 - y1
+
+    angle = -atan2s(h, v)
+    return angle
+end
+
 function spawn_object(parent, model, behaviorId)
     local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
@@ -615,7 +647,7 @@ function bhv_yellow_falling_rock_loop(o)
             o.oAction = 1
         end
     elseif o.oAction == 1 then
-        result = object_step()
+        local result = object_step()
         if result & OBJ_COL_FLAG_GROUNDED == 1 then
             cur_obj_play_sound_2(SOUND_GENERAL_BIG_POUND)
             obj_mark_for_deletion(o)
@@ -900,4 +932,32 @@ function bhv_spinning_star_custom_loop(o)
 end
 
 --bhvSpinningStar (BBH)
-hook_behavior(id_bhvStar, OBJ_LIST_GENACTOR, false, nil, bhv_spinning_star_custom_loop)
+hook_behavior(id_bhvStar, OBJ_LIST_LEVEL, false, nil, bhv_spinning_star_custom_loop)
+
+---@param o Object
+function bhv_rockshooter_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oDamageOrCoinValue = 2
+    o.oIntangibleTimer = 0
+    o.hitboxHeight = 400
+    o.hitboxRadius = 400
+    o.oInteractType = INTERACT_DAMAGE
+    smlua_anim_util_set_animation(o, "anim_rockshooter_idle")
+    --network_init_object(o, true, { "oAction", "oTimer" })
+end
+
+---@param o Object
+function bhv_rockshooter_loop(o)
+    o.oInteractStatus = 0
+    if dist_between_objects(o, nearest_player_to_object(o)) < 5400 then
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
+            0x130)
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > (6 * 30) then -- 6 seconds
+            o.oSubAction = 0
+            --spawn_object(o, MODEL_OCTOOMBA_ROCK, id_bhvBulletBill)
+        end
+    end
+end
+
+bhvRedRockShooter = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rockshooter_init, bhv_rockshooter_loop)
