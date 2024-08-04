@@ -8,6 +8,10 @@ local function is_bubbled(m)
     return m.action == ACT_BUBBLED
 end
 
+function get_curr_star_count()
+    return save_file_get_total_star_count(get_current_save_file_num() - 1, COURSE_NONE, COURSE_SA)
+end
+
 local function obj_rotate_pitch_toward(o, target, increment)
     local startPitch = o.oMoveAnglePitch
     o.oMoveAnglePitch = approach_s16_symmetric(o.oMoveAnglePitch, target, increment)
@@ -961,3 +965,22 @@ function bhv_rockshooter_loop(o)
 end
 
 bhvRedRockShooter = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rockshooter_init, bhv_rockshooter_loop)
+
+MODEL_ROCKET_DOOR = smlua_model_util_get_id("rocket_door_geo")
+
+---@param o Object
+function bhv_rocket_door_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("rocket_door_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+function bhv_rocket_door_loop(o)
+    load_object_collision_model()
+    if get_curr_star_count() >= 15 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvRocketDoor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rocket_door_init, bhv_rocket_door_loop)

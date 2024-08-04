@@ -79,7 +79,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(56, 8584, -223, 5738, 0, 0, 0, 0x81130000, Bhv_Custom_0x1300024c),
 		OBJECT(57, 7527, -655, 5955, 0, -25, 0, 0x2130000, Bhv_Custom_0x1300024c),
 		OBJECT(57, 8063, -655, 4804, 0, 155, 0, 0x2130000, Bhv_Custom_0x1300024c),
-		OBJECT(59, 4066, 129, -5130, 0, 0, 0, 0x30e0000, Bhv_Custom_0x1300024c),
+		OBJECT(MODEL_ROCKET_DOOR, 4278, 146, -4936, 0, 0, 0, 0x30e0000, bhvRocketDoor),
 		OBJECT(22, 7945, -426, -3306, 0, 0, 0, 0x0, bhvWarpPipe),
 		OBJECT(221, 7322, -635, 5420, 0, -130, 0, 0x14130000, Bhv_Custom_0x13000644),
 		OBJECT(221, 197, -855, -2463, 0, 0, 0, 0x4350000, Bhv_Custom_0x13000644),
