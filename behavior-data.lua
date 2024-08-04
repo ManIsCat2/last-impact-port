@@ -773,7 +773,7 @@ function bhv_octooomba_init(o)
     o.oGravity = 3
     o.oFriction = 1
     o.oBuoyancy = 1
-    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction" })
+    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oHiddenBlueCoinSwitch" })
 end
 
 ---@param o Object

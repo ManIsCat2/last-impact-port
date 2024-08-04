@@ -3,10 +3,9 @@
 const GeoLayout castle_grounds_area_1_geo[] = {
 	GEO_NODE_START(),
 	GEO_OPEN_NODE(),
-		GEO_TRANSLATE_ROTATE_WITH_DL(LAYER_OPAQUE, 0, 157, 0, 63, 11, 0, castle_grounds_dl_009_7AACDDC6_c_bmp_mesh_layer_1),
-		GEO_OPEN_NODE(),
-			GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_009_7AACDDC6_c_bmp_mesh_layer_4),
-		GEO_CLOSE_NODE(),
+		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_348_6DAF90F6_c_bmp_001_mesh_layer_1),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_348_6DAF90F6_c_bmp_001_mesh_layer_4),
+		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_348_6DAF90F6_c_bmp_002_mesh_layer_1),
 	GEO_CLOSE_NODE(),
 	GEO_RETURN(),
 };
@@ -32,8 +31,6 @@ const GeoLayout castle_grounds_area_1[] = {
 				GEO_CLOSE_NODE(),
 			GEO_CLOSE_NODE(),
 		GEO_CLOSE_NODE(),
-		GEO_DISPLAY_LIST(LAYER_OPAQUE, castle_grounds_dl_material_revert_render_settings),
-		GEO_DISPLAY_LIST(LAYER_ALPHA, castle_grounds_dl_material_revert_render_settings),
 	GEO_CLOSE_NODE(),
 	GEO_END(),
 };

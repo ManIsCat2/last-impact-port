@@ -1,3 +1,8 @@
+Gfx castle_grounds_dl__6DAF90F6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 castle_grounds_dl__6DAF90F6_c_rgba16[] = {
+	#include "levels/castle_grounds/_6DAF90F6_c.rgba16.inc.c"
+};
+
 Gfx castle_grounds_dl__7AACDDC6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__7AACDDC6_c_rgba16[] = {
 	#include "levels/castle_grounds/_7AACDDC6_c.rgba16.inc.c"
@@ -248,46 +253,6 @@ u8 castle_grounds_dl__501D005E_c_rgba16[] = {
 	#include "levels/castle_grounds/_501D005E_c.rgba16.inc.c"
 };
 
-Gfx castle_grounds_dl__1CC00C65_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__1CC00C65_c_rgba16[] = {
-	#include "levels/castle_grounds/_1CC00C65_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__292E78C8_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__292E78C8_c_rgba16[] = {
-	#include "levels/castle_grounds/_292E78C8_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__69011F9F_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__69011F9F_c_rgba16[] = {
-	#include "levels/castle_grounds/_69011F9F_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__3EBAF17E_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__3EBAF17E_c_rgba16[] = {
-	#include "levels/castle_grounds/_3EBAF17E_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__74FD4A9F_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__74FD4A9F_c_rgba16[] = {
-	#include "levels/castle_grounds/_74FD4A9F_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__1966F89B_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__1966F89B_c_rgba16[] = {
-	#include "levels/castle_grounds/_1966F89B_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__14305EC8_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__14305EC8_c_rgba16[] = {
-	#include "levels/castle_grounds/_14305EC8_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__3C09636D_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__3C09636D_c_rgba16[] = {
-	#include "levels/castle_grounds/_3C09636D_c.rgba16.inc.c"
-};
-
 Gfx castle_grounds_dl__37684CA7_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__37684CA7_c_rgba16[] = {
 	#include "levels/castle_grounds/_37684CA7_c.rgba16.inc.c"
@@ -296,16 +261,6 @@ u8 castle_grounds_dl__37684CA7_c_rgba16[] = {
 Gfx castle_grounds_dl__20562C60_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__20562C60_c_rgba16[] = {
 	#include "levels/castle_grounds/_20562C60_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__20562C60_c_ci8_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__20562C60_c_ci8[] = {
-	#include "levels/castle_grounds/_20562C60_c.ci8.inc.c"
-};
-
-Gfx castle_grounds_dl__20562C60_c_pal_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__20562C60_c_pal_rgba16[] = {
-	#include "levels/castle_grounds/_20562C60_c.rgba16.pal"
 };
 
 Gfx castle_grounds_dl__889E45E_c_rgba16_aligner[] = {gsSPEndDisplayList()};
@@ -318,14 +273,29 @@ u8 castle_grounds_dl__15F0BDA3_c_rgba16[] = {
 	#include "levels/castle_grounds/_15F0BDA3_c.rgba16.inc.c"
 };
 
+Gfx castle_grounds_dl__3106D15C_c_ci8_aligner[] = {gsSPEndDisplayList()};
+u8 castle_grounds_dl__3106D15C_c_ci8[] = {
+	#include "levels/castle_grounds/_3106D15C_c.ci8.inc.c"
+};
+
+Gfx castle_grounds_dl__3106D15C_c_pal_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 castle_grounds_dl__3106D15C_c_pal_rgba16[] = {
+	#include "levels/castle_grounds/_3106D15C_c.rgba16.pal"
+};
+
 Gfx castle_grounds_dl__3106D15C_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__3106D15C_c_rgba16[] = {
 	#include "levels/castle_grounds/_3106D15C_c.rgba16.inc.c"
 };
 
-Gfx castle_grounds_dl__1AB5DD0C_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__1AB5DD0C_c_rgba16[] = {
-	#include "levels/castle_grounds/_1AB5DD0C_c.rgba16.inc.c"
+Gfx castle_grounds_dl__1AB5DD0C_c_ci8_aligner[] = {gsSPEndDisplayList()};
+u8 castle_grounds_dl__1AB5DD0C_c_ci8[] = {
+	#include "levels/castle_grounds/_1AB5DD0C_c.ci8.inc.c"
+};
+
+Gfx castle_grounds_dl__1AB5DD0C_c_pal_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 castle_grounds_dl__1AB5DD0C_c_pal_rgba16[] = {
+	#include "levels/castle_grounds/_1AB5DD0C_c.rgba16.pal"
 };
 
 Gfx castle_grounds_dl__21155809_c_rgba16_aligner[] = {gsSPEndDisplayList()};
@@ -353,16 +323,6 @@ u8 castle_grounds_dl__1982078E_c_rgba16[] = {
 	#include "levels/castle_grounds/_1982078E_c.rgba16.inc.c"
 };
 
-Gfx castle_grounds_dl__217078CB_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__217078CB_c_rgba16[] = {
-	#include "levels/castle_grounds/_217078CB_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__28715BC8_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__28715BC8_c_rgba16[] = {
-	#include "levels/castle_grounds/_28715BC8_c.rgba16.inc.c"
-};
-
 Gfx castle_grounds_dl__7AF544AF_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__7AF544AF_c_rgba16[] = {
 	#include "levels/castle_grounds/_7AF544AF_c.rgba16.inc.c"
@@ -376,15 +336,5 @@ u8 castle_grounds_dl__11ED81_c_rgba16[] = {
 Gfx castle_grounds_dl__560ECCA8_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 castle_grounds_dl__560ECCA8_c_rgba16[] = {
 	#include "levels/castle_grounds/_560ECCA8_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__114626C6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__114626C6_c_rgba16[] = {
-	#include "levels/castle_grounds/_114626C6_c.rgba16.inc.c"
-};
-
-Gfx castle_grounds_dl__6DAF90F6_c_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 castle_grounds_dl__6DAF90F6_c_rgba16[] = {
-	#include "levels/castle_grounds/_6DAF90F6_c.rgba16.inc.c"
 };
 
