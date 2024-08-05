@@ -11,15 +11,8 @@
 
 #include "levels/scripts.h"
 
-
-/* Fast64 begin persistent block [includes] */
-/* Fast64 end persistent block [includes] */
-
 #include "make_const_nonconst.h"
 #include "levels/castle_grounds/header.h"
-
-/* Fast64 begin persistent block [scripts] */
-/* Fast64 end persistent block [scripts] */
 
 const LevelScript level_castle_grounds_entry[] = {
 	INIT_LEVEL(),
@@ -27,9 +20,6 @@ const LevelScript level_castle_grounds_entry[] = {
 	LOAD_MIO0(0xa, _water_skybox_mio0SegmentRomStart, _water_skybox_mio0SegmentRomEnd), 
 	ALLOC_LEVEL_POOL(),
 	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
-
-	/* Fast64 begin persistent block [level commands] */
-	/* Fast64 end persistent block [level commands] */
 
 	AREA(1, castle_grounds_area_1),
 		WARP_NODE(153, LEVEL_ENDING, 1, 10, WARP_NO_CHECKPOINT),
@@ -85,7 +75,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(221, 197, -855, -2463, 0, 0, 0, 0x4350000, Bhv_Custom_0x13000644),
 		OBJECT(E_MODEL_TOAD, 4688, 5, -4916, 0, 0, 0, (54 << 24) | (3 << 16), id_bhvToadMessage),
 		OBJECT(0, 372, 3095, 403, 0, 0, 0, 0x0, Bhv_Custom_0x13000668),
-		OBJECT(29, 4007, 126, -5241, 0, -153, 0, 0x0, Bhv_Custom_0x1300114c),
+		OBJECT(MODEL_ROCKET, 4076, 47, -5412, 0, -153, 0, 0x0, bhvRocket),
 		OBJECT(102, 3169, -635, -1901, 0, -129, 0, 0x1e0000, Bhv_Custom_0x13002740),
 		OBJECT(222, 5382, -640, 749, 0, 0, 0, 0x0, Bhv_Custom_0x13002fe0),
 		OBJECT(32, 0, 21829, 0, 0, 0, 0, 0x0, Bhv_Custom_0x13003014),
@@ -139,6 +129,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(0, 1274, -1548, -4281, 0, 0, 0, 0x400d0000, bhvWarp),
 		OBJECT(0, 8401, -635, 5661, 0, 0, 0, 0x40200000, bhvWarp),
 		OBJECT(27, 7099, -589, 1561, 9, -128, -6, 0x0, bhvYellowBackgroundInMenu),
+		OBJECT(MODEL_NONE, 4076, 4440, -5412, 0, -153, 0, (9 << 16), bhvWarp),
 		TERRAIN(castle_grounds_area_1_collision),
 		MACRO_OBJECTS(castle_grounds_area_1_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, 0),

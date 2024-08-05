@@ -611,3 +611,4 @@ extern Gfx mat_revert_castle_grounds_dl__118_4277B019_c_bmp_f3d[];
 extern Gfx castle_grounds_dl_348_6DAF90F6_c_bmp_001_mesh_layer_1[];
 extern Gfx castle_grounds_dl_348_6DAF90F6_c_bmp_001_mesh_layer_4[];
 extern Gfx castle_grounds_dl_348_6DAF90F6_c_bmp_002_mesh_layer_1[];
+extern Gfx castle_grounds_dl_material_revert_render_settings[];

@@ -777,7 +777,8 @@ function bhv_octooomba_init(o)
     o.oGravity = 3
     o.oFriction = 1
     o.oBuoyancy = 1
-    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oHiddenBlueCoinSwitch" })
+    network_init_object(o, true,
+        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oHiddenBlueCoinSwitch" })
 end
 
 ---@param o Object
@@ -984,3 +985,43 @@ function bhv_rocket_door_loop(o)
 end
 
 bhvRocketDoor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rocket_door_init, bhv_rocket_door_loop)
+
+MODEL_ROCKET = smlua_model_util_get_id("rocket_geo")
+
+---@param o Object
+function bhv_rocket_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.hitboxHeight = 900
+    o.hitboxRadius = 500
+    o.oIntangibleTimer = 0
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oPosY", "oAction", "oTimer" })
+end
+
+---@param o Object
+function bhv_rocket_loop(o)
+    if obj_check_hitbox_overlap(o, nearest_player_to_object(o)) and o.oAction == 0 then
+        o.oAction = 1
+    end
+
+    if o.oAction == 1 then
+        o.oPosY = o.oPosY + 45
+        spawn_non_sync_object(id_bhvBobombFuseSmoke, E_MODEL_SMOKE, o.oPosX, o.oPosY - 150, o.oPosZ, nil)
+        cur_obj_play_sound_2(SOUND_GENERAL2_BOBOMB_EXPLOSION);
+        vec3f_set(nearest_mario_state_to_object(o).pos, o.oPosX, o.oPosY + 200, o.oPosZ)
+        if o.oTimer == 90 then
+            o.oAction = 2
+            o.oTimer = 0
+            cur_obj_set_pos_to_home()
+        end
+    end
+
+    if o.oAction == 2 then
+        if o.oTimer == 50 then
+            o.oAction = 0
+        end
+    end
+end
+
+bhvRocket = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rocket_init, bhv_rocket_loop)
