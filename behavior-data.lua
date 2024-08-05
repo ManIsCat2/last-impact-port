@@ -739,13 +739,12 @@ function bhv_gummy_bear_init(o)
     o.header.gfx.skipInViewCheck = true
 end
 
----animstatebyparam2
-function bhv_gummy_bear_loop(o)
+function bhv_animstate_by_param2(o)
     load_object_collision_model()
     o.oAnimState = o.oBehParams2ndByte
 end
 
-bhvGummyBear = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_gummy_bear_init, bhv_gummy_bear_loop)
+bhvGummyBear = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_gummy_bear_init, bhv_animstate_by_param2)
 
 ---param2 = 0 is donut, param2 = 1 is candy cane
 function bhv_hmc_static_obj_init(o)
@@ -777,6 +776,7 @@ function bhv_octooomba_init(o)
     o.oGravity = 3
     o.oFriction = 1
     o.oBuoyancy = 1
+    o.oNumLootCoins = 1
     network_init_object(o, true,
         { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oSubAction" })
 end
@@ -820,6 +820,7 @@ function bhv_octooomba_loop(o)
             spawn_mist_particles()
             obj_mark_for_deletion(o)
             cur_obj_play_sound_1(SOUND_OBJ_DEFAULT_DEATH)
+            obj_spawn_yellow_coins(o, o.oNumLootCoins)
         end
     end
 end
@@ -1095,3 +1096,12 @@ function bhv_bbh_cage_loop(o)
 end
 
 hook_behavior(id_bhvHiddenObject, OBJ_LIST_SURFACE, true, bhv_bbh_cage_init, bhv_bbh_cage_loop)
+
+MODEL_FLASHING_LIGHT = smlua_model_util_get_id("flashing_light_geo")
+
+function bhv_flashing_light(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+hook_behavior(id_bhvFloorSwitchAnimatesObject, OBJ_LIST_LEVEL, true, bhv_flashing_light, bhv_animstate_by_param2)
