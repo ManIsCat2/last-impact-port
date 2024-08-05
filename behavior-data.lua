@@ -993,7 +993,7 @@ function bhv_rocket_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.hitboxHeight = 900
-    o.hitboxRadius = 500
+    o.hitboxRadius = 310
     o.oIntangibleTimer = 0
     cur_obj_set_home_once()
     network_init_object(o, true, { "oPosY", "oAction", "oTimer" })

@@ -75,7 +75,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(221, 197, -855, -2463, 0, 0, 0, 0x4350000, Bhv_Custom_0x13000644),
 		OBJECT(E_MODEL_TOAD, 4688, 5, -4916, 0, 0, 0, (54 << 24) | (3 << 16), id_bhvToadMessage),
 		OBJECT(0, 372, 3095, 403, 0, 0, 0, 0x0, Bhv_Custom_0x13000668),
-		OBJECT(MODEL_ROCKET, 4076, 47, -5412, 0, -153, 0, 0x0, bhvRocket),
+		OBJECT(MODEL_ROCKET, 4076, 47, -5412, 0, 28, 0, 0x0, bhvRocket),
 		OBJECT(102, 3169, -635, -1901, 0, -129, 0, 0x1e0000, Bhv_Custom_0x13002740),
 		OBJECT(222, 5382, -640, 749, 0, 0, 0, 0x0, Bhv_Custom_0x13002fe0),
 		OBJECT(32, 0, 21829, 0, 0, 0, 0, 0x0, Bhv_Custom_0x13003014),
