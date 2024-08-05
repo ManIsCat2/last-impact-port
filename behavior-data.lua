@@ -1051,6 +1051,8 @@ function bhv_cage_opener_loop(o)
 end
 
 bhvRedCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener_init, bhv_cage_opener_loop)
+bhvYellowCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener_init, bhv_cage_opener_loop)
+bhvBlueCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener_init, bhv_cage_opener_loop)
 
 ---@param o Object
 function bhv_bbh_cage_init(o)
@@ -1061,14 +1063,22 @@ function bhv_bbh_cage_init(o)
     network_init_object(o, true, { "oPosY", "oAction" })
 end
 
+local sBBHCageInfo = {
+    [1] = bhvRedCageOpener,
+    [2] = bhvBlueCageOpener,
+    [4] = bhvYellowCageOpener
+}
+
 ---@param o Object
 function bhv_bbh_cage_loop(o)
     load_object_collision_model()
     local currP = nearest_player_to_object(o)
+    local curBhv
+    curBhv = sBBHCageInfo[o.oBehParams2ndByte]
     if o.oAction == 0 then
-        if o.oBehParams2ndByte == 1 then
-            if obj_get_nearest_object_with_behavior_id(o, bhvRedCageOpener) then
-                if obj_get_nearest_object_with_behavior_id(o, bhvRedCageOpener).oSubAction == 1 then
+        if curBhv then
+            if obj_get_nearest_object_with_behavior_id(o, curBhv) then
+                if obj_get_nearest_object_with_behavior_id(o, curBhv).oSubAction == 1 then
                     if dist_between_objects(o, currP) < 400 then
                         o.oAction = 1
                     end
