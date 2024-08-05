@@ -778,7 +778,7 @@ function bhv_octooomba_init(o)
     o.oFriction = 1
     o.oBuoyancy = 1
     network_init_object(o, true,
-        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oHiddenBlueCoinSwitch" })
+        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oFaceAngleYaw", "oAction", "oSubAction" })
 end
 
 ---@param o Object
@@ -1025,3 +1025,63 @@ function bhv_rocket_loop(o)
 end
 
 bhvRocket = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rocket_init, bhv_rocket_loop)
+
+---@param o Object
+function bhv_cage_opener_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("cage_opener_collision")
+    network_init_object(o, true, { "oSubAction", "oAction" })
+end
+
+---@param o Object
+function bhv_cage_opener_loop(o)
+    load_object_collision_model()
+    local currM = nearest_mario_state_to_object(o)
+    if currM.floor.object == o and currM.pos.y == currM.floorHeight then
+        --0: unopened 1: opened
+        o.oSubAction = 1
+        --end
+        o.oAction = 1
+    end
+
+    if o.oAction == 1 then
+        cur_obj_scale_over_time(2, 3, 1.5, 0.2);
+    end
+end
+
+bhvRedCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener_init, bhv_cage_opener_loop)
+
+---@param o Object
+function bhv_bbh_cage_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bbh_cage_collision")
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oPosY", "oAction" })
+end
+
+---@param o Object
+function bhv_bbh_cage_loop(o)
+    load_object_collision_model()
+    local currP = nearest_player_to_object(o)
+    if o.oAction == 0 then
+        if o.oBehParams2ndByte == 1 then
+            if obj_get_nearest_object_with_behavior_id(o, bhvRedCageOpener) then
+                if obj_get_nearest_object_with_behavior_id(o, bhvRedCageOpener).oSubAction == 1 then
+                    if dist_between_objects(o, currP) < 400 then
+                        o.oAction = 1
+                    end
+                end
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oPosY = o.oPosY - 10
+    end
+
+    if o.oPosY < (o.oHomeY - 2300) then
+        obj_mark_for_deletion(o)
+    end
+end
+
+hook_behavior(id_bhvHiddenObject, OBJ_LIST_SURFACE, true, bhv_bbh_cage_init, bhv_bbh_cage_loop)

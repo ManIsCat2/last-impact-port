@@ -1,0 +1,13 @@
+extern const GeoLayout bbh_cage_geo[];
+extern Lights1 bbh_cage_Material_0_f3d_lights;
+extern Lights1 bbh_cage_Material_1_f3d_lights;
+extern u8 bbh_cage__0_rgba16[];
+extern u8 bbh_cage__1_rgba16[];
+extern Vtx bbh_cage_000_displaylist_mesh_layer_1_vtx_0[7];
+extern Gfx bbh_cage_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bbh_cage_000_displaylist_mesh_layer_1_vtx_1[59];
+extern Gfx bbh_cage_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_bbh_cage_Material_0_f3d[];
+extern Gfx mat_bbh_cage_Material_1_f3d[];
+extern Gfx bbh_cage_000_displaylist_mesh_layer_1[];
+extern Gfx bbh_cage_material_revert_render_settings[];
