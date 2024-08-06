@@ -399,13 +399,13 @@ Gfx flashing_light_000_displaylist_001_mesh_layer_1_mat_override_f3dlite_materia
 };
 
 Gfx flashing_light_000_displaylist_001_mesh_layer_1_mat_override_f3dlite_material_003_1[] = {
-	gsSPDisplayList(mat_flashing_light_f3dlite_material_001),
+	gsSPDisplayList(mat_flashing_light_f3dlite_material_003),
 	gsSPDisplayList(flashing_light_000_displaylist_001_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };
 
 Gfx flashing_light_000_displaylist_001_mesh_layer_1_mat_override_f3dlite_material_004_2[] = {
-	gsSPDisplayList(mat_flashing_light_f3dlite_material_001),
+	gsSPDisplayList(mat_flashing_light_f3dlite_material_004),
 	gsSPDisplayList(flashing_light_000_displaylist_001_mesh_layer_1_tri_0),
 	gsSPEndDisplayList(),
 };

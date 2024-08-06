@@ -826,6 +826,7 @@ function bhv_octooomba_loop(o)
 end
 
 bhvOctoomba = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_octooomba_init, bhv_octooomba_loop)
+
 ---@param o Object
 function octoomba_rock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -1092,6 +1093,12 @@ function bhv_bbh_cage_loop(o)
 
     if o.oPosY < (o.oHomeY - 2300) then
         obj_mark_for_deletion(o)
+    end
+
+    if o.oBehParams2ndByte == 2 and gNetworkPlayers[0].currActNum >= 2 then
+        if dist_between_objects(o, currP) < 400 then
+            o.oAction = 1
+        end
     end
 end
 
