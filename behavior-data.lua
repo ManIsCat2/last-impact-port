@@ -1134,23 +1134,24 @@ bhvTalkingYoshi = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_yoshi_
 ---@param o Object
 function bhv_mario_galaxy_block_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    --checking dist to this
     cur_obj_set_home_once()
     o.collisionData = smlua_collision_util_get("mario_galaxy_block_collision")
     o.oVelY = math.random(1000, 4000)
     o.oHeldState = math.random(3000, 5000)
-    o.hitboxDownOffset = o.oPosY + 560
+    o.hitboxDownOffset = o.oPosY + 895
+    o.oAnimState = o.oBehParams2ndByte
 
     -- home Face angles
     o.oAngleVelPitch = o.oFaceAnglePitch
     o.oAngleVelRoll = o.oFaceAngleRoll
     --oAngleVelYaw breaks it lol
     o.oFishYawVel = o.oFaceAngleYaw
+    network_init_object(o, true,
+        { "oAction", "oSubAction", "oFaceAnglePitch", "oFaceAngleRoll", "oFaceAngleYaw", "oPosX", "oPosY", "oPosZ" })
 end
 
 ---@param o Object
 function bhv_mario_galaxy_block_loop(o)
-    bhv_animstate_by_param2(o)
     if o.oSubAction == 0 then
         o.oHiddenBlueCoinSwitch = spawn_non_sync_object(id_bhvStaticObject, E_MODEL_NONE, o.oHomeX, o.oHomeY, o.oHomeZ,
             nil)
@@ -1158,10 +1159,10 @@ function bhv_mario_galaxy_block_loop(o)
     end
     local currP = nearest_player_to_object(o)
     if o.oAction == 0 then
-        o.oFaceAnglePitch = o.oFaceAnglePitch + 600
-        o.oFaceAngleRoll = o.oFaceAngleRoll + 510
+        o.oFaceAnglePitch = o.oFaceAnglePitch + math.random(1, 900) + (o.oBehParams2ndByte * 17) * 2
+        o.oFaceAngleRoll = o.oFaceAngleRoll + math.random(1, 900) + (o.oBehParams2ndByte * 17) * 2
         o.oFaceAngleYaw = 0
-        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) < 1150 then
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) < 1300 then
             o.oAction = 1
             o.oFaceAngleRoll = 16384
             o.oFaceAnglePitch = 16384
@@ -1178,10 +1179,54 @@ function bhv_mario_galaxy_block_loop(o)
         o.oFaceAngleRoll = approach_f32_symmetric(o.oFaceAngleRoll, o.oAngleVelRoll, 800)
         o.oFaceAnglePitch = approach_f32_symmetric(o.oFaceAnglePitch, o.oAngleVelPitch, 800)
         o.oFaceAngleYaw = approach_f32_symmetric(o.oFaceAngleYaw, o.oFishYawVel, 800)
-        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) > 1150 + 300 then
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) > 1300 + 300 then
             o.oAction = 0
         end
     end
 end
 
 bhvMarioGalaxyBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_mario_galaxy_block_init, bhv_mario_galaxy_block_loop)
+
+--[[const BehaviorScript bhvFadingWarp[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    ID(id_bhvFadingWarp),
+    SET_INT(oInteractionSubtype, INT_SUBTYPE_FADING_WARP),
+    OR_INT(oFlags, (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    SET_INT(oInteractType, INTERACT_WARP),
+    SET_INT(oIntangibleTimer, 0),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_fading_warp_loop),
+    END_LOOP(),
+};
+]]
+
+function rr_fading_warp_init(o)
+    o.oFlags = (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)
+    o.oInteractionSubtype = INT_SUBTYPE_FADING_WARP
+    o.oInteractType = INTERACT_WARP
+    o.oIntangibleTimer = 0
+end
+
+function rr_fading_warp_loop(o)
+    bhv_fading_warp_loop()
+    if get_curr_star_count() < 70 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvRRFadingWarp = hook_behavior(nil, OBJ_LIST_LEVEL, true, rr_fading_warp_init, rr_fading_warp_loop)
+
+function rr_rotating_thing_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 4000
+    o.collisionData = smlua_collision_util_get("rr_rotating_thing_collision")
+end
+
+function rr_rotating_thing_loop(o)
+    load_object_collision_model()
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 600
+    o.oFaceAngleYaw = 69500
+end
+
+bhvRRrotatingThing = hook_behavior(nil, OBJ_LIST_SURFACE, true, rr_rotating_thing_init, rr_rotating_thing_loop)
