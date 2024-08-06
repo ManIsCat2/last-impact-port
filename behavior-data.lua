@@ -933,7 +933,7 @@ function bhv_spinning_star_custom_loop(o)
             o.oOpacity = 0
             o.oPosX = math.random(-17874, -4089)
             o.oPosZ = math.random(-17881, -1084)
-            o.oPosY = -499 + math.random(50, 100)
+            o.oPosY = 15000 + math.random(50, 100)
         end
     end
 end
