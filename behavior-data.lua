@@ -1081,7 +1081,7 @@ function bhv_bbh_cage_loop(o)
         if curBhv then
             if obj_get_nearest_object_with_behavior_id(o, curBhv) then
                 if obj_get_nearest_object_with_behavior_id(o, curBhv).oSubAction == 1 then
-                    if dist_between_objects(o, currP) < 400 then
+                    if dist_between_objects(o, currP) < 1000 then
                         o.oAction = 1
                     end
                 end
@@ -1096,7 +1096,7 @@ function bhv_bbh_cage_loop(o)
     end
 
     if o.oBehParams2ndByte == 2 and gNetworkPlayers[0].currActNum >= 2 then
-        if dist_between_objects(o, currP) < 400 then
+        if dist_between_objects(o, currP) < 1000 then
             o.oAction = 1
         end
     end
@@ -1162,7 +1162,7 @@ function bhv_mario_galaxy_block_loop(o)
         o.oFaceAnglePitch = o.oFaceAnglePitch + math.random(1, 900) + (o.oBehParams2ndByte * 17) * 2
         o.oFaceAngleRoll = o.oFaceAngleRoll + math.random(1, 900) + (o.oBehParams2ndByte * 17) * 2
         o.oFaceAngleYaw = 0
-        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) < 1300 then
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) < 900 then
             o.oAction = 1
             o.oFaceAngleRoll = 16384
             o.oFaceAnglePitch = 16384
@@ -1179,7 +1179,7 @@ function bhv_mario_galaxy_block_loop(o)
         o.oFaceAngleRoll = approach_f32_symmetric(o.oFaceAngleRoll, o.oAngleVelRoll, 800)
         o.oFaceAnglePitch = approach_f32_symmetric(o.oFaceAnglePitch, o.oAngleVelPitch, 800)
         o.oFaceAngleYaw = approach_f32_symmetric(o.oFaceAngleYaw, o.oFishYawVel, 800)
-        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) > 1300 + 300 then
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) > 900 + 300 then
             o.oAction = 0
         end
     end
