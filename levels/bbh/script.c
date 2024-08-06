@@ -35,6 +35,7 @@ LOAD_MODEL_FROM_GEO(24, octoomba_geo),
 LOAD_MODEL_FROM_GEO(25, red_rock_shooter_geo),
 LOAD_MODEL_FROM_GEO(54, bbh_cage_geo),
 LOAD_MODEL_FROM_GEO(55, cage_opener_geo),
+LOAD_MODEL_FROM_GEO(57, mario_galaxy_block_geo),
 JUMP_LINK(local_area_bbh_1_),
 FREE_LEVEL_POOL(),
 MARIO_POS(1,135,-6558,0,6464),
@@ -207,6 +208,16 @@ OBJECT_WITH_ACTS(130,10662,-168,12476,0,26,0,0x30000, bhvBreakableBox,63),
 OBJECT_WITH_ACTS(130,10448,-168,12624,0,26,0,0x20000, bhvBreakableBox,63),
 OBJECT_WITH_ACTS(130,10572,-168,12226,0,26,0,0x10000, bhvBreakableBox,63),
 OBJECT_WITH_ACTS(36,2385,127,300,0,0,0,0x0,Bhv_Custom_0x1300184c,63),
+//start
+// left then right if theres two (no one understands what this means besides maniscat2)
+OBJECT_WITH_ACTS(57,2367,6500,2950,0,0,0,(1 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,2367,6500,3400,0,90,0,(2 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,1894,6500,3550,0,0,0,(0 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,1894,6500,4150,0,0,0,(2 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,2200,6500,4600,0,90,0,(3 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,1600,6500,4600,0,90,0,(1 << 16), bhvMarioGalaxyBlock,63),
+OBJECT_WITH_ACTS(57,1130,6500,4600,0,0,0,(3 << 16), bhvMarioGalaxyBlock,63),
+//end
 OBJECT_WITH_ACTS(0,8768,11264,12288,0,0,0,0xda2a0000,editor_Scroll_Texture,31),
 RETURN()
 };

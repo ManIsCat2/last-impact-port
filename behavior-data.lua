@@ -1112,3 +1112,76 @@ function bhv_flashing_light(o)
 end
 
 hook_behavior(id_bhvFloorSwitchAnimatesObject, OBJ_LIST_LEVEL, true, bhv_flashing_light, bhv_animstate_by_param2)
+
+function bhv_talking_yoshi_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE| OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
+    o.oInteractType = INTERACT_TEXT
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oAnimations = gObjectAnimations.yoshi_seg5_anims_05024100
+    cur_obj_init_animation(0)
+    o.hitboxRadius = 150
+    o.hitboxHeight = 120
+    o.oIntangibleTimer = 0
+    bhv_bobomb_buddy_init()
+end
+
+function bhv_talking_yoshi_loop(o)
+    bhv_bobomb_buddy_loop()
+end
+
+bhvTalkingYoshi = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_yoshi_init, bhv_talking_yoshi_loop)
+
+---@param o Object
+function bhv_mario_galaxy_block_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    --checking dist to this
+    cur_obj_set_home_once()
+    o.collisionData = smlua_collision_util_get("mario_galaxy_block_collision")
+    o.oVelY = math.random(1000, 4000)
+    o.oHeldState = math.random(3000, 5000)
+    o.hitboxDownOffset = o.oPosY + 560
+
+    -- home Face angles
+    o.oAngleVelPitch = o.oFaceAnglePitch
+    o.oAngleVelRoll = o.oFaceAngleRoll
+    --oAngleVelYaw breaks it lol
+    o.oFishYawVel = o.oFaceAngleYaw
+end
+
+---@param o Object
+function bhv_mario_galaxy_block_loop(o)
+    bhv_animstate_by_param2(o)
+    if o.oSubAction == 0 then
+        o.oHiddenBlueCoinSwitch = spawn_non_sync_object(id_bhvStaticObject, E_MODEL_NONE, o.oHomeX, o.oHomeY, o.oHomeZ,
+            nil)
+        o.oSubAction = 1
+    end
+    local currP = nearest_player_to_object(o)
+    if o.oAction == 0 then
+        o.oFaceAnglePitch = o.oFaceAnglePitch + 600
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 510
+        o.oFaceAngleYaw = 0
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) < 1150 then
+            o.oAction = 1
+            o.oFaceAngleRoll = 16384
+            o.oFaceAnglePitch = 16384
+        else
+            o.oPosX = approach_f32_symmetric(o.oPosX, o.oVelY, 50)
+            o.oPosZ = approach_f32_symmetric(o.oPosZ, o.oHeldState, 60)
+            o.oPosY = approach_f32_symmetric(o.oPosY, o.hitboxDownOffset, 70)
+        end
+    elseif o.oAction == 1 then
+        load_object_collision_model()
+        o.oPosX = approach_f32_symmetric(o.oPosX, o.oHomeX, 100)
+        o.oPosZ = approach_f32_symmetric(o.oPosZ, o.oHomeZ, 120)
+        o.oPosY = approach_f32_symmetric(o.oPosY, o.oHomeY, 140)
+        o.oFaceAngleRoll = approach_f32_symmetric(o.oFaceAngleRoll, o.oAngleVelRoll, 800)
+        o.oFaceAnglePitch = approach_f32_symmetric(o.oFaceAnglePitch, o.oAngleVelPitch, 800)
+        o.oFaceAngleYaw = approach_f32_symmetric(o.oFaceAngleYaw, o.oFishYawVel, 800)
+        if dist_between_objects(o.oHiddenBlueCoinSwitch, currP) > 1150 + 300 then
+            o.oAction = 0
+        end
+    end
+end
+
+bhvMarioGalaxyBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_mario_galaxy_block_init, bhv_mario_galaxy_block_loop)
