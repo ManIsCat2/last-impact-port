@@ -1,6 +1,6 @@
-CG (overworld 1) 85% done
-CC (overlworld 2 or 3 idk) 0% done
-CI (overlworld 2 or 3 idk) 0% done
+CG (overworld 1) 90% done
+CC (overlworld 2 or 3 idk) 70% done //theres not really behaviors so its higher than 0% lol
+CI (overlworld 2 or 3 idk) 70% done // same for here
 
 BOB - 95% done
 WF - 0%
@@ -14,7 +14,7 @@ DDD - 85% done
 SL - 0%
 WDW - 0%
 TTM - 50% done
-THI - 35% done
+THI - 60% done
 TTC - 0%
 RR - 93% done
 BITDW - 0%
@@ -26,4 +26,4 @@ VCUTM - 0%
 WMOTR - 0%
 SA - 0%, has working calculator behavior????
 
-total progress: 28.54%
+total progress: 33.69%

@@ -1,0 +1,10 @@
+extern const GeoLayout thi2_platform_geo[];
+extern Lights1 thi2_platform_f3dlite_material_lights;
+extern u8 thi2_platform__07014410_ci8[];
+extern u8 thi2_platform__07014410_pal_rgba16[];
+extern Vtx thi2_platform_000_displaylist_mesh_layer_1_vtx_0[13];
+extern Gfx thi2_platform_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_thi2_platform_f3dlite_material[];
+extern Gfx mat_revert_thi2_platform_f3dlite_material[];
+extern Gfx thi2_platform_000_displaylist_mesh_layer_1[];
+extern Gfx thi2_platform_material_revert_render_settings[];

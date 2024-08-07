@@ -361,8 +361,8 @@ bhvTapTapKey = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_taptap_key_init, b
 [0021ADDC / 13000FDC] 23 00 00 00 0050 0100 // Set Collision sphere size (XZ radius = 80, Y radius = 256)
 [0021ADE4 / 13000FE4] 0E 2A 0002 // (Set value) obj->_0x130 = (float)2 //oINTERACTTYPE
 [0021ADE8 / 13000FE8] 08 00 00 00 // Start of loop
-[0021ADEC / 13000FEC]    0C 00 00 00 803839CC // Call ASM function 0x803839CC --
-[0021ADF4 / 13000FF4]    0C 00 00 00 802AEF10 // Call ASM function 0x802AEF10 --load_object_collison_model
+[0021ADEC / 13000FEC]    0C 00 00 00 803839CC // Call ASM function 0x803839CC --load_object_collison_model
+[0021ADF4 / 13000FF4]    0C 00 00 00 802AEF10 // Call ASM function 0x802AEF10 --bhv_flower_generator_loop
 [0021ADFC / 13000FFC]    09 00 00 00 // End of loop]]
 
 ---@param o Object
@@ -1370,7 +1370,9 @@ local function bhv_chocolate_init(o)
 end
 
 bhvChocolate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_chocolate_init,
-    function(o) load_object_collision_model() end)
+    function(o)
+        load_object_collision_model()
+    end)
 
 ---@param o Object
 local function bhv_whomp_npc_init(o)
@@ -1390,7 +1392,7 @@ local function bhv_whomp_npc_loop(o)
         gMarioStates[0].action = ACT_READING_NPC_DIALOG
         local response = cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, DIALOG_069)
         if response == 1 then
-            o.oInteractStatus = 0 --not done yet, sooo
+            o.oInteractStatus = 0 --not done yet, sooo i do that instead
         elseif response == 2 then
             o.oInteractStatus = 0
         end
@@ -1398,3 +1400,28 @@ local function bhv_whomp_npc_loop(o)
 end
 
 bhvWhompNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_whomp_npc_init, bhv_whomp_npc_loop)
+
+local function bhv_thi2_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("thi2_platform_collision")
+end
+
+bhvTHI2Platform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thi2_platform,
+    function(o)
+        load_object_collision_model()
+    end)
+
+local function bhv_talking_peach(o)
+    o.oFlags = (OBJ_FLAG_PERSISTENT_RESPAWN | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)
+    o.oInteractType = INTERACT_TEXT
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oAnimations = gObjectAnimations.peach_seg5_anims_0501C41C
+    cur_obj_init_animation(6)
+    o.hitboxRadius = 110
+    o.hitboxHeight = 70
+    o.oIntangibleTimer = 0
+    bhv_toad_message_init()
+end
+
+bhvTalkingPeach = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach, function (o) bhv_toad_message_loop() end)
