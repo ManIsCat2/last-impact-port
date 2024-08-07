@@ -1,0 +1,29 @@
+CG (overworld 1) 85% done
+CC (overlworld 2 or 3 idk) 0% done
+CI (overlworld 2 or 3 idk) 0% done
+
+BOB - 95% done
+WF - 0%
+JRB  0%
+CCM - 80% done
+BBH - 90% done
+HMC - 80% done
+LLL - 0%
+SSL - 0%
+DDD - 85% done
+SL - 0%
+WDW - 0%
+TTM - 50% done
+THI - 35% done
+TTC - 0%
+RR - 93% done
+BITDW - 0%
+BITFS - 0%
+PSS - 0%
+COTMC - 0%
+TOTWC - 0%
+VCUTM - 0%
+WMOTR - 0%
+SA - 0%, has working calculator behavior????
+
+total progress: 24.23%

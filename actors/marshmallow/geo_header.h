@@ -1,0 +1,10 @@
+extern const GeoLayout marshmallow_geo[];
+extern Lights1 marshmallow_f3dlite_material_001_lights;
+extern u8 marshmallow_custom_DL_0701eb80_0x701db10_custom_rgba16_ci8[];
+extern u8 marshmallow_custom_DL_0701eb80_0x701db10_custom_rgba16_pal_rgba16[];
+extern Vtx marshmallow_sm64_mesh_mesh_layer_1_vtx_0[47];
+extern Gfx marshmallow_sm64_mesh_mesh_layer_1_tri_0[];
+extern Gfx mat_marshmallow_f3dlite_material_001[];
+extern Gfx mat_revert_marshmallow_f3dlite_material_001[];
+extern Gfx marshmallow_sm64_mesh_mesh_layer_1[];
+extern Gfx marshmallow_material_revert_render_settings[];

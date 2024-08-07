@@ -751,9 +751,9 @@ function bhv_hmc_static_obj_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     if o.oBehParams2ndByte == 0 then
-        o.collisionData = smlua_collision_util_get("donut_collision")
+        --o.collisionData = smlua_collision_util_get("donut_collision")
     elseif o.oBehParams2ndByte == 1 then
-        o.collisionData = smlua_collision_util_get("candy_cane_collision")
+        --o.collisionData = smlua_collision_util_get("candy_cane_collision")
     end
 end
 
@@ -1230,3 +1230,56 @@ function rr_rotating_thing_loop(o)
 end
 
 bhvRRrotatingThing = hook_behavior(nil, OBJ_LIST_SURFACE, true, rr_rotating_thing_init, rr_rotating_thing_loop)
+
+function bhv_thi_fan_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+function rotate_fan(o, param1)
+    o.oFaceAnglePitch = o.oFaceAnglePitch + o.oBehParams2ndByte + (param1 * 120)
+end
+
+function rotate_fan2(o, param1)
+    o.oFaceAngleYaw = o.oFaceAngleYaw + o.oBehParams2ndByte + (param1 * 120)
+end
+
+function bhv_thi_fan_loop(o)
+    local param1 = (o.oBehParams >> 24) & 0xFF
+    --load_object_collision_model()
+    if param1 ~= 4 and param1 ~= 22 and param1 ~= 1 then
+        o.oFaceAngleYaw = o.oFaceAngleYaw + o.oBehParams2ndByte + (param1 * 120)
+    elseif param1 == 4 then
+        obj_scale(o, 0.65)
+        rotate_fan(o, param1)
+    elseif param1 == 22 then
+        rotate_fan(o, param1)
+    elseif param1 == 1 then
+        obj_scale(o, 0.8)
+        rotate_fan2(o, 6.5)
+    end
+end
+
+bhvTHIFan = hook_behavior(nil, --[[not sure]] OBJ_LIST_LEVEL, true, bhv_thi_fan_init, bhv_thi_fan_loop)
+
+function bhv_marshmallow_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("marshmallow_collision")
+    cur_obj_set_home_once()
+end
+
+function bhv_marshmallow_loop(o)
+    load_object_collision_model()
+    if cur_obj_is_mario_ground_pounding_platform() == 1 and o.oAction == 0 then
+        o.oAction = 1
+    end
+
+    if o.oAction == 1 then
+        o.oSubAction = o.oSubAction + 0.5
+        obj_act_squished(o.oSubAction)
+
+    end
+end
+
+bhvMarshMallow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_marshmallow_init, bhv_noteblock_loop)

@@ -30,4 +30,10 @@ add_scroll_target(<id>, "VB_rr_1_0xe05a180", <offset>, <count>)
 add_scroll_target(<id>, "VB_castle_courtyard_1_0xe03b810", <offset>, <count>)
 add_scroll_target(<id>, "VB_castle_courtyard_1_0xe062690", <offset>, <count>)
 add_scroll_target(<id>, "VB_castle_courtyard_1_0xe05e7c0", <offset>, <count>)
---]]
+add_scroll_target(<id>, "VB_thi_1_0xe076ae0", <offset>, <count>)
+add_scroll_target(<id>, "VB_thi_1_0xe05e990", <offset>, <count>)
+add_scroll_target(<id>, "VB_thi_1_0xe0787f0", <offset>, <count>)
+add_scroll_target(<id>, "VB_thi_1_0xe078520", <offset>, <count>)
+add_scroll_target(<id>, "VB_thi_1_0xe078340", <offset>, <count>)
+add_scroll_target(<id>, "VB_thi_1_0xe078ac0", <offset>, <count>)
+]]
