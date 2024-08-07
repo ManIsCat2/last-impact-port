@@ -1,4 +1,4 @@
-local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz =
+local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop =
     find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale,
     cutscene_object_with_dialog,
     smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle,
@@ -9,7 +9,8 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric,
     cur_obj_is_mario_ground_pounding_platform, cur_obj_hide,
     cur_obj_become_intangible, cur_obj_unhide,
-    cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz
+    cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded,
+    bhv_pole_base_loop
 
 local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
@@ -57,7 +58,7 @@ local function obj_pitch_angle_to_object(obj1, obj2)
     return angle
 end
 
-function spawn_object(parent, model, behaviorId)
+local function spawn_object(parent, model, behaviorId)
     local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
 
@@ -151,14 +152,14 @@ end
 hook_behavior(id_bhvCutOutObject, OBJ_LIST_SURFACE, true, bhv_bob_cloud_platform_init, bhv_bob_cloud_platform_loop)
 
 ---@param o Object
-function bhv_bob_prison_gate_init(o)
+local function bhv_bob_prison_gate_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1600
     o.collisionData = smlua_collision_util_get("bob_prison_gate_collision")
 end
 
 ---@param o Object
-function bhv_bob_prison_gate_loop(o)
+local function bhv_bob_prison_gate_loop(o)
     load_object_collision_model()
     nearkey = obj_get_nearest_object_with_behavior_id(o, bhvTapTapKey)
     if nearkey and nearkey.oAction == 1 then
@@ -174,7 +175,7 @@ end
 hook_behavior(id_bhvBitfsSinkingPlatforms, OBJ_LIST_SURFACE, true, bhv_bob_prison_gate_init, bhv_bob_prison_gate_loop)
 
 ---@param o Object
-function bhv_parent_rabbit_init(o)
+local function bhv_parent_rabbit_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE |OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.oInteractionSubtype = INT_SUBTYPE_NPC
     if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
@@ -194,7 +195,7 @@ end
 MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
 
 ---@param o Object
-function bhv_parent_rabbit_loop(o)
+local function bhv_parent_rabbit_loop(o)
     obj_set_model_extended(o, MODEL_RABBIT)
     neargate = obj_get_nearest_object_with_behavior_id(o, id_bhvBitfsSinkingPlatforms)
 
@@ -264,7 +265,7 @@ id_bhvParentAndChildRabbit = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_par
 [0021AD98 / 13000F98]    09 00 00 00 // End of loop]]
 
 ---@param o Object
-function bhv_taptap_init(o)
+local function bhv_taptap_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_DIST_TO_MARIO |
         OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
     o.oDamageOrCoinValue = 2
@@ -286,7 +287,7 @@ end
 MODEL_TAPTAP_KEY = smlua_model_util_get_id("taptap_key_geo")
 
 ---@param o Object
-function bhv_taptap_loop(o)
+local function bhv_taptap_loop(o)
     smlua_anim_util_set_animation(o, "anim_taptap_walk")
     object_step()
     o.oInteractStatus = 0
@@ -328,7 +329,7 @@ end
 bhvTapTap = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_taptap_init, bhv_taptap_loop)
 
 ---@param o Object
-function bhv_taptap_key_init(o)
+local function bhv_taptap_key_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.hitboxRadius = 70
     o.hitboxHeight = 70
@@ -336,7 +337,7 @@ function bhv_taptap_key_init(o)
 end
 
 ---@param o Object
-function bhv_taptap_key_loop(o)
+local function bhv_taptap_key_loop(o)
     o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x120
     if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
@@ -365,7 +366,7 @@ bhvTapTapKey = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_taptap_key_init, b
 [0021ADFC / 13000FFC]    09 00 00 00 // End of loop]]
 
 ---@param o Object
-function bhv_flower_generator_init(o)
+local function bhv_flower_generator_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1280
     o.oInteractType = INTERACT_BREAKABLE
@@ -379,7 +380,7 @@ end
 MODEL_WHITE_FLOWER = smlua_model_util_get_id("bob_white_flower_geo")
 
 ---@param o Object
-function bhv_flower_generator_loop(o)
+local function bhv_flower_generator_loop(o)
     load_object_collision_model()
 
     if o.oAction == 0 then
@@ -403,9 +404,8 @@ end
 
 bhvFlowerGenerator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_flower_generator_init, bhv_flower_generator_loop)
 
-
 ---@param o Object
-function bhv_white_flower_init(o)
+local function bhv_white_flower_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.oInteractType = INTERACT_POLE
     o.hitboxHeight = 270
@@ -416,7 +416,7 @@ function bhv_white_flower_init(o)
 end
 
 ---@param o Object
-function bhv_white_flower_loop(o)
+local function bhv_white_flower_loop(o)
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x66
     o.oFaceAnglePitch = 0
     o.oFaceAngleRoll = 0
@@ -499,7 +499,7 @@ LAUNCH_STAR_ACT_LAUNCH = 1
 local playerLaunched = false
 
 ---@param o Object
-function bhv_launch_star_init(o)
+local function bhv_launch_star_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.hitboxRadius = 200
     o.hitboxHeight = 200
@@ -508,7 +508,7 @@ function bhv_launch_star_init(o)
 end
 
 ---@param o Object
-function bhv_launch_star_loop(o)
+local function bhv_launch_star_loop(o)
     local m = gMarioStates[0]
     if obj_check_hitbox_overlap(m.marioObj, o) and o.oAction == LAUNCH_STAR_ACT_IDLE and m.action ~= ACT_SHOT_FROM_CANNON then
         o.oTimer = 0
@@ -562,7 +562,7 @@ local NOTEBLOCK_ACT_IDLE = 0
 local NOTEBLOCK_ACT_BOUNCING = 1
 
 ---@param o Object
-function bhv_noteblock_init(o)
+local function bhv_noteblock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("col_Noteblock_MOP_0xaa6444")
     cur_obj_set_home_once()
@@ -570,7 +570,7 @@ function bhv_noteblock_init(o)
 end
 
 ---@param obj Object
-function bhv_noteblock_loop(obj)
+local function bhv_noteblock_loop(obj)
     load_object_collision_model()
     local m = gMarioStates[0]
     local y_spd = 64
@@ -608,7 +608,7 @@ end
 
 bhvNoteblock_MOP = hook_behavior(nil, OBJ_LIST_SURFACE, false, bhv_noteblock_init, bhv_noteblock_loop)
 
-function bhv_crystal_init(o)
+local function bhv_crystal_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 3000
     o.collisionData = smlua_collision_util_get("cave_crystal_collision")
@@ -616,18 +616,18 @@ function bhv_crystal_init(o)
 end
 
 ---scalebyparam2
-function bhv_crystal_loop(o)
+local function bhv_crystal_loop(o)
     load_object_collision_model()
     obj_scale(o, o.oBehParams2ndByte / 100)
 end
 
 bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, bhv_crystal_loop)
 
-function bhv_silver_star_init(o)
+local function bhv_silver_star_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
 end
 
-function bhv_silver_star_loop(o)
+local function bhv_silver_star_loop(o)
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x880
 end
 
@@ -646,7 +646,7 @@ bhvSilverStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_silver_star_init
 ]]
 
 ---@param o Object
-function bhv_yellow_falling_rock_init(o)
+local function bhv_yellow_falling_rock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.hitboxRadius = 210
     o.hitboxHeight = 192
@@ -658,7 +658,7 @@ function bhv_yellow_falling_rock_init(o)
 end
 
 ---@param o Object
-function bhv_yellow_falling_rock_loop(o)
+local function bhv_yellow_falling_rock_loop(o)
     if o.oAction == 0 then
         if dist_between_objects(o, nearest_player_to_object(o)) < 1350 then
             o.oAction = 1
@@ -677,7 +677,7 @@ bhvYellowFallingRock = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_yellow_falli
 
 
 ---@param o Object
-function bhv_bee_npc_init(o)
+local function bhv_bee_npc_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO
     o.oInteractionSubtype = INT_SUBTYPE_NPC
     o.oInteractType = INTERACT_TEXT
@@ -689,7 +689,7 @@ function bhv_bee_npc_init(o)
 end
 
 ---@param o Object
-function bhv_bee_npc_loop(o)
+local function bhv_bee_npc_loop(o)
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
     if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
         gMarioStates[0].action = ACT_READING_NPC_DIALOG
@@ -702,14 +702,14 @@ end
 bhvBeeNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_bee_npc_init, bhv_bee_npc_loop)
 
 ---@param o Object
-function bhv_lilypad_init(o)
+local function bhv_lilypad_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 800
     o.collisionData = smlua_collision_util_get("lilypad_collision")
 end
 
 ---@param o Object
-function bhv_lilypad_loop(o)
+local function bhv_lilypad_loop(o)
     load_object_collision_model()
 end
 
@@ -746,13 +746,13 @@ end
 
 bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, bhv_cotmc_tree_loop)
 
-function bhv_gummy_bear_init(o)
+local function bhv_gummy_bear_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1200
     o.header.gfx.skipInViewCheck = true
 end
 
-function bhv_animstate_by_param2(o)
+local function bhv_animstate_by_param2(o)
     load_object_collision_model()
     o.oAnimState = o.oBehParams2ndByte
 end
@@ -760,7 +760,7 @@ end
 bhvGummyBear = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_gummy_bear_init, bhv_animstate_by_param2)
 
 ---param2 = 0 is donut, param2 = 1 is candy cane
-function bhv_hmc_static_obj_init(o)
+local function bhv_hmc_static_obj_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     if o.oBehParams2ndByte == 0 then
@@ -770,7 +770,7 @@ function bhv_hmc_static_obj_init(o)
     end
 end
 
-function bhv_hmc_static_obj_loop(o)
+local function bhv_hmc_static_obj_loop(o)
     load_object_collision_model()
 end
 
@@ -779,7 +779,7 @@ bhvCollisionHmcStaticObject = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc
 MODEL_OCTOOMBA_ROCK = smlua_model_util_get_id("octoomba_rock_geo")
 
 ---@param o Object
-function bhv_octooomba_init(o)
+local function bhv_octooomba_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
     o.oInteractType = INTERACT_BOUNCE_TOP2
     o.hitboxHeight = 100
@@ -795,7 +795,7 @@ function bhv_octooomba_init(o)
 end
 
 ---@param o Object
-function bhv_octooomba_loop(o)
+local function bhv_octooomba_loop(o)
     smlua_anim_util_set_animation(o, "anim_octoomba")
     --djui_chat_message_create(tostring(o.oDistanceToMario))
     object_step()
@@ -841,7 +841,7 @@ end
 bhvOctoomba = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_octooomba_init, bhv_octooomba_loop)
 
 ---@param o Object
-function octoomba_rock_init(o)
+local function octoomba_rock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oDamageOrCoinValue = 2
     o.oIntangibleTimer = 0
@@ -857,17 +857,12 @@ function octoomba_rock_init(o)
 end
 
 ---@param o Object
-function octoomba_rock_loop(o)
+local function octoomba_rock_loop(o)
     local floor = o.oFloor
     o.oForwardVel = 15
     move_obj_with_physics(true, o)
     o.oFaceAnglePitch = o.oFaceAnglePitch + 1300
-    if o.oTimer > (4 * 30) then -- 4 seconds
-        obj_mark_for_deletion(o)
-        spawn_mist_particles()
-    end
-
-    if o.oInteractStatus ~= 0 then
+    if o.oTimer > (4 * 30) or o.oInteractStatus ~= 0 then -- 4 seconds
         obj_mark_for_deletion(o)
         spawn_mist_particles()
     end
@@ -876,7 +871,7 @@ end
 bhvOctoombaRock = hook_behavior(nil, OBJ_LIST_GENACTOR, true, octoomba_rock_init, octoomba_rock_loop)
 
 ---@param o Object
-function bhv_crocodile_init(o)
+local function bhv_crocodile_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
     o.oDamageOrCoinValue = 2
     o.oIntangibleTimer = 0
@@ -887,7 +882,7 @@ function bhv_crocodile_init(o)
 end
 
 ---@param o Object
-function bhv_crocodile_loop(o)
+local function bhv_crocodile_loop(o)
     o.oInteractStatus = 0
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)), 0x160)
     if o.oAction == 0 then
@@ -909,7 +904,7 @@ end
 hook_behavior(id_bhvCcmTouchedStarSpawn, OBJ_LIST_GENACTOR, true, bhv_crocodile_init, bhv_crocodile_loop)
 
 ---@param o Object
-function bhv_spinning_star_custom_loop(o)
+local function bhv_spinning_star_custom_loop(o)
     --djui_chat_message_create(tostring(o.oAnimState))
     if (o.oBehParams >> 8) & 0xFF == 25 and o.oOpacity == 0 then
         local colresult = 0
@@ -955,7 +950,7 @@ end
 hook_behavior(id_bhvStar, OBJ_LIST_LEVEL, false, nil, bhv_spinning_star_custom_loop)
 
 ---@param o Object
-function bhv_rockshooter_init(o)
+local function bhv_rockshooter_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oDamageOrCoinValue = 2
     o.oIntangibleTimer = 0
@@ -967,7 +962,7 @@ function bhv_rockshooter_init(o)
 end
 
 ---@param o Object
-function bhv_rockshooter_loop(o)
+local function bhv_rockshooter_loop(o)
     o.oInteractStatus = 0
     if dist_between_objects(o, nearest_player_to_object(o)) < 5400 then
         o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
@@ -985,14 +980,14 @@ bhvRedRockShooter = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rockshooter_
 MODEL_ROCKET_DOOR = smlua_model_util_get_id("rocket_door_geo")
 
 ---@param o Object
-function bhv_rocket_door_init(o)
+local function bhv_rocket_door_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("rocket_door_collision")
     o.header.gfx.skipInViewCheck = true
 end
 
 ---@param o Object
-function bhv_rocket_door_loop(o)
+local function bhv_rocket_door_loop(o)
     load_object_collision_model()
     if get_curr_star_count() >= 15 then
         obj_mark_for_deletion(o)
@@ -1004,7 +999,7 @@ bhvRocketDoor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rocket_door_init,
 MODEL_ROCKET = smlua_model_util_get_id("rocket_geo")
 
 ---@param o Object
-function bhv_rocket_init(o)
+local function bhv_rocket_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.hitboxHeight = 900
@@ -1015,7 +1010,7 @@ function bhv_rocket_init(o)
 end
 
 ---@param o Object
-function bhv_rocket_loop(o)
+local function bhv_rocket_loop(o)
     if obj_check_hitbox_overlap(o, nearest_player_to_object(o)) and o.oAction == 0 then
         o.oAction = 1
     end
@@ -1042,7 +1037,7 @@ end
 bhvRocket = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rocket_init, bhv_rocket_loop)
 
 ---@param o Object
-function bhv_cage_opener_init(o)
+local function bhv_cage_opener_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("cage_opener_collision")
@@ -1050,7 +1045,7 @@ function bhv_cage_opener_init(o)
 end
 
 ---@param o Object
-function bhv_cage_opener_loop(o)
+local function bhv_cage_opener_loop(o)
     load_object_collision_model()
     local currM = nearest_mario_state_to_object(o)
     if currM.floor.object == o and currM.pos.y == currM.floorHeight then
@@ -1070,7 +1065,7 @@ bhvYellowCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener
 bhvBlueCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cage_opener_init, bhv_cage_opener_loop)
 
 ---@param o Object
-function bhv_bbh_cage_init(o)
+local function bhv_bbh_cage_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("bbh_cage_collision")
@@ -1085,7 +1080,7 @@ local sBBHCageInfo = {
 }
 
 ---@param o Object
-function bhv_bbh_cage_loop(o)
+local function bhv_bbh_cage_loop(o)
     load_object_collision_model()
     local currP = nearest_player_to_object(o)
     local curBhv
@@ -1119,14 +1114,14 @@ hook_behavior(id_bhvHiddenObject, OBJ_LIST_SURFACE, true, bhv_bbh_cage_init, bhv
 
 MODEL_FLASHING_LIGHT = smlua_model_util_get_id("flashing_light_geo")
 
-function bhv_flashing_light(o)
+local function bhv_flashing_light(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
 end
 
 hook_behavior(id_bhvFloorSwitchAnimatesObject, OBJ_LIST_LEVEL, true, bhv_flashing_light, bhv_animstate_by_param2)
 
-function bhv_talking_yoshi_init(o)
+local function bhv_talking_yoshi_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE| OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
     o.oInteractType = INTERACT_TEXT
     o.oInteractionSubtype = INT_SUBTYPE_NPC
@@ -1138,14 +1133,14 @@ function bhv_talking_yoshi_init(o)
     bhv_bobomb_buddy_init()
 end
 
-function bhv_talking_yoshi_loop(o)
+local function bhv_talking_yoshi_loop(o)
     bhv_bobomb_buddy_loop()
 end
 
 bhvTalkingYoshi = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_yoshi_init, bhv_talking_yoshi_loop)
 
 ---@param o Object
-function bhv_mario_galaxy_block_init(o)
+local function bhv_mario_galaxy_block_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     cur_obj_set_home_once()
     o.collisionData = smlua_collision_util_get("mario_galaxy_block_collision")
@@ -1164,7 +1159,7 @@ function bhv_mario_galaxy_block_init(o)
 end
 
 ---@param o Object
-function bhv_mario_galaxy_block_loop(o)
+local function bhv_mario_galaxy_block_loop(o)
     if o.oSubAction == 0 then
         o.oHiddenBlueCoinSwitch = spawn_non_sync_object(id_bhvStaticObject, E_MODEL_NONE, o.oHomeX, o.oHomeY, o.oHomeZ,
             nil)
@@ -1213,14 +1208,14 @@ bhvMarioGalaxyBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_mario_galax
 };
 ]]
 
-function rr_fading_warp_init(o)
+local function rr_fading_warp_init(o)
     o.oFlags = (OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)
     o.oInteractionSubtype = INT_SUBTYPE_FADING_WARP
     o.oInteractType = INTERACT_WARP
     o.oIntangibleTimer = 0
 end
 
-function rr_fading_warp_loop(o)
+local function rr_fading_warp_loop(o)
     bhv_fading_warp_loop()
     if get_curr_star_count() < 70 then
         obj_mark_for_deletion(o)
@@ -1229,14 +1224,14 @@ end
 
 bhvRRFadingWarp = hook_behavior(nil, OBJ_LIST_LEVEL, true, rr_fading_warp_init, rr_fading_warp_loop)
 
-function rr_rotating_thing_init(o)
+local function rr_rotating_thing_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.oCollisionDistance = 4000
     o.collisionData = smlua_collision_util_get("rr_rotating_thing_collision")
 end
 
-function rr_rotating_thing_loop(o)
+local function rr_rotating_thing_loop(o)
     load_object_collision_model()
     o.oFaceAngleRoll = o.oFaceAngleRoll + 600
     o.oFaceAngleYaw = 69500
@@ -1244,20 +1239,20 @@ end
 
 bhvRRrotatingThing = hook_behavior(nil, OBJ_LIST_SURFACE, true, rr_rotating_thing_init, rr_rotating_thing_loop)
 
-function bhv_thi_fan_init(o)
+local function bhv_thi_fan_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
 end
 
-function rotate_fan(o, param1)
+local function rotate_fan(o, param1)
     o.oFaceAnglePitch = o.oFaceAnglePitch + o.oBehParams2ndByte + (param1 * 120)
 end
 
-function rotate_fan2(o, param1)
+local function rotate_fan2(o, param1)
     o.oFaceAngleYaw = o.oFaceAngleYaw + o.oBehParams2ndByte + (param1 * 120)
 end
 
-function bhv_thi_fan_loop(o)
+local function bhv_thi_fan_loop(o)
     local param1 = (o.oBehParams >> 24) & 0xFF
     --load_object_collision_model()
     if param1 ~= 4 and param1 ~= 22 and param1 ~= 1 then
@@ -1275,14 +1270,14 @@ end
 
 bhvTHIFan = hook_behavior(nil, --[[not sure]] OBJ_LIST_LEVEL, true, bhv_thi_fan_init, bhv_thi_fan_loop)
 
-function bhv_marshmallow_init(o)
+local function bhv_marshmallow_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("marshmallow_collision")
     cur_obj_set_home_once()
 end
 
-function bhv_marshmallow_loop(o)
+local function bhv_marshmallow_loop(o)
     load_object_collision_model()
     if cur_obj_is_mario_ground_pounding_platform() == 1 and o.oAction == 0 then
         o.oAction = 1
@@ -1296,20 +1291,20 @@ end
 
 bhvMarshMallow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_marshmallow_init, bhv_noteblock_loop)
 
-function bhv_fading_warp_stand_init(o)
+local function bhv_fading_warp_stand_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("fading_warp_stand_collision")
 end
 
-function bhv_fading_warp_stand_loop(o)
+local function bhv_fading_warp_stand_loop(o)
     load_object_collision_model()
 end
 
 ---bhvFadingWarpStand
 hook_behavior(id_bhvBowserKeyCourseExit, OBJ_LIST_SURFACE, true, bhv_fading_warp_stand_init, bhv_fading_warp_stand_init)
 
-function bhv_rotating_cupcake_init(o)
+local function bhv_rotating_cupcake_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("cupcake_collision")
@@ -1317,14 +1312,14 @@ function bhv_rotating_cupcake_init(o)
     o.oAngleVelYaw = 0x200
 end
 
-function bhv_rotating_cupcake_loop(o)
+local function bhv_rotating_cupcake_loop(o)
     load_object_collision_model()
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x200
 end
 
 bhvRotatingCupcake = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rotating_cupcake_init, bhv_rotating_cupcake_loop)
 
-function bhv_spinning_cheese_init(o)
+local function bhv_spinning_cheese_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("spinning_cheese_collision")
@@ -1333,7 +1328,7 @@ function bhv_spinning_cheese_init(o)
     network_init_object(o, true, { "oFaceAngleYaw" })
 end
 
-function bhv_spinning_cheese_loop(o)
+local function bhv_spinning_cheese_loop(o)
     load_object_collision_model()
     o.oFaceAngleYaw = o.oFaceAngleYaw + -64
 end
@@ -1341,7 +1336,7 @@ end
 bhvSpinningCheese = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_spinning_cheese_init, bhv_spinning_cheese_loop)
 
 ---@param o Object
-function bhv_spike_fire_init(o)
+local function bhv_spike_fire_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("hmc_spike_collision")
@@ -1350,7 +1345,7 @@ function bhv_spike_fire_init(o)
 end
 
 ---@param o Object
-function bhv_spike_fire_loop(o)
+local function bhv_spike_fire_loop(o)
     load_object_collision_model()
     o.oInteractStatus = 0
     o.oSubAction = o.oSubAction + 1
