@@ -9,8 +9,8 @@ CCM - 80% done
 BBH - 90% done
 HMC - 93% done
 LLL - 0%
-SSL - 0%
-DDD - 85% done
+SSL - 50%
+DDD - 90% done
 SL - 0%
 WDW - 0%
 TTM - 50% done
@@ -25,5 +25,3 @@ TOTWC - 0%
 VCUTM - 0%
 WMOTR - 0%
 SA - 0%, has working calculator behavior????
-
-total progress: 33.69%

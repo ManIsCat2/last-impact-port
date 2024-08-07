@@ -1424,4 +1424,44 @@ local function bhv_talking_peach(o)
     bhv_toad_message_init()
 end
 
-bhvTalkingPeach = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach, function (o) bhv_toad_message_loop() end)
+bhvTalkingPeach = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach, function(o) bhv_toad_message_loop() end)
+
+local function bhv_ssl_rotating_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("ssl_rotating_platform_collision")
+    o.oCollisionDistance = 5000
+    o.oAngleVelYaw = 50
+end
+
+bhvSSLRotatingPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ssl_rotating_platform,
+    function(o)
+        load_object_collision_model()
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 50
+    end)
+
+---@param o Object
+local function bhv_queen_bee_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oInteractType = INTERACT_TEXT
+    o.hitboxRadius = 140
+    o.hitboxHeight = 260
+    o.hitboxDownOffset = 0
+    o.oIntangibleTimer = 0
+    smlua_anim_util_set_animation(o, "anim_queen_bee")
+end
+
+---@param o Object
+local function bhv_queen_bee_loop(o)
+    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x130)
+    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+        gMarioStates[0].action = ACT_READING_NPC_DIALOG
+        if cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
+            o.oInteractStatus = 0
+        end
+    end
+end
+
+--bhvQueenBee
+hook_behavior(id_bhvBetaBowserAnchor, OBJ_LIST_GENACTOR, true, bhv_queen_bee_init, bhv_queen_bee_loop)

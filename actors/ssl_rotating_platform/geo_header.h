@@ -1,0 +1,13 @@
+extern const GeoLayout ssl_rotating_platform_geo[];
+extern Lights1 ssl_rotating_platform_Material_0_f3d_lights;
+extern Lights1 ssl_rotating_platform_Material_1_f3d_lights;
+extern u8 ssl_rotating_platform__0_rgba16[];
+extern u8 ssl_rotating_platform__1_rgba16[];
+extern Vtx ssl_rotating_platform_000_displaylist_mesh_layer_1_vtx_0[156];
+extern Gfx ssl_rotating_platform_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx ssl_rotating_platform_000_displaylist_mesh_layer_1_vtx_1[104];
+extern Gfx ssl_rotating_platform_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_ssl_rotating_platform_Material_0_f3d[];
+extern Gfx mat_ssl_rotating_platform_Material_1_f3d[];
+extern Gfx ssl_rotating_platform_000_displaylist_mesh_layer_1[];
+extern Gfx ssl_rotating_platform_material_revert_render_settings[];
