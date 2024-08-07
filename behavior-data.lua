@@ -615,13 +615,12 @@ local function bhv_crystal_init(o)
     o.header.gfx.skipInViewCheck = true
 end
 
----scalebyparam2
-local function bhv_crystal_loop(o)
+local function scalebyparam2(o)
     load_object_collision_model()
-    obj_scale(o, o.oBehParams2ndByte / 100)
+    obj_scale(o, o.oBehParams2ndByte / 100 + 1.0)
 end
 
-bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, bhv_crystal_loop)
+bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, scalebyparam2)
 
 local function bhv_silver_star_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -1363,3 +1362,39 @@ local function bhv_spike_fire_loop(o)
 end
 
 hook_behavior(id_bhvFlameMovingForwardGrowing, OBJ_LIST_SURFACE, true, bhv_spike_fire_init, bhv_spike_fire_loop)
+
+local function bhv_chocolate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("chocolate_collision")
+end
+
+bhvChocolate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_chocolate_init,
+    function(o) load_object_collision_model() end)
+
+---@param o Object
+local function bhv_whomp_npc_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oInteractType = INTERACT_TEXT
+    o.hitboxRadius = 150
+    o.hitboxHeight = 350
+    o.oIntangibleTimer = 0
+    o.oAnimations = gObjectAnimations.whomp_seg6_anims_06020A04
+    cur_obj_init_animation(0)
+end
+
+---@param o Object
+local function bhv_whomp_npc_loop(o)
+    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+        gMarioStates[0].action = ACT_READING_NPC_DIALOG
+        local response = cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, DIALOG_069)
+        if response == 1 then
+            o.oInteractStatus = 0 --not done yet, sooo
+        elseif response == 2 then
+            o.oInteractStatus = 0
+        end
+    end
+end
+
+bhvWhompNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_whomp_npc_init, bhv_whomp_npc_loop)
