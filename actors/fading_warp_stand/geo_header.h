@@ -1,0 +1,13 @@
+extern const GeoLayout fading_warp_stand_geo[];
+extern Lights1 fading_warp_stand_Material_0_f3d_lights;
+extern Lights1 fading_warp_stand_Material_1_f3d_lights;
+extern u8 fading_warp_stand__0_rgba16[];
+extern u8 fading_warp_stand__1_rgba16[];
+extern Vtx fading_warp_stand_node_mesh_layer_1_vtx_0[9];
+extern Gfx fading_warp_stand_node_mesh_layer_1_tri_0[];
+extern Vtx fading_warp_stand_node_mesh_layer_1_vtx_1[16];
+extern Gfx fading_warp_stand_node_mesh_layer_1_tri_1[];
+extern Gfx mat_fading_warp_stand_Material_0_f3d[];
+extern Gfx mat_fading_warp_stand_Material_1_f3d[];
+extern Gfx fading_warp_stand_node_mesh_layer_1[];
+extern Gfx fading_warp_stand_material_revert_render_settings[];

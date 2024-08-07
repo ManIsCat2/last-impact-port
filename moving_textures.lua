@@ -37,3 +37,12 @@ add_scroll_target(<id>, "VB_thi_1_0xe078520", <offset>, <count>)
 add_scroll_target(<id>, "VB_thi_1_0xe078340", <offset>, <count>)
 add_scroll_target(<id>, "VB_thi_1_0xe078ac0", <offset>, <count>)
 ]]
+
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06ac70", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06ad60", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06ae50", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06af40", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06b030", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06b120", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06b210", 0, 15)
+add_scroll_target(0xac4a0000, "VB_hmc_1_0xe06b300", 0, 15)

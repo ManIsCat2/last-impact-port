@@ -1283,3 +1283,31 @@ function bhv_marshmallow_loop(o)
 end
 
 bhvMarshMallow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_marshmallow_init, bhv_noteblock_loop)
+
+function bhv_fading_warp_stand_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("fading_warp_stand_collision")
+end
+
+function bhv_fading_warp_stand_loop(o)
+    load_object_collision_model()
+end
+
+---bhvFadingWarpStand
+hook_behavior(id_bhvBowserKeyCourseExit, OBJ_LIST_SURFACE, true, bhv_fading_warp_stand_init, bhv_fading_warp_stand_init)
+
+function bhv_rotating_cupcake_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("cupcake_collision")
+    o.oCollisionDistance = 1200
+    o.oAngleVelYaw = 0x330
+end
+
+function bhv_rotating_cupcake_loop(o)
+    load_object_collision_model()
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x330
+end
+
+bhvRotatingCupcake = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rotating_cupcake_init, bhv_rotating_cupcake_loop)
