@@ -1,3 +1,16 @@
+local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz =
+    find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale,
+    cutscene_object_with_dialog,
+    smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle,
+    approach_s16_symmetric, math.sin, nearest_mario_state_to_object, nearest_player_to_object,
+    save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss,
+    cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get,
+    smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation,
+    dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric,
+    cur_obj_is_mario_ground_pounding_platform, cur_obj_hide,
+    cur_obj_become_intangible, cur_obj_unhide,
+    cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz
+
 local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
@@ -55,7 +68,7 @@ end
 ---function from SM64: Through the ages
 ---@param clampFloor boolean
 ---@param o Object
-function move_obj_with_physics(clampFloor, o)
+local function move_obj_with_physics(clampFloor, o)
     local bounciness = o.oBounciness
     o.oVelY = o.oVelY + o.oGravity
     if o.oVelY < -70.0 then
@@ -87,7 +100,7 @@ end
 hook_behavior(id_bhvWigglerHead, OBJ_LIST_GENACTOR, true, nil, wiggler_loop, "bhvWigglerHead")
 
 ---@param o Object
-function bhv_fuzzy_init(o)
+local function bhv_fuzzy_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
     -- according to quad64
     -- Set Hitbox size (XZ radius = 288, Y radius = 288)
@@ -99,9 +112,9 @@ function bhv_fuzzy_init(o)
 end
 
 ---@param o Object
-function bhv_fuzzy_loop(o)
+local function bhv_fuzzy_loop(o)
     o.oForwardVel = 5
-    o.oPosY = o.oPosY + math.sin(o.oTimer * 0.07) * 2
+    o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     o.oMoveAngleYaw = o.oMoveAngleYaw + 90
     for i = 0, 15 do
         local m = gMarioStates[i]
@@ -118,7 +131,7 @@ end
 bhvFuzzy = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fuzzy_init, bhv_fuzzy_loop)
 
 ---@param o Object
-function bhv_bob_cloud_platform_init(o)
+local function bhv_bob_cloud_platform_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oCollisionDistance = 1600
     o.collisionData = smlua_collision_util_get("bob_cloud_platform_collision")
@@ -126,7 +139,7 @@ function bhv_bob_cloud_platform_init(o)
 end
 
 ---@param o Object
-function bhv_bob_cloud_platform_loop(o)
+local function bhv_bob_cloud_platform_loop(o)
     load_object_collision_model()
     o.oVelY = approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
     if cur_obj_is_mario_on_platform() == 1 then
@@ -324,7 +337,7 @@ end
 
 ---@param o Object
 function bhv_taptap_key_loop(o)
-    o.oPosY = o.oPosY + math.sin(o.oTimer * 0.07) * 2
+    o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x120
     if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
         if o.oAction == 0 then
@@ -751,9 +764,9 @@ function bhv_hmc_static_obj_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     if o.oBehParams2ndByte == 0 then
-        --o.collisionData = smlua_collision_util_get("donut_collision")
+        o.collisionData = smlua_collision_util_get("donut_collision")
     elseif o.oBehParams2ndByte == 1 then
-        --o.collisionData = smlua_collision_util_get("candy_cane_collision")
+        o.collisionData = smlua_collision_util_get("candy_cane_collision")
     end
 end
 
@@ -1278,7 +1291,6 @@ function bhv_marshmallow_loop(o)
     if o.oAction == 1 then
         o.oSubAction = o.oSubAction + 0.5
         obj_act_squished(o.oSubAction)
-
     end
 end
 
@@ -1302,12 +1314,57 @@ function bhv_rotating_cupcake_init(o)
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("cupcake_collision")
     o.oCollisionDistance = 1200
-    o.oAngleVelYaw = 0x330
+    o.oAngleVelYaw = 0x200
 end
 
 function bhv_rotating_cupcake_loop(o)
     load_object_collision_model()
-    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x330
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x200
 end
 
 bhvRotatingCupcake = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rotating_cupcake_init, bhv_rotating_cupcake_loop)
+
+function bhv_spinning_cheese_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("spinning_cheese_collision")
+    o.oCollisionDistance = 4000
+    o.oAngleVelYaw = -64
+    network_init_object(o, true, { "oFaceAngleYaw" })
+end
+
+function bhv_spinning_cheese_loop(o)
+    load_object_collision_model()
+    o.oFaceAngleYaw = o.oFaceAngleYaw + -64
+end
+
+bhvSpinningCheese = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_spinning_cheese_init, bhv_spinning_cheese_loop)
+
+---@param o Object
+function bhv_spike_fire_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("hmc_spike_collision")
+    o.oCollisionDistance = 1500
+    network_init_object(o, true, { "oSubAction", "oAction", "oPosY" })
+end
+
+---@param o Object
+function bhv_spike_fire_loop(o)
+    load_object_collision_model()
+    o.oInteractStatus = 0
+    o.oSubAction = o.oSubAction + 1
+    if o.oSubAction > 70 then
+        o.oAction = o.oAction ~ 1
+        o.oSubAction = 0
+        cur_obj_play_sound_1(SOUND_GENERAL_WATER_LEVEL_TRIG)
+    end
+
+    if o.oAction == 1 then
+        o.oPosY = -282
+    else
+        o.oPosY = -42
+    end
+end
+
+hook_behavior(id_bhvFlameMovingForwardGrowing, OBJ_LIST_SURFACE, true, bhv_spike_fire_init, bhv_spike_fire_loop)

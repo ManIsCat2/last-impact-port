@@ -1,0 +1,13 @@
+extern const GeoLayout spinning_cheese_geo[];
+extern Lights1 spinning_cheese_Material_0_f3d_lights;
+extern Lights1 spinning_cheese_Material_1_f3d_lights;
+extern u8 spinning_cheese__0_rgba16[];
+extern u8 spinning_cheese__1_rgba16[];
+extern Vtx spinning_cheese_000_displaylist_mesh_layer_1_vtx_0[445];
+extern Gfx spinning_cheese_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx spinning_cheese_000_displaylist_mesh_layer_1_vtx_1[1132];
+extern Gfx spinning_cheese_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_spinning_cheese_Material_0_f3d[];
+extern Gfx mat_spinning_cheese_Material_1_f3d[];
+extern Gfx spinning_cheese_000_displaylist_mesh_layer_1[];
+extern Gfx spinning_cheese_material_revert_render_settings[];
