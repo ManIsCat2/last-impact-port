@@ -27,7 +27,7 @@ jobs:
 
     - name: Create a ZIP file of the repository
       run: |
-        zip -r last_impact_coop.zip * -x \*.c \*.h \*.png
+        zip -r last_impact_coop.zip * -x \*.c \*.h \*.png \*.blend \*.blend1 \*.bmp
         
     - name: Push build to Discord webhook
       uses: MineBartekSA/discord-webhook@v2
