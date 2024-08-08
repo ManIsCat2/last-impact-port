@@ -1526,10 +1526,12 @@ local function bhv_und_magikoopa_loop(o)
                 if o.oBehParams2ndByte == 102 then
                     o.oAction = 1
                 else
+                    network_send_object(o, true)
                     o.oAction = 2
                     spawn_triangle_break_particles(20, 138, 3.0, 4);
-                    local kamekstar = spawn_sync_object(id_bhvStar, E_MODEL_STAR, o.oPosX, o.oPosY + 100, o.oPosZ,
+                    spawn_sync_object(id_bhvStar, E_MODEL_STAR, o.oPosX, o.oPosY + 100, o.oPosZ,
                         function(o) o.oBehParams = (3 << 24) end)
+                    obj_mark_for_deletion(o)
                 end
             end
         end
@@ -1551,3 +1553,22 @@ local function bhv_und_magikoopa_loop(o)
 end
 
 bhvUnderCoverMagikoopa = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_und_magikoopa_init, bhv_und_magikoopa_loop)
+
+MODEL_CG_20_GATE = smlua_model_util_get_id("cg_20_gate_geo")
+
+---@param o Object
+local function bhv_cg_20_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("cg_20_gate_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+local function bhv_cg_20_gate_loop(o)
+    load_object_collision_model()
+    if get_curr_star_count() >= 20 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvCG20Gate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cg_20_gate_init, bhv_cg_20_gate_loop)

@@ -1,4 +1,4 @@
-CG (overworld 1) 95% done
+CG (overworld 1) 98% done
 CC (overlworld 2 or 3 idk) 70% done //theres not really behaviors so its higher than 0% lol
 CI (overlworld 2 or 3 idk) 70% done // same for here
 
@@ -28,4 +28,4 @@ VCUTM - 50% - dead%
 WMOTR - 50% - dead%
 SA - 50% - dead%, has working calculator behavior????
 
-total progress: 69.50%
+total progress: 55.57%
