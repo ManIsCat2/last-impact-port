@@ -44,4 +44,15 @@ function fuzzy_dizziness(m)
     end
 end
 
+function remove_all_extra_states()
+    local e = gMarioStateExtras[0]
+    e.fuzzied = false
+    e.fuzziedtimer = 0
+    --[[if gNetworkPlayers[0].currLevelNum ~= LEVEL_BBH then
+        gPlayerSyncTable[0].hasMagicWand = false
+    end]]
+end
+
 hook_event(HOOK_MARIO_UPDATE, fuzzy_dizziness)
+hook_event(HOOK_ON_DEATH, remove_all_extra_states)
+hook_event(HOOK_ON_WARP, remove_all_extra_states)

@@ -8,7 +8,8 @@ movtexqc_register('ccm_1_Movtex_0', 5, 1, 0)
 movtexqc_register('ddd_1_Movtex_0', 23, 1, 0)
 movtexqc_register('ddd_2_Movtex_0', 23, 1, 0)
 movtexqc_register('ddd_3_Movtex_0', 23, 1, 0)
-
+movtexqc_register('lll_1_Movtex_0', 22, 1, 0)
+movtexqc_register('lll_1_Movtex_1', 22, 1, 0)
 
 -- Scroll Textures
 --   Uncomment and replace <id>, <offset> and <count> with the proper values

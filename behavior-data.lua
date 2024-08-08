@@ -1,4 +1,4 @@
-local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop =
+local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id =
     find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale,
     cutscene_object_with_dialog,
     smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle,
@@ -10,10 +10,24 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     cur_obj_is_mario_ground_pounding_platform, cur_obj_hide,
     cur_obj_become_intangible, cur_obj_unhide,
     cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded,
-    bhv_pole_base_loop
+    bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id
+
+if not SM64COOPDX_VERSION then
+    gGlobalSoundSource = { x = 0, y = 0, z = 0 }
+end
+
+gPlayerSyncTable[0].hasMagicWand = false
 
 local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
+end
+
+local function for_each_object_with_behavior(behavior, func) --* function by Isaac
+    local o = obj_get_first_with_behavior_id(behavior)
+    while o do
+        func(o)
+        o = obj_get_next_with_same_behavior_id(o)
+    end
 end
 
 ---@param m MarioState
@@ -90,6 +104,30 @@ local function move_obj_with_physics(clampFloor, o)
     -- wall collision
     cur_obj_resolve_wall_collisions()
 end
+
+
+MODEL_MAGIKOOPA_WAND = smlua_model_util_get_id("magikoopa_wand_geo")
+
+function bhv_update()
+    for_each_object_with_behavior(id_bhvStaticObject,
+        function(o)
+            if obj_has_model_extended(o, MODEL_MAGIKOOPA_WAND) ~= 0 then
+                spawn_non_sync_object(id_bhvSparkleSpawn, E_MODEL_NONE, o.oPosX, o.oPosY, o.oPosZ, nil)
+                o.hitboxHeight = 50
+                o.hitboxRadius = 50
+                for i = 0, 15 do
+                    local state = gMarioStates[i]
+                    if obj_check_hitbox_overlap(o, state.marioObj) then
+                        obj_mark_for_deletion(o)
+                        gPlayerSyncTable[i].hasMagicWand = true
+                        play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+                    end
+                end
+            end
+        end)
+end
+
+hook_event(HOOK_UPDATE, bhv_update)
 
 ---@param o Object
 local function wiggler_loop(o)
@@ -190,6 +228,7 @@ local function bhv_parent_rabbit_init(o)
     o.oIntangibleTimer = 0
     o.oAnimations = gObjectAnimations.mips_seg6_anims_06015634
     cur_obj_init_animation(0)
+    network_init_object(o, true, { "oAction", "oSubAction", "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ", "oForwardVel" })
 end
 
 MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
@@ -237,10 +276,10 @@ local function bhv_parent_rabbit_loop(o)
 
     if o.oBehParams2ndByte == 12 and o.oAction == 0 then
         if o.oPosX == -286 and o.oPosY == -2655 and o.oPosZ == -12644 then
-            if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
+            if obj_check_hitbox_overlap(gMarioStates[0].marioObj, o) then
                 gMarioStates[0].action = ACT_READING_NPC_DIALOG
                 if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 36) ~= 0 then
-                    neareastplayer = nearest_mario_state_to_object(o)
+                    local neareastplayer = nearest_mario_state_to_object(o)
                     spawn_default_star(neareastplayer.pos.x, neareastplayer.pos.y + 230, neareastplayer.pos.z)
                     o.oAction = 2
                 end
@@ -617,7 +656,7 @@ end
 
 local function scalebyparam2(o)
     load_object_collision_model()
-    obj_scale(o, o.oBehParams2ndByte / 100 + 1.0)
+    obj_scale(o, o.oBehParams2ndByte / 100)
 end
 
 bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, scalebyparam2)
@@ -1346,7 +1385,6 @@ end
 ---@param o Object
 local function bhv_spike_fire_loop(o)
     load_object_collision_model()
-    o.oInteractStatus = 0
     o.oSubAction = o.oSubAction + 1
     if o.oSubAction > 70 then
         o.oAction = o.oAction ~ 1
@@ -1465,3 +1503,41 @@ end
 
 --bhvQueenBee
 hook_behavior(id_bhvBetaBowserAnchor, OBJ_LIST_GENACTOR, true, bhv_queen_bee_init, bhv_queen_bee_loop)
+
+---@param o Object
+local function bhv_und_magikoopa_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+    o.hitboxRadius = 80
+    o.hitboxHeight = 90
+    o.oIntangibleTimer = 0
+    o.oOpacity = 255
+    o.oAnimations = gObjectAnimations.toad_seg6_anims_0600FB58
+    cur_obj_init_animation(6)
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+local function bhv_und_magikoopa_loop(o)
+    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
+    local currP = nearest_player_to_object(o)
+    if gPlayerSyncTable[0].hasMagicWand == true then
+        magikdialog = DIALOG_103
+    else
+        magikdialog = DIALOG_102
+    end
+
+    if dist_between_objects(o, gMarioStates[0].marioObj) < 200 then
+        if o.oAction == 0 then
+            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, magikdialog) ~= 0 then
+                o.oAction = 1
+            end
+        end
+    end
+
+    if o.oAction == 1 and dist_between_objects(o, currP) > 200 then
+        o.oAction = 0
+    end
+end
+--bhvQueenBee
+bhvUnderCoverMagikoopa = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_und_magikoopa_init, bhv_und_magikoopa_loop)

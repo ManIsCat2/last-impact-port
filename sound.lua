@@ -26,6 +26,8 @@ smlua_audio_utils_replace_sequence(0x28, 0x25, 75, "28_Seq_custom")
 smlua_audio_utils_replace_sequence(0x29, 0x25, 75, "29_Seq_custom")
 smlua_audio_utils_replace_sequence(0x2D, 0x25, 75, "2D_Seq_custom") --cave theme
 smlua_audio_utils_replace_sequence(0x2E, 0x25, 75, "2E_Seq_custom")
+smlua_audio_utils_replace_sequence(0x31, 0x15, 75, "31_Seq_custom")
+smlua_audio_utils_replace_sequence(0x34, 0x25, 75, "34_Seq_custom")
 smlua_audio_utils_replace_sequence(0x35, 0x2A, 75, "35_Seq_custom") --drybone desert
 smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried honey hive
 smlua_audio_utils_replace_sequence(0x3C, 20, 75, "3C_Seq_custom") --broken song
