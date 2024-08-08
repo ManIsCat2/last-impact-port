@@ -1,0 +1,39 @@
+name: Upload Zip to Discord
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  webhook: https://discord.com/api/webhooks/1240425552700248176/8cIEptH9zF_Guhn3qmG5RgaidwlNTks0JDanM6sgt6jDgc4Bv6TRikuhf1QKWuWrO-uN
+  version: us
+
+  major: 0
+  milestone: 0
+  commit: ${{github.run_number}}
+
+permissions:
+  contents: write
+
+jobs:
+
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create a ZIP file of the repository
+      run: |
+        zip -r last_impact_coop.zip * -x \*.c \*.h \*.png
+        
+    - name: Push build to Discord webhook
+      uses: MineBartekSA/discord-webhook@v2
+      with:
+        webhook: ${{env.webhook}}
+        content: |
+          New commit: ${{github.event.head_commit.message}} (sha: ${{github.event.after}})
+        attachment: |
+          file: last_impact_coop.zip
