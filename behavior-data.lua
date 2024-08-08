@@ -16,8 +16,6 @@ if not SM64COOPDX_VERSION then
     gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 end
 
-gPlayerSyncTable[0].hasMagicWand = false
-
 local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
@@ -119,7 +117,7 @@ function bhv_update()
                     local state = gMarioStates[i]
                     if obj_check_hitbox_overlap(o, state.marioObj) then
                         obj_mark_for_deletion(o)
-                        gPlayerSyncTable[i].hasMagicWand = true
+                        gMarioStateExtras[i].hasMagicWand = true
                         play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
                     end
                 end
@@ -1514,30 +1512,41 @@ local function bhv_und_magikoopa_init(o)
     o.oOpacity = 255
     o.oAnimations = gObjectAnimations.toad_seg6_anims_0600FB58
     cur_obj_init_animation(6)
-    network_init_object(o, true, nil)
+    network_init_object(o, true, { "oAction", "oPosX", "oPosY", "oPosZ", "oBehParams2ndByte" })
 end
 
 ---@param o Object
 local function bhv_und_magikoopa_loop(o)
     o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
     local currP = nearest_player_to_object(o)
-    if gPlayerSyncTable[0].hasMagicWand == true then
-        magikdialog = DIALOG_103
-    else
-        magikdialog = DIALOG_102
-    end
-
-    if dist_between_objects(o, gMarioStates[0].marioObj) < 200 then
+    local curPsync = o.oBehParams2ndByte == DIALOG_103 and currP or gMarioStates[0].marioObj
+    if dist_between_objects(o, curPsync) < 200 then
         if o.oAction == 0 then
-            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, magikdialog) ~= 0 then
-                o.oAction = 1
+            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
+                if o.oBehParams2ndByte == 102 then
+                    o.oAction = 1
+                else
+                    o.oAction = 2
+                    spawn_triangle_break_particles(20, 138, 3.0, 4);
+                    local kamekstar = spawn_sync_object(id_bhvStar, E_MODEL_STAR, o.oPosX, o.oPosY + 100, o.oPosZ,
+                        function(o) o.oBehParams = (3 << 24) end)
+                end
             end
         end
     end
 
-    if o.oAction == 1 and dist_between_objects(o, currP) > 200 then
-        o.oAction = 0
+    if o.oAction == 1 then
+        if dist_between_objects(o, currP) > 200 then
+            o.oAction = 0
+        end
+    elseif o.oAction == 2 then
+
+    end
+
+    if gMarioStateExtras[0].hasMagicWand == true then
+        o.oBehParams2ndByte = DIALOG_103
+    else
+        o.oBehParams2ndByte = DIALOG_102
     end
 end
---bhvQueenBee
 bhvUnderCoverMagikoopa = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_und_magikoopa_init, bhv_und_magikoopa_loop)

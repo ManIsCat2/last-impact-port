@@ -8,6 +8,7 @@ for i = 0, (MAX_PLAYERS - 1) do
     local e = gMarioStateExtras[i]
     e.fuzzied = false
     e.fuzziedtimer = 0
+    e.hasMagicWand = false
 end
 
 vec3f_set(gLevelValues.starPositions.KoopaBobStarPos, 3030, 4500, -4600)
@@ -48,9 +49,9 @@ function remove_all_extra_states()
     local e = gMarioStateExtras[0]
     e.fuzzied = false
     e.fuzziedtimer = 0
-    --[[if gNetworkPlayers[0].currLevelNum ~= LEVEL_BBH then
-        gPlayerSyncTable[0].hasMagicWand = false
-    end]]
+    if gNetworkPlayers[0].currLevelNum ~= LEVEL_LLL then
+        e.hasMagicWand = false
+    end
 end
 
 hook_event(HOOK_MARIO_UPDATE, fuzzy_dizziness)

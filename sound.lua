@@ -1,5 +1,5 @@
 smlua_audio_utils_replace_sequence(0x01, 0x22, 75, "01_Seq_custom") --star collect
-smlua_audio_utils_replace_sequence(0x02, 0x11, 75, "02_Seq_custom") --title
+--smlua_audio_utils_replace_sequence(0x02, 0x11, 75, "02_Seq_custom") --title
 smlua_audio_utils_replace_sequence(0x09, 0x25, 75, "09_Seq_custom") --above the clouds
 smlua_audio_utils_replace_sequence(0x0B, 0x25, 75, "0B_Seq_custom") --dangerous minigame
 smlua_audio_utils_replace_sequence(0x0C, 0x15, 75, "0C_Seq_custom") --water temple
