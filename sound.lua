@@ -7,6 +7,7 @@ smlua_audio_utils_replace_sequence(0x0D, 0x25, 75, "0D_Seq_custom") --star selec
 smlua_audio_utils_replace_sequence(0x0E, 0x25, 75, "0E_Seq_custom") --happy minigame
 smlua_audio_utils_replace_sequence(0x0F, 0x19, 75, "0F_Seq_custom") --protect the cake
 smlua_audio_utils_replace_sequence(0x10, 0x1B, 75, "10_Seq_custom") --the villain appears
+smlua_audio_utils_replace_sequence(0x11, 0x19, 75, "11_Seq_custom")
 smlua_audio_utils_replace_sequence(0x12, 0x1F, 75, "12_Seq_custom") --highscore
 smlua_audio_utils_replace_sequence(0x14, 0x1A, 75, "14_Seq_custom") --race fanfare
 smlua_audio_utils_replace_sequence(0x15, 0x0E, 75, "15_Seq_custom") --star spawn

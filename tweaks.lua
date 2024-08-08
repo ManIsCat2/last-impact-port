@@ -4,8 +4,8 @@ save_file_set_flags(SAVE_FLAG_HAVE_METAL_CAP)
 save_file_set_flags(SAVE_FLAG_HAVE_VANISH_CAP)
 save_file_set_flags(SAVE_FLAG_HAVE_WING_CAP)
 
-gLevelValues.exitCastleLevel = LEVEL_CASTLE_GROUNDS
 gLevelValues.exitCastleWarpNode = 10
+--gLevelValues.disableActs = true
 
 --[[gLevelValues.exitCastleWarpNode = 0
 gBehaviorValues.KingBobombFVel = 2.3509887E-38

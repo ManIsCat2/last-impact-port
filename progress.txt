@@ -1,4 +1,4 @@
-CG (overworld 1) 90% done
+CG (overworld 1) 95% done
 CC (overlworld 2 or 3 idk) 70% done //theres not really behaviors so its higher than 0% lol
 CI (overlworld 2 or 3 idk) 70% done // same for here
 
@@ -19,7 +19,7 @@ TTM - 50% done
 THI - 75% done
 TTC - 50% - dead%
 RR - 93% done
-BITDW - 50% - dead%
+BITDW - 75%
 BITFS - 50% - dead%
 PSS - 50% - dead%
 COTMC - 50% - dead%
@@ -28,4 +28,4 @@ VCUTM - 50% - dead%
 WMOTR - 50% - dead%
 SA - 50% - dead%, has working calculator behavior????
 
-total progress: 67.30%
+total progress: 69.50%
