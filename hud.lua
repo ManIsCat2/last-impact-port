@@ -70,42 +70,44 @@ function hud_render_power_meter(health, x, y, width, height)
 end
 
 function base_hud()
-    local screenWidth = djui_hud_get_screen_width()
-    local screenHeight = djui_hud_get_screen_height()
+    if _G.OmmEnabled and _G.OmmApi.omm_get_setting(gMarioStates[0], "hud") == 0 or not _G.OmmEnabled then
+        local screenWidth = djui_hud_get_screen_width()
+        local screenHeight = djui_hud_get_screen_height()
 
-    ---@type MarioState
-    local m = gMarioStates[0]
+        ---@type MarioState
+        local m = gMarioStates[0]
 
-    -- Life Counter
+        -- Life Counter
 
-    local lifeIcon = charSelect and charSelect.character_get_life_icon(0) or m.character.hudHeadTexture
-    djui_hud_render_texture(lifeIcon, 22, 15, 1, 1)
+        local lifeIcon = charSelect and charSelect.character_get_life_icon(0) or m.character.hudHeadTexture
+        djui_hud_render_texture(lifeIcon, 22, 15, 1, 1)
 
-    djui_hud_print_text("@", 38, 15, 1)
-    djui_hud_print_text(tostring(m.numLives), 54, 15, 1)
+        djui_hud_print_text("@", 38, 15, 1)
+        djui_hud_print_text(tostring(m.numLives), 54, 15, 1)
 
-    -- Star Counter
+        -- Star Counter
 
-    local starIcon = charSelect and charSelect.character_get_star_icon(0) or gTextures.star
-    djui_hud_render_texture(starIcon, 22, screenHeight - 32, 1, 1)
+        local starIcon = charSelect and charSelect.character_get_star_icon(0) or gTextures.star
+        djui_hud_render_texture(starIcon, 22, screenHeight - 32, 1, 1)
 
-    djui_hud_print_text("@", 38, screenHeight - 32, 1)
-    djui_hud_print_text(tostring(m.numStars), 54, screenHeight - 32, 1)
+        djui_hud_print_text("@", 38, screenHeight - 32, 1)
+        djui_hud_print_text(tostring(m.numStars), 54, screenHeight - 32, 1)
 
-    -- Coin Counter + Reds
+        -- Coin Counter + Reds
 
-    djui_hud_render_texture(gTextures.coin, screenWidth - 76, screenHeight - 32, 1, 1)
-    djui_hud_print_text("@", screenWidth - 76 + 16, screenHeight - 32, 1)
-    djui_hud_print_text(tostring(m.numCoins), screenWidth - 76 + 32, screenHeight - 32, 1)
-    numRedCoins = gMarioStates[0].area.numRedCoins - obj_count_objects_with_behavior_id(id_bhvRedCoin)
+        djui_hud_render_texture(gTextures.coin, screenWidth - 76, screenHeight - 32, 1, 1)
+        djui_hud_print_text("@", screenWidth - 76 + 16, screenHeight - 32, 1)
+        djui_hud_print_text(tostring(m.numCoins), screenWidth - 76 + 32, screenHeight - 32, 1)
+        numRedCoins = gMarioStates[0].area.numRedCoins - obj_count_objects_with_behavior_id(id_bhvRedCoin)
 
-    if is_game_paused() and numRedCoins > 0 then
-        djui_hud_print_text("\"@" .. tostring(numRedCoins), screenWidth / 2 + 16, screenHeight - 32, 1)
+        if is_game_paused() and numRedCoins > 0 then
+            djui_hud_print_text("\"@" .. tostring(numRedCoins), screenWidth / 2 + 16, screenHeight - 32, 1)
+        end
+
+        -- Custom 6 Slice Power Meter
+
+        hud_render_power_meter(m.health, screenWidth - 66, 8, 64, 64)
     end
-
-    -- Custom 6 Slice Power Meter
-
-    hud_render_power_meter(m.health, screenWidth - 66, 8, 64, 64)
 end
 
 function on_hud_render_behind()

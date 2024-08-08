@@ -20,7 +20,7 @@ local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
 
-local function for_each_object_with_behavior(behavior, func) --* function by Isaac
+function for_each_object_with_behavior(behavior, func) --* function by Isaac
     local o = obj_get_first_with_behavior_id(behavior)
     while o do
         func(o)
@@ -1549,4 +1549,5 @@ local function bhv_und_magikoopa_loop(o)
         o.oBehParams2ndByte = DIALOG_102
     end
 end
+
 bhvUnderCoverMagikoopa = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_und_magikoopa_init, bhv_und_magikoopa_loop)

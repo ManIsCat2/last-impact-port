@@ -3,12 +3,14 @@ if _G.OmmEnabled then
         ---------------
         -- Game data --
         ---------------
-        
-        _G.OmmApi.omm_force_setting("hud", 3)
-        
+
         -----------------
         -- Level stars --
         -----------------
+
+        if id_bhvParentAndChildRabbit then
+            _G.OmmApi.omm_register_star_behavior(id_bhvParentAndChildRabbit, "Mips Parent and Child", "MIPS PARENT AND CHILD", function(bhvParams) return true end)
+        end
 
         --------------------
         -- Star behaviors --

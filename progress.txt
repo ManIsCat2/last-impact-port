@@ -2,26 +2,30 @@ CG (overworld 1) 90% done
 CC (overlworld 2 or 3 idk) 70% done //theres not really behaviors so its higher than 0% lol
 CI (overlworld 2 or 3 idk) 70% done // same for here
 
+//some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
+
 BOB - 95% done
-WF - 0%
-JRB  0%
+WF - 50% - dead%
+JRB  50% - dead%
 CCM - 80% done
 BBH - 90% done
 HMC - 93% done
-LLL - 0%
-SSL - 50%
+LLL - 60% done
+SSL - 50% done
 DDD - 90% done
-SL - 0%
-WDW - 0%
+SL - 50% - dead%
+WDW - 50% - dead%
 TTM - 50% done
-THI - 60% done
-TTC - 0%
+THI - 75% done
+TTC - 50% - dead%
 RR - 93% done
-BITDW - 0%
-BITFS - 0%
-PSS - 0%
-COTMC - 0%
-TOTWC - 0%
-VCUTM - 0%
-WMOTR - 0%
-SA - 0%, has working calculator behavior????
+BITDW - 50% - dead%
+BITFS - 50% - dead%
+PSS - 50% - dead%
+COTMC - 50% - dead%
+TOTWC - 50% - dead%
+VCUTM - 50% - dead%
+WMOTR - 50% - dead%
+SA - 50% - dead%, has working calculator behavior????
+
+total progress: 67.30%
