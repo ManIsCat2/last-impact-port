@@ -1,0 +1,13 @@
+extern const GeoLayout bitdw_floating_boat_geo[];
+extern Lights1 bitdw_floating_boat_Material_0_f3d_lights;
+extern Lights1 bitdw_floating_boat_Material_1_f3d_lights;
+extern u8 bitdw_floating_boat__0_rgba16[];
+extern u8 bitdw_floating_boat__1_rgba16[];
+extern Vtx bitdw_floating_boat_000_displaylist_mesh_layer_1_vtx_0[74];
+extern Gfx bitdw_floating_boat_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bitdw_floating_boat_000_displaylist_mesh_layer_1_vtx_1[64];
+extern Gfx bitdw_floating_boat_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_bitdw_floating_boat_Material_0_f3d[];
+extern Gfx mat_bitdw_floating_boat_Material_1_f3d[];
+extern Gfx bitdw_floating_boat_000_displaylist_mesh_layer_1[];
+extern Gfx bitdw_floating_boat_material_revert_render_settings[];

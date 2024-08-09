@@ -762,22 +762,23 @@ bhvLilyPad = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_lilypad_init, bhv_li
 [0021A098 / 13000298]    09 00 00 00 // End of loop
 ]]
 
+MODEL_COTMC_TREE = smlua_model_util_get_id("cotmc_tree_geo")
+
 ---@param o Object
-function bhv_cotmc_tree_init(o)
+local function bhv_cotmc_tree_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.hitboxRadius = 160
     o.hitboxHeight = 864
     o.oIntangibleTimer = 0
-    --o.oAnimations = gObjectAnimations.goomba_seg8_anims_0801DA4C
-    --o.oGraphYOffset = 200
-    --o.oCollisionDistance = 19455 --kaze what the fuck
-    --o.oInteractType = INTERACT_BREAKABLE
-    --o.collisionData = smlua_collision_util_get("cotmc_tree_collision")
+    o.oCollisionDistance = 19455 --kaze what the fuck
+    o.oInteractType = INTERACT_BREAKABLE
+    o.collisionData = smlua_collision_util_get("cotmc_tree_collision")
+    obj_set_model_extended(o, MODEL_COTMC_TREE)
 end
 
 ---@param o Object
-function bhv_cotmc_tree_loop(o)
-    djui_chat_message_create("GG")
+local function bhv_cotmc_tree_loop(o)
+    load_object_collision_model()
 end
 
 bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, bhv_cotmc_tree_loop)
@@ -1092,7 +1093,12 @@ local function bhv_cage_opener_loop(o)
     end
 
     if o.oAction == 1 then
-        cur_obj_scale_over_time(2, 3, 1.5, 0.2);
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction < 50 then
+            cur_obj_scale_over_time(2, 3, 1.5, 0.2);
+        else
+            obj_scale(o, 0)
+        end
     end
 end
 
@@ -1572,3 +1578,33 @@ local function bhv_cg_20_gate_loop(o)
 end
 
 bhvCG20Gate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cg_20_gate_init, bhv_cg_20_gate_loop)
+
+MODEL_FIRE_BULLY = smlua_model_util_get_id("fire_bully_geo") -- for bitdw (bowsers fiery castle)
+
+---@param o Object
+local function bhv_bitdw_floating_boat_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("bitdw_floating_boat_collision")
+    o.oCollisionDistance = 1000
+    o.header.gfx.skipInViewCheck = true
+    o.oMoveAngleYaw = -16384
+    o.oFaceAngleYaw = o.oFaceAngleYaw +16384
+    --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
+end
+
+---@param o Object
+local function bhv_bitdw_floating_boat_loop(o) -- not done yet
+    load_object_collision_model()
+
+    --[[local currP = nearest_player_to_object(o)
+    if o.oAction == 0 then
+        if cur_obj_is_mario_on_platform() == 1 then
+            o.oAction = 1
+        end
+    end
+    if o.oAction == 1 then
+        o.oForwardVel = 12
+    end]]
+end
+
+bhvBITDWBoat = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitdw_floating_boat_init, bhv_bitdw_floating_boat_loop)

@@ -45,7 +45,7 @@ EXIT(),
 const LevelScript local_area_thi_1_[] = {
 AREA(1,Geo_thi_1_0x1e61700),
 TERRAIN(col_thi_1_0xe094020),
-SET_BACKGROUND_MUSIC(0,60),
+SET_BACKGROUND_MUSIC(0,0),
 TERRAIN_TYPE(0),
 JUMP_LINK(local_objects_thi_1_),
 JUMP_LINK(local_warps_thi_1_),
@@ -154,7 +154,7 @@ RETURN()
 const LevelScript local_area_thi_2_[] = {
 AREA(2,Geo_thi_2_0x1e61600),
 TERRAIN(col_thi_2_0x7012d00),
-SET_BACKGROUND_MUSIC(0,60),
+SET_BACKGROUND_MUSIC(0,0),
 TERRAIN_TYPE(0),
 JUMP_LINK(local_objects_thi_2_),
 JUMP_LINK(local_warps_thi_2_),
