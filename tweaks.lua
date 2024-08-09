@@ -5,6 +5,7 @@ save_file_set_flags(SAVE_FLAG_HAVE_VANISH_CAP)
 save_file_set_flags(SAVE_FLAG_HAVE_WING_CAP)
 
 gLevelValues.exitCastleWarpNode = 10
+gLevelValues.exitCastleLevel = LEVEL_CASTLE_GROUNDS
 --gLevelValues.disableActs = true
 
 --[[gLevelValues.exitCastleWarpNode = 0

@@ -70,6 +70,8 @@ local function obj_pitch_angle_to_object(obj1, obj2)
     return angle
 end
 
+local function approach_s32_symmetric(curr, targ, inc) approach_s32(curr, targ, inc, inc) end
+
 local function spawn_object(parent, model, behaviorId)
     local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
@@ -1588,7 +1590,7 @@ local function bhv_bitdw_floating_boat_init(o)
     o.oCollisionDistance = 1000
     o.header.gfx.skipInViewCheck = true
     o.oMoveAngleYaw = -16384
-    o.oFaceAngleYaw = o.oFaceAngleYaw +16384
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 16384
     --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
 end
 
@@ -1608,3 +1610,53 @@ local function bhv_bitdw_floating_boat_loop(o) -- not done yet
 end
 
 bhvBITDWBoat = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitdw_floating_boat_init, bhv_bitdw_floating_boat_loop)
+
+---@param o Object
+local function bhv_thi_floating_platform_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("thi_flying_train_collision")
+    o.oForwardVel = 15
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oAnimState", "oAction", "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ" })
+end
+
+local sThiTrainTrajectoryInfo = {
+    { timer = 150, action = 1, moveangle = -5459 },
+    { timer = 265, action = 2, moveangle = 6109 },
+    { timer = 360, action = 3, moveangle = 13725 },
+    { timer = 470, action = 4, moveangle = 16384 },
+    { timer = 575, action = 5, moveangle = 19549 },
+    { timer = 675, action = 6, moveangle = 26941 },
+    { timer = 730, action = 7, moveangle = -27251 },
+    { timer = 820, action = 8, moveangle = -19612 },
+    { timer = 920, action = 9, moveangle = -16384 },
+}
+
+---@param o Object
+local function bhv_thi_floating_platform_loop(o)
+    load_object_collision_model()
+    --djui_chat_message_create(tostring(o.oAnimState))
+    o.oAnimState = o.oAnimState + 1
+    for i = 1, #sThiTrainTrajectoryInfo do
+        if o.oAnimState == sThiTrainTrajectoryInfo[i].timer then
+            o.oAction = sThiTrainTrajectoryInfo[i].action
+        end
+    end
+
+    if o.oAction ~= 0 then
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, sThiTrainTrajectoryInfo[o.oAction].moveangle, 200)
+        if o.oMoveAngleYaw == sThiTrainTrajectoryInfo[o.oAction].moveangle then
+            o.oAction = 0
+        end
+    end
+
+    if o.oAnimState == 950 then
+        cur_obj_set_pos_to_home()
+        o.oAnimState = 0
+    end
+end
+
+---bhvThiFlyingTrain
+hook_behavior(id_bhvBigBullyWithMinions, OBJ_LIST_SURFACE, true, bhv_thi_floating_platform_init,
+    bhv_thi_floating_platform_loop)
