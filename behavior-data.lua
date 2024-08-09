@@ -1678,7 +1678,7 @@ end
 local function bhv_bowser_door_key_loop(o)
     load_object_collision_model()
     if (save_file_get_flags() & SAVE_FLAG_HAVE_KEY_1) ~= 0 then
-        if dist_between_objects(o, nearest_player_to_object(o)) < 2000 then
+        if dist_between_objects(o, nearest_player_to_object(o)) < 1200 then
             o.oAction = 1
         end
     end
