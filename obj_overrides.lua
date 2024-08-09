@@ -31,7 +31,7 @@ end
 hook_behavior(id_bhvToadMessage, OBJ_LIST_GENACTOR, false, nil, bhv_toad_custom_loop)
 
 --STRAsleect 
-MODEL_STARSELECT = smlua_model_util_get_id("starselect_geo")
+local MODEL_STARSELECT = smlua_model_util_get_id("starselect_geo")
 
 local function act_selector_init(o)
     obj_set_model_extended(o, MODEL_STARSELECT)
