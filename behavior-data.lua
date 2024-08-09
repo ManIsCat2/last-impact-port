@@ -1,4 +1,4 @@
-local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id =
+local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags =
     find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale,
     cutscene_object_with_dialog,
     smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle,
@@ -10,7 +10,7 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     cur_obj_is_mario_ground_pounding_platform, cur_obj_hide,
     cur_obj_become_intangible, cur_obj_unhide,
     cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded,
-    bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id
+    bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags
 
 if not SM64COOPDX_VERSION then
     gGlobalSoundSource = { x = 0, y = 0, z = 0 }
@@ -1657,6 +1657,34 @@ local function bhv_thi_floating_platform_loop(o)
     end
 end
 
----bhvThiFlyingTrain
+---bhvThiFlyingBus
 hook_behavior(id_bhvBigBullyWithMinions, OBJ_LIST_SURFACE, true, bhv_thi_floating_platform_init,
     bhv_thi_floating_platform_loop)
+
+-- the door in CG area 2
+
+MODEL_BOWSER_KEY_GATE = smlua_model_util_get_id("bowser_door_key_geo")
+
+---@param o Object
+local function bhv_bowser_door_key_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("bowser_door_key_collision")
+    o.header.gfx.skipInViewCheck = true
+    o.oAnimState = o.oFaceAngleYaw
+    network_init_object(o, true, { "oFaceAngleYaw", "oAction" })
+end
+
+---@param o Object
+local function bhv_bowser_door_key_loop(o)
+    load_object_collision_model()
+    if (save_file_get_flags() & SAVE_FLAG_HAVE_KEY_1) ~= 0 then
+        if dist_between_objects(o, nearest_player_to_object(o)) < 2000 then
+            o.oAction = 1
+        end
+    end
+    if o.oAction == 1 then
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, (o.oAnimState == 0 and -13000 or -16384 - 3384), 300)
+    end
+end
+
+bhvBowserKeyGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bowser_door_key_init, bhv_bowser_door_key_loop)
