@@ -1703,4 +1703,3 @@ local function bhv_soup(o)
 end
 
 bhvSoup = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_soup, function(o) load_object_collision_model() end)
---093305710
