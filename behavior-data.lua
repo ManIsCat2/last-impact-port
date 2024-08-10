@@ -79,7 +79,7 @@ end
 local function approach_s32_symmetric(curr, targ, inc) approach_s32(curr, targ, inc, inc) end
 
 local function spawn_object(parent, model, behaviorId)
-    local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
+    local obj = spawn_non_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
 
     obj_copy_pos_and_angle(obj, parent)
@@ -357,7 +357,7 @@ local function bhv_taptap_loop(o)
         o.oBowserUnk106 = o.oBowserUnk106 + 1
         if o.oBowserUnk106 > 80 then
             if o.oBehParams2ndByte == 1 then
-                spawn_sync_object(bhvTapTapKey, MODEL_TAPTAP_KEY, o.oPosX, o.oPosY, o.oPosZ, nil)
+                spawn_non_sync_object(bhvTapTapKey, MODEL_TAPTAP_KEY, o.oPosX, o.oPosY, o.oPosZ, nil)
                 obj_mark_for_deletion(o)
             else
                 o.oNumLootCoins = 2
@@ -438,7 +438,7 @@ local function bhv_flower_generator_loop(o)
 
         if o.oTimer == 40 then
             o.oDoorUnk100 = 27184
-            spawn_sync_object(bhvWhiteFlower, MODEL_WHITE_FLOWER, -3428, o.oPosY + 500, -4409,
+            spawn_non_sync_object(bhvWhiteFlower, MODEL_WHITE_FLOWER, -3428, o.oPosY + 500, -4409,
                 function(obj) obj.parentObj = o end)
         end
         if o.oTimer == 88 then
