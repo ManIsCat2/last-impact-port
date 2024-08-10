@@ -1704,3 +1704,37 @@ local function bhv_soup(o)
 end
 
 bhvSoup = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_soup, function(o) load_object_collision_model() end)
+
+---@param o Object
+local function bhv_animated_hands_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oIntangibleTimer = 0
+    o.oDamageOrCoinValue = 2
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+local function bhv_animated_hands_loop(o)
+    local curP = nearest_player_to_object(o)
+    o.oInteractStatus = 0
+
+    if dist_between_objects(o, curP) < 500 then
+        smlua_anim_util_set_animation(o, "anim_animated_hand_attack")
+    else
+        smlua_anim_util_set_animation(o, "anim_animated_hand_idle")
+        o.oInteractType = INTERACT_IGLOO_BARRIER
+        o.hitboxRadius = 0
+        o.hitboxHeight = 0
+    end
+    if dist_between_objects(o, curP) < 2400 then
+        o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, curP), 0x180)
+    end
+
+    if smlua_anim_util_get_current_animation_name(o) == "anim_animated_hand_attack" and o.header.gfx.animInfo.animFrame == 38 then
+        o.oInteractType = INTERACT_DAMAGE
+        o.hitboxRadius = 450
+        o.hitboxHeight = 700
+    end
+end
+
+hook_behavior(id_bhvPyramidElevator, OBJ_LIST_GENACTOR, true, bhv_animated_hands_init, bhv_animated_hands_loop)

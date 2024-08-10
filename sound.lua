@@ -1,5 +1,6 @@
 smlua_audio_utils_replace_sequence(0x01, 0x22, 75, "01_Seq_custom") --star collect
 --smlua_audio_utils_replace_sequence(0x02, 0x11, 75, "02_Seq_custom") --title
+smlua_audio_utils_replace_sequence(0x06, 0x25, 75, "06_Seq_custom")
 smlua_audio_utils_replace_sequence(0x09, 0x25, 75, "09_Seq_custom") --above the clouds
 smlua_audio_utils_replace_sequence(0x0B, 0x25, 75, "0B_Seq_custom") --dangerous minigame
 smlua_audio_utils_replace_sequence(0x0C, 0x15, 75, "0C_Seq_custom") --water temple
@@ -37,4 +38,5 @@ smlua_audio_utils_replace_sequence(0x3C, 20, 75, "3C_Seq_custom") --broken song
 smlua_audio_utils_replace_sequence(0x3E, 0x0C, 75, "3E_Seq_custom") --starlight zone
 smlua_audio_utils_replace_sequence(0x40, 0x11, 75, "40_Seq_custom") --gamble game gallery
 smlua_audio_utils_replace_sequence(0x41, 0x25, 75, "41_Seq_custom") --underground sewer
+smlua_audio_utils_replace_sequence(0x42, 0x18, 75, "42_Seq_custom")
 smlua_audio_utils_replace_sequence(0x43, 0x2A, 75, "43_Seq_custom") --rainbow road
