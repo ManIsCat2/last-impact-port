@@ -3,7 +3,6 @@ NestPlacementsVanilla = {
         nests = {},
     },
 
-
    -- super sweet sugarland
     [LEVEL_HMC] = {
         nests = {

@@ -9,7 +9,7 @@ WF - 50% - dead%
 JRB  50% - dead%
 CCM - 80% done
 BBH - 90% done
-HMC - 95% done
+HMC - 97% done
 LLL - 60% done
 SSL - 50% done
 DDD - 90% done
@@ -17,7 +17,7 @@ SL - 50% - dead%
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
-TTC - 50% - dead%
+TTC - 60%
 RR - 93% done
 BITDW - 80%
 BITFS - 50% - dead%

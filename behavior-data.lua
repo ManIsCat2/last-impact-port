@@ -234,7 +234,7 @@ local function bhv_parent_rabbit_init(o)
     o.oIntangibleTimer = 0
     o.oAnimations = gObjectAnimations.mips_seg6_anims_06015634
     cur_obj_init_animation(0)
-    network_init_object(o, true, { "oAction", "oSubAction", "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ", "oForwardVel" })
+    --network_init_object(o, true, { "oAction", "oSubAction", "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ", "oForwardVel" })
 end
 
 MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
@@ -1738,3 +1738,30 @@ local function bhv_animated_hands_loop(o)
 end
 
 hook_behavior(id_bhvPyramidElevator, OBJ_LIST_GENACTOR, true, bhv_animated_hands_init, bhv_animated_hands_loop)
+
+
+---@param o Object
+local function bhv_hmc_gear_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+end
+
+---@param o Object
+local function bhv_hmc_gear_loop(o)
+    local beh1st = (o.oBehParams >> 24) & 0xFF
+    local s50Time10 = 50 * 10
+    if beh1st == 16 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
+    elseif beh1st == 240 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
+    elseif beh1st == 12 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
+    elseif beh1st == 244 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
+    elseif beh1st == 24 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
+    elseif beh1st == 232 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
+    end
+end
+
+bhvHMCGear = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_hmc_gear_init, bhv_hmc_gear_loop)
