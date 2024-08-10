@@ -38,6 +38,12 @@ function get_curr_star_count()
     return save_file_get_total_star_count(get_current_save_file_num() - 1, COURSE_NONE, COURSE_SA)
 end
 
+---@param key integer
+---@return boolean
+function save_has_key(key)
+    return (save_file_get_flags() & key) ~= 0
+end
+
 local function obj_rotate_pitch_toward(o, target, increment)
     local startPitch = o.oMoveAnglePitch
     o.oMoveAnglePitch = approach_s16_symmetric(o.oMoveAnglePitch, target, increment)
@@ -1080,7 +1086,7 @@ local function bhv_cage_opener_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("cage_opener_collision")
-    network_init_object(o, true, { "oSubAction", "oAction" })
+    network_init_object(o, true, { "oSubAction", "oAction", "oAnimState" })
 end
 
 ---@param o Object
@@ -1095,8 +1101,8 @@ local function bhv_cage_opener_loop(o)
     end
 
     if o.oAction == 1 then
-        o.oSubAction = o.oSubAction + 1
-        if o.oSubAction < 50 then
+        o.oAnimState = o.oAnimState + 1
+        if o.oAnimState < 50 then
             cur_obj_scale_over_time(2, 3, 1.5, 0.2);
         else
             obj_scale(o, 0)
@@ -1677,7 +1683,7 @@ end
 ---@param o Object
 local function bhv_bowser_door_key_loop(o)
     load_object_collision_model()
-    if (save_file_get_flags() & SAVE_FLAG_HAVE_KEY_1) ~= 0 then
+    if save_has_key(SAVE_FLAG_HAVE_KEY_1) then
         if dist_between_objects(o, nearest_player_to_object(o)) < 1200 then
             o.oAction = 1
         end
@@ -1688,3 +1694,13 @@ local function bhv_bowser_door_key_loop(o)
 end
 
 bhvBowserKeyGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bowser_door_key_init, bhv_bowser_door_key_loop)
+
+local function bhv_soup(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 2000
+    o.collisionData = smlua_collision_util_get("soup_collision")
+end
+
+bhvSoup = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_soup, function(o) load_object_collision_model() end)
+--093305710

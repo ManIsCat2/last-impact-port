@@ -1,0 +1,8 @@
+
+const GeoLayout soup_geo[]= {
+GEO_CULLING_RADIUS(4000),
+GEO_OPEN_NODE(),
+GEO_DISPLAY_LIST(1,DL_custom_geo_190015a0_0x701ab80),
+GEO_CLOSE_NODE(),
+GEO_END(),
+};
