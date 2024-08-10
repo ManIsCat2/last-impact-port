@@ -1597,6 +1597,7 @@ local function bhv_bitdw_floating_boat_init(o)
     o.header.gfx.skipInViewCheck = true
     o.oMoveAngleYaw = -16384
     o.oFaceAngleYaw = o.oFaceAngleYaw + 16384
+    save_file_set_flags(SAVE_FLAG_HAVE_KEY_1)
     --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
 end
 
