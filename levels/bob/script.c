@@ -83,6 +83,9 @@ RETURN()
 };
 const LevelScript local_objects_bob_1_[] = {
 OBJECT_WITH_ACTS(0,-5675,-1396,2244,0,68,0,0xa0000, bhvSpinAirborneWarp,63),
+//START
+OBJECT_WITH_ACTS(MODEL_BOB_NORMAL,0,0,0,0,0,0,0, bhvBOBLevelModel,63),
+//END
 OBJECT_WITH_ACTS(0,-6927,2683,19573,0,-154,0,0xb0000, bhvUnusedParticleSpawn,63),
 OBJECT_WITH_ACTS(100,6327,-2646,-8171,0,-153,0,0x10c0000, id_bhvParentAndChildRabbit,63),
 OBJECT_WITH_ACTS(100,-82,-2648,-12815,0,-28,0,0x2e0000, id_bhvParentAndChildRabbit,63),

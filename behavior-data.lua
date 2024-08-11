@@ -1846,3 +1846,23 @@ local function bhv_boat_loop(o)
 end
 
 bhvBoat = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_boat_init, bhv_boat_loop)
+
+MODEL_BOB_RAINBOW = smlua_model_util_get_id("bob_level_model_rainbow_geo")
+MODEL_BOB_NORMAL = smlua_model_util_get_id("bob_level_model_geo")
+
+---@param o Object
+local function bhv_bob_level_model_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+local function bhv_bob_level_model_loop(o)
+    if gMarioStateExtras[0].fuzzied then
+        obj_set_model_extended(o, MODEL_BOB_RAINBOW)
+    else
+        obj_set_model_extended(o, MODEL_BOB_NORMAL)
+    end
+end
+
+bhvBOBLevelModel = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_bob_level_model_init, bhv_bob_level_model_loop)
