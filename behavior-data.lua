@@ -1745,23 +1745,25 @@ local function bhv_hmc_gear_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
 end
 
+local s50Time10 = 50 * 10
+local Ns50Time10 = -(50 * 10)
+
+local angleAdjust = {
+    [16] = s50Time10,
+    [240] = Ns50Time10,
+    [12] = s50Time10,
+    [244] = Ns50Time10,
+    [24] = s50Time10,
+    [232] = Ns50Time10
+}
+
 ---@param o Object
 local function bhv_hmc_gear_loop(o)
     local beh1st = (o.oBehParams >> 24) & 0xFF
-    local s50Time10 = 50 * 10
-    if beh1st == 16 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
-    elseif beh1st == 240 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
-    elseif beh1st == 12 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
-    elseif beh1st == 244 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
-    elseif beh1st == 24 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll + s50Time10
-    elseif beh1st == 232 then
-        o.oFaceAngleRoll = o.oFaceAngleRoll - s50Time10
+
+    if angleAdjust[beh1st] then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + angleAdjust[beh1st]
     end
 end
 
-bhvHMCGear = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_hmc_gear_init, bhv_hmc_gear_loop)
+bhvHMCGear = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_hmc_gear_init, bhv_hmc_gear_loop)

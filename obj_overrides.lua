@@ -13,16 +13,17 @@ hook_behavior(id_bhvThwomp, OBJ_LIST_SURFACE, false, nil, bhv_thwomp_custom)
 
 -- toad that has a expire date when you get the amount of stars needed
 
+local sDisappearToadsInfo = {
+    [DIALOG_054] = 15,
+    [DIALOG_019] = 20,
+    [DIALOG_053] = 4,
+}
+
 ---@param o Object
 local function bhv_toad_custom_loop(o)
-    if ((o.oBehParams >> 24) & 0xFF) == DIALOG_054 then
-        if get_curr_star_count() >= 15 then
-            obj_mark_for_deletion(o)
-        end
-    end
-
-    if ((o.oBehParams >> 24) & 0xFF) == DIALOG_019 then
-        if get_curr_star_count() >= 20 then
+    local oBehParams1stByte = ((o.oBehParams >> 24) & 0xFF)
+    if sDisappearToadsInfo[oBehParams1stByte] then
+        if get_curr_star_count() >= sDisappearToadsInfo[oBehParams1stByte] then
             obj_mark_for_deletion(o)
         end
     end
