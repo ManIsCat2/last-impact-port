@@ -1767,3 +1767,36 @@ local function bhv_hmc_gear_loop(o)
 end
 
 bhvHMCGear = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_hmc_gear_init, bhv_hmc_gear_loop)
+
+---@param o Object
+local function bhv_hmc_moving_platform_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.collisionData = smlua_collision_util_get("hmc_moving_platform_collision")
+    o.oCollisionDistance = 1000
+    o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
+    --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
+end
+
+---@param o Object
+local function bhv_hmc_moving_platform_loop(o)
+    load_object_collision_model()
+
+    --- only moves for the local player, others player wont see it moving.
+    if o.oAction == 0 then
+        o.oForwardVel = 0
+        if gMarioStates[0].marioObj.platform == o then
+            o.oAction = 1
+        end
+    end
+    if o.oAction == 1 then
+        o.oForwardVel = -12
+    end
+
+    if o.oPosZ < -15500 then
+        o.oAction = 0
+        cur_obj_set_pos_to_home()
+    end
+end
+
+bhvHMCMovingPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc_moving_platform_init, bhv_hmc_moving_platform_loop)
