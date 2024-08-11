@@ -1870,14 +1870,40 @@ MODEL_BOB_NORMAL = smlua_model_util_get_id("bob_level_model_geo")
 local function bhv_bob_level_model_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
 end
 
 ---@param o Object
 local function bhv_bob_level_model_loop(o)
     if gMarioStateExtras[0].fuzzied then
         obj_set_model_extended(o, MODEL_BOB_RAINBOW)
+        if o.oAction ~= 1 and o.oAction ~= 2 and o.oAction ~= 3 then
+            o.oAction = math.random(1, 3)
+        end
     else
         obj_set_model_extended(o, MODEL_BOB_NORMAL)
+        o.oAction = 0
+    end
+
+    if o.oAction == 0 then
+        cur_obj_set_pos_to_home()
+        o.oFaceAnglePitch = 0
+        o.oFaceAngleRoll = 0
+        o.oFaceAngleYaw = 0
+    end
+
+    if o.oAction == 1 then
+        o.oPosX = o.oPosX + math.random(5, 10)
+        o.oPosZ = o.oPosZ + math.random(2, 6)
+        o.oPosY = o.oPosY + 4
+    end
+
+    if o.oAction == 2 then
+        o.oPosY = o.oPosY + 4
+    end
+
+    if o.oAction == 3 then
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 50
     end
 end
 
