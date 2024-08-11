@@ -1825,23 +1825,39 @@ local function bhv_boat_init(o)
     o.oCollisionDistance = 1200
     o.header.gfx.skipInViewCheck = true
     cur_obj_set_home_once()
-    --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
+    network_init_object(o, true, { "oAction", "oForwardVel", "oPosX", "oPosZ" })
 end
 
 ---@param o Object
 local function bhv_boat_loop(o)
     load_object_collision_model()
 
-    if o.oBehParams2ndByte == 0 then
-        if get_curr_star_count() >= 4 then
-            obj_mark_for_deletion(o)
+    if o.oAction == 0 then
+        o.oForwardVel = 0
+        if o.oBehParams2ndByte == 0 then
+            if get_curr_star_count() >= 4 then
+                obj_mark_for_deletion(o)
+            end
         end
-    end
 
-    if o.oBehParams2ndByte == 1 then
-        if get_curr_star_count() < 4 then
-            obj_mark_for_deletion(o)
+        if o.oBehParams2ndByte == 1 then
+            if get_curr_star_count() < 4 then
+                obj_mark_for_deletion(o)
+            end
+
+            if cur_obj_is_any_player_on_platform() == 1 then
+                o.oAction = 1
+            end
         end
+    elseif o.oAction == 1 then
+        o.oForwardVel = 25
+        local CurrM = nearest_mario_state_to_object(o)
+        CurrM.pos.x = o.oPosX
+        CurrM.pos.y = o.oPosY + 90
+        CurrM.pos.z = o.oPosZ
+    end
+    if o.oPosX < -1600 then
+        cur_obj_set_pos_to_home(); o.oAction = 0
     end
 end
 

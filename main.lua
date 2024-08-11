@@ -1,6 +1,6 @@
 -- name: [WIP] \\#FF4500\\SM64 Last Impact
 -- incompatible: romhack
--- description: A groundbreaking hack from the legendary Kaze introducing tons of new\nmechanics, an extensive amount of levels, written with over 100,000 lines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#A9A9A9\\Fearl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\\#00FFFF\\Steven (Rideable Yoshi)
+-- description: A groundbreaking hack from the legendary Kaze introducing tons of new\nmechanics, an extensive amount of levels, written with over 100,000 lines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#A9A9A9\\Fearl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\n\\#00FFFF\\Steven (Rideable Yoshi)
 
 gMarioStateExtras = {}
 for i = 0, (MAX_PLAYERS - 1) do
