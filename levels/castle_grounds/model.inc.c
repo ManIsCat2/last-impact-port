@@ -526,6 +526,10 @@ Lights1 castle_grounds_dl__118_4277B019_c_bmp_f3d_lights = gdSPDefLights1(
 	0x7F, 0x7F, 0x7F,
 	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
 
+Lights1 castle_grounds_dl_sm64_water_mat_lights = gdSPDefLights1(
+	0x7F, 0x7F, 0x7F,
+	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
+
 Lights1 castle_grounds_dl_Material_0_f3d_lights = gdSPDefLights1(
 	0x7F, 0x7F, 0x7F,
 	0xFF, 0xFF, 0xFF, 0x28, 0x28, 0x28);
@@ -26603,6 +26607,20 @@ Gfx castle_grounds_dl_348_6DAF90F6_c_bmp_002_mesh_layer_1_tri_2[] = {
 	gsSPEndDisplayList(),
 };
 
+Vtx castle_grounds_dl_Water_Box_Mesh_mesh_layer_5_vtx_0[4] = {
+	{{{-15688, 0, 15688}, 0, {-10256, 11248}, {0x00, 0x7F, 0x00, 0xFF}}},
+	{{{15688, 0, 15688}, 0, {10224, 11248}, {0x00, 0x7F, 0x00, 0xFF}}},
+	{{{15688, 0, -15688}, 0, {10224, -9232}, {0x00, 0x7F, 0x00, 0xFF}}},
+	{{{-15688, 0, -15688}, 0, {-10256, -9232}, {0x00, 0x7F, 0x00, 0xFF}}},
+};
+
+Gfx castle_grounds_dl_Water_Box_Mesh_mesh_layer_5_tri_0[] = {
+	gsSPVertex(castle_grounds_dl_Water_Box_Mesh_mesh_layer_5_vtx_0 + 0, 4, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(0, 2, 3, 0),
+	gsSPEndDisplayList(),
+};
+
 Vtx castle_grounds_dl_node_mesh_layer_1_vtx_0[68] = {
 	{{{7046, -551, -1908}, 0, {2028, 4026}, {0xA6, 0xB1, 0xD6, 0xFF}}},
 	{{{7131, -600, -1816}, 0, {1680, 3174}, {0x9E, 0xB1, 0xED, 0xFF}}},
@@ -33106,6 +33124,27 @@ Gfx mat_revert_castle_grounds_dl__118_4277B019_c_bmp_f3d[] = {
 	gsSPEndDisplayList(),
 };
 
+Gfx mat_castle_grounds_dl_sm64_water_mat[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0),
+	gsSPClearGeometryMode(G_CULL_BACK),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsDPSetPrimColor(0, 0, 255, 255, 255, 100),
+	gsSPSetLights1(castle_grounds_dl_sm64_water_mat_lights),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, castle_grounds_dl_segment2_11C58_rgba16_rgba16),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
+	gsDPLoadBlock(7, 0, 0, 1023, 256),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, 0),
+	gsDPSetTileSize(0, 0, 0, 124, 124),
+	gsSPEndDisplayList(),
+};
+
+Gfx mat_revert_castle_grounds_dl_sm64_water_mat[] = {
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_CULL_BACK),
+	gsSPEndDisplayList(),
+};
+
 Gfx mat_castle_grounds_dl_Material_0_f3d[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
@@ -33585,6 +33624,13 @@ Gfx castle_grounds_dl_348_6DAF90F6_c_bmp_002_mesh_layer_1[] = {
 	gsSPDisplayList(mat_castle_grounds_dl__118_4277B019_c_bmp_f3d),
 	gsSPDisplayList(castle_grounds_dl_348_6DAF90F6_c_bmp_002_mesh_layer_1_tri_2),
 	gsSPDisplayList(mat_revert_castle_grounds_dl__118_4277B019_c_bmp_f3d),
+	gsSPEndDisplayList(),
+};
+
+Gfx castle_grounds_dl_Water_Box_Mesh_mesh_layer_5[] = {
+	gsSPDisplayList(mat_castle_grounds_dl_sm64_water_mat),
+	gsSPDisplayList(castle_grounds_dl_Water_Box_Mesh_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_castle_grounds_dl_sm64_water_mat),
 	gsSPEndDisplayList(),
 };
 

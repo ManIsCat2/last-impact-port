@@ -23,6 +23,7 @@ smlua_audio_utils_replace_sequence(0x20, 0x1B, 75, "20_Seq_custom")
 smlua_audio_utils_replace_sequence(0x21, 0x24, 75, "21_Seq_custom")
 smlua_audio_utils_replace_sequence(0x23, 0x25, 75, "23_Seq_custom") --wildlife valley
 smlua_audio_utils_replace_sequence(0x24, 0x25, 75, "24_Seq_custom")
+smlua_audio_utils_replace_sequence(0x25, 0x11, 75, "25_Seq_custom")
 smlua_audio_utils_replace_sequence(0x27, 0x25, 75, "27_Seq_custom")
 smlua_audio_utils_replace_sequence(0x28, 0x25, 75, "28_Seq_custom")
 smlua_audio_utils_replace_sequence(0x29, 0x25, 75, "29_Seq_custom")
@@ -34,7 +35,7 @@ smlua_audio_utils_replace_sequence(0x34, 0x25, 75, "34_Seq_custom")
 smlua_audio_utils_replace_sequence(0x35, 0x2A, 75, "35_Seq_custom") --drybone desert
 smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried honey hive
 smlua_audio_utils_replace_sequence(0x38, 0x17, 75, "38_Seq_custom")
-smlua_audio_utils_replace_sequence(0x3C, 20, 75, "3C_Seq_custom") --broken song
+smlua_audio_utils_replace_sequence(0x3C, 20, 75, "3C_Seq_custom") --broken song //uses streamed music
 smlua_audio_utils_replace_sequence(0x3E, 0x0C, 75, "3E_Seq_custom") --starlight zone
 smlua_audio_utils_replace_sequence(0x40, 0x11, 75, "40_Seq_custom") --gamble game gallery
 smlua_audio_utils_replace_sequence(0x41, 0x25, 75, "41_Seq_custom") --underground sewer

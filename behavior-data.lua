@@ -1799,4 +1799,50 @@ local function bhv_hmc_moving_platform_loop(o)
     end
 end
 
-bhvHMCMovingPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc_moving_platform_init, bhv_hmc_moving_platform_loop)
+bhvHMCMovingPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_hmc_moving_platform_init,
+    bhv_hmc_moving_platform_loop)
+
+local function bhv_2d_star_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+local function bhv_2d_star_loop(o)
+    o.oAnimState = o.oAnimState + 1
+end
+
+bhv2DStar = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_2d_star_init, bhv_2d_star_loop)
+
+--//bhvYellowBackgroundInMenu
+MODEL_MINIGAME_HOUSE = smlua_model_util_get_id("minigame_house_geo")
+
+MODEL_BOAT = smlua_model_util_get_id("boat_geo")
+
+---@param o Object
+local function bhv_boat_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.collisionData = smlua_collision_util_get("boat_collision")
+    o.oCollisionDistance = 1200
+    o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
+    --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
+end
+
+---@param o Object
+local function bhv_boat_loop(o)
+    load_object_collision_model()
+
+    if o.oBehParams2ndByte == 0 then
+        if get_curr_star_count() >= 4 then
+            obj_mark_for_deletion(o)
+        end
+    end
+
+    if o.oBehParams2ndByte == 1 then
+        if get_curr_star_count() < 4 then
+            obj_mark_for_deletion(o)
+        end
+    end
+end
+
+bhvBoat = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_boat_init, bhv_boat_loop)
