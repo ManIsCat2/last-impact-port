@@ -1908,3 +1908,15 @@ local function bhv_bob_level_model_loop(o)
 end
 
 bhvBOBLevelModel = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_bob_level_model_init, bhv_bob_level_model_loop)
+
+---@param o Object
+local function bhv_air_ballon(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 80
+    o.hitboxHeight = 160
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+end
+
+--bhvAirBalloon (TOTWC)
+hook_behavior(id_bhvKoopaShell, OBJ_LIST_LEVEL, true, bhv_air_ballon, nil)
