@@ -113,6 +113,7 @@ end
 
 
 MODEL_MAGIKOOPA_WAND = smlua_model_util_get_id("magikoopa_wand_geo")
+MODEL_TOTWC_STATIC_CLOUD = smlua_model_util_get_id("totwc_static_cloud_geo")
 
 function bhv_update()
     for_each_object_with_behavior(id_bhvStaticObject,
@@ -129,6 +130,10 @@ function bhv_update()
                         play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
                     end
                 end
+            end
+
+            if obj_has_model_extended(o, MODEL_TOTWC_STATIC_CLOUD) ~= 0 then
+                o.header.gfx.skipInViewCheck = true
             end
         end)
 end
