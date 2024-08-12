@@ -1831,9 +1831,9 @@ local function bhv_boat_init(o)
     o.oCollisionDistance = 1200
     o.header.gfx.skipInViewCheck = true
     cur_obj_set_home_once()
-    network_init_object(o, true, { "oAction", "oForwardVel", "oPosX", "oPosZ" })
 end
 
+--only moves for local player
 ---@param o Object
 local function bhv_boat_loop(o)
     load_object_collision_model()
@@ -1851,19 +1851,17 @@ local function bhv_boat_loop(o)
                 obj_mark_for_deletion(o)
             end
 
-            if cur_obj_is_any_player_on_platform() == 1 then
+            if cur_obj_is_mario_on_platform() == 1 then
                 o.oAction = 1
             end
         end
     elseif o.oAction == 1 then
         o.oForwardVel = 25
         local CurrM = nearest_mario_state_to_object(o)
-        CurrM.pos.x = o.oPosX
-        CurrM.pos.y = o.oPosY + 90
-        CurrM.pos.z = o.oPosZ
-    end
-    if o.oPosX < -1600 then
-        cur_obj_set_pos_to_home(); o.oAction = 0
+        local realM = gMarioStates[0]
+        realM.pos.x = o.oPosX
+        realM.pos.y = o.oPosY + 90
+        realM.pos.z = o.oPosZ
     end
 end
 
