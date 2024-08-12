@@ -191,7 +191,7 @@ function bhv_cloudflower_init(obj)
     obj.oIntangibleTimer = 0
     obj.oGravity = 3
     obj.oFaceAnglePitch = obj.oFaceAnglePitch + -16384
-    obj.oGraphYOffset = 20
+    obj.oGraphYOffset = 0
     network_init_object(obj, true, nil)
 end
 

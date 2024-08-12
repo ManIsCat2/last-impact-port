@@ -23,7 +23,7 @@ BITDW - 80%
 BITFS - 50% - dead%
 PSS - 50% - dead%
 COTMC - 75%
-TOTWC - 50% - dead%
-VCUTM - 50% - dead%
+TOTWC - 70%
+VCUTM - 70%
 WMOTR - 50% - dead%
 SA - 50% - dead%, has working calculator behavior????
