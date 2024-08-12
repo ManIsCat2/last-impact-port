@@ -4,18 +4,20 @@
 -- Models
 
 E_MODEL_BEE_MARIO = smlua_model_util_get_id("bee_mario_geo")
+E_MODEL_CLOUD_MARIO = smlua_model_util_get_id("cloud_mario_geo")
 
 -- Powerups enum
 
 NORMAL = 0
 BEE = 1
+CLOUD = 2
 
 characterPowerupModels = {
-    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cat = nil, },
-    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cat = nil, },
-    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cat = nil, },
-    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cat = nil, },
-    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cat = nil, },
+    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
+    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
+    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
+    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
+    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
 }
 
 -- Powerups are a PlayerSyncTable by the way.
@@ -28,6 +30,7 @@ function get_character_model(m)
     powerupStates = {
         [NORMAL] = { modelId = nil },
         [BEE] = { modelId = CPM.bee and CPM.bee or CPMM.bee },
+        [CLOUD] = { modelId = CPM.cloud and CPM.cloud or CPMM.cloud },
     }
 end
 
@@ -136,22 +139,11 @@ end
 
 hook_event(HOOK_UPDATE, energy_meter)
 
----@param obj Object
-function bhv_beesuit_init(obj)
-    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    obj_set_model_extended(obj, E_MODEL_BEE_SHROOM)
-    obj_scale(obj, 0.5)
-    obj.hitboxRadius = 30
-    obj.hitboxHeight = 30
-    obj.oIntangibleTimer = 0
-    obj.oGravity = 3
-    obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
-    network_init_object(obj, true, nil)
-end
+local cloudcount = 0
 
+---@param powerup integer
 ---@param obj Object
-function bhv_beesuit_loop(obj)
-    object_step()
+function general_powerup_handler(obj, powerup)
     for i = 0, 15 do
         local m = gMarioStates[i]
         if obj.oAction == 0 then
@@ -160,7 +152,7 @@ function bhv_beesuit_loop(obj)
                 cur_obj_hide()
                 obj.oTimer = 0
                 cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
-                gPlayerSyncTable[i].powerup = BEE
+                gPlayerSyncTable[i].powerup = powerup
             end
         end
     end
@@ -178,9 +170,146 @@ function bhv_beesuit_loop(obj)
     end
 end
 
-bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv_beesuit_loop)
+---@param obj Object
+function bhv_beesuit_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj_set_model_extended(obj, E_MODEL_BEE_SHROOM)
+    obj_scale(obj, 0.5)
+    obj.hitboxRadius = 30
+    obj.hitboxHeight = 30
+    obj.oIntangibleTimer = 0
+    obj.oGravity = 3
+    obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
+    network_init_object(obj, true, nil)
+end
 
-xMid = djui_hud_get_screen_width() / 2
+---@param obj Object
+function bhv_cloudflower_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj.hitboxRadius = 80
+    obj.hitboxHeight = 80
+    obj.oIntangibleTimer = 0
+    obj.oGravity = 3
+    obj.oFaceAnglePitch = obj.oFaceAnglePitch + -16384
+    obj.oGraphYOffset = 20
+    network_init_object(obj, true, nil)
+end
+
+---@param obj Object
+function bhv_beesuit_loop(obj)
+    object_step()
+    general_powerup_handler(obj, BEE)
+end
+
+---@param obj Object
+function bhv_cloudflower_loop(obj)
+    general_powerup_handler(obj, CLOUD)
+end
+
+---only deletes for local player
+---@param obj Object
+function bhv_add_cloud_count_loop(obj)
+    obj.oFaceAngleYaw = obj.oFaceAngleYaw + 0x110
+    local m = gMarioStates[0]
+    if obj.oAction == 0 then
+        if obj_check_hitbox_overlap(m.marioObj, obj) then
+            obj.oAction = 1
+            cur_obj_hide()
+            obj.oTimer = 0
+            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+            if cloudcount ~= 3 and gPlayerSyncTable[0].powerup == CLOUD then
+                cloudcount = cloudcount + 1
+            end
+        end
+    end
+
+
+    if obj.oAction == 1 then
+        obj.hitboxRadius = 0
+        obj.hitboxHeight = 0
+        if obj.oTimer > 200 then
+            obj.oTimer = 0
+            obj.oAction = 0
+            cur_obj_unhide()
+            obj.hitboxRadius = 65
+            obj.hitboxHeight = 65
+        end
+    end
+end
+
+bhvAddCloudCount = hook_behavior(nil, OBJ_LIST_GENACTOR, true,
+    function(obj) obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE end,
+    bhv_add_cloud_count_loop)
+
+function cloudbox(o)
+    o.oCollisionDistance = 1400
+    o.oFaceAnglePitch = 0
+    o.oFaceAngleRoll = 0
+    --o.globalPlayerIndex = (o.parentObj.globalPlayerIndex)
+    --djui_chat_message_create(tostring(o.oTimer))
+    if o.oTimer < 15 then
+        o.header.gfx.scale.x = o.header.gfx.scale.x + 0.097;
+        o.header.gfx.scale.y = o.header.gfx.scale.x;
+        o.header.gfx.scale.z = o.header.gfx.scale.x;
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 0x0800;
+    else
+        if cur_obj_wait_then_blink(360, 20) ~= 0 or cur_obj_is_mario_ground_pounding_platform() == 1 then
+            spawn_mist_particles_variable(0, -40.0, 46.0)
+            mark_obj_for_deletion(o)
+        else
+            load_object_collision_model()
+        end
+    end
+end
+
+-- Function to check the cloud count
+function checkCloudCount()
+    local gMarioState = gMarioStates[0]
+    local gMarioObject = gMarioState.marioObj
+    local o
+
+    if cloudcount > obj_count_objects_with_behavior_id(bhvCloudFollow) then
+        o = spawn_object(gMarioObject, MODEL_CLOUDSPAWN, bhvCloudFollow)
+        o.oHiddenBlueCoinSwitch = gMarioObject.oHiddenBlueCoinSwitch
+        gMarioObject.oHiddenBlueCoinSwitch = o
+        obj_scale(o, 0.3)
+    end
+end
+
+-- Function for cloud following
+local gapclose = 0.1
+function cloudfollowing(o)
+    local gMarioState = gMarioStates[0]
+    local gMarioObject = gMarioState.marioObj
+    --o.globalPlayerIndex = (o.parentObj.globalPlayerIndex)
+    --obj_set_billboard(o)
+    local x, y, z
+    if gMarioObject.oHiddenBlueCoinSwitch == o then
+        y = gMarioState.pos.y + 150
+        x = gMarioState.pos.x + sins(gMarioState.faceAngle.y) * 50
+        z = gMarioState.pos.z + coss(gMarioState.faceAngle.y) * 50
+    elseif gMarioObject.oHiddenBlueCoinSwitch and (gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch == o) then
+        y = gMarioObject.oHiddenBlueCoinSwitch.oPosY + 10
+        x = gMarioObject.oHiddenBlueCoinSwitch.oPosX + sins(gMarioObject.oHiddenBlueCoinSwitch.oMoveAngleYaw) * 50
+        z = gMarioObject.oHiddenBlueCoinSwitch.oPosZ + coss(gMarioObject.oHiddenBlueCoinSwitch.oMoveAngleYaw) * 50
+    elseif gMarioObject.oHiddenBlueCoinSwitch and (gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch) then
+        y = gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch.oPosY + 10
+        x = gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch.oPosX +
+            sins(gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch.oMoveAngleYaw) * 50
+        z = gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch.oPosZ +
+            coss(gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch.oMoveAngleYaw) * 50
+    end
+    o.oPosX = o.oPosX + (x - o.oPosX) * gapclose
+    o.oPosY = o.oPosY + (y - o.oPosY) * gapclose
+    o.oPosZ = o.oPosZ + (z - o.oPosZ) * gapclose
+
+    if gPlayerSyncTable[0].powerup ~= CLOUD then
+        mark_obj_for_deletion(o)
+    end
+end
+
+bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv_beesuit_loop)
+bhvCloudFlower = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cloudflower_init, bhv_cloudflower_loop)
 
 ---@param m MarioState
 function bee_update(m)
@@ -199,6 +328,55 @@ function bee_update(m)
     end
     if m.action & ACT_FLAG_AIR == 0 then
         gPlayerSyncTable[0].energyBar = 72
+    end
+end
+
+MODEL_CLOUDSPAWN = smlua_model_util_get_id("cloudspawn")
+
+function cloud_powerup(m)
+    if gPlayerSyncTable[0].powerup == CLOUD then
+        checkCloudCount()
+    end
+    --djui_chat_message_create(tostring(cloudcount))
+    if m.playerIndex ~= 0 then return end
+    local gMarioObject = m.marioObj
+    --djui_chat_message_create(tostring(gMarioObject.oHiddenBlueCoinSwitch))
+    if gPlayerSyncTable[0].powerup == CLOUD then
+        local a
+        if (m.action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION) ~= 0 then
+            if (m.action & ACT_FLAG_INVULNERABLE) == 0 then
+                if (m.controller.buttonPressed & A_BUTTON) ~= 0 then
+                    if m.pos.y > m.floorHeight + 72 then
+                        if (m.action ~= ACT_WALL_KICK_AIR) or (m.actionTimer > 1) then
+                            if (m.action ~= ACT_FORWARD_ROLLOUT) and (m.action ~= ACT_FLYING_TRIPLE_JUMP) then
+                                if cloudcount > 0 then
+                                    spawn_sync_object(bhvCloudSpawn, MODEL_CLOUDSPAWN, m.pos.x,
+                                        m.pos.y - 130, m.pos.z, nil)
+
+                                    spawn_mist_particles_variable(0, -40.0, 46.0)
+                                    m.vel.y = 30
+                                    m.forwardVel = 0
+                                    --[[gMarioState.inertia[1] = 0
+                                    gMarioState.inertia[2] = 0
+                                    gMarioState.inertia[3] = 0]]
+                                    set_mario_action(m, ACT_FORWARD_ROLLOUT, 0)
+                                    cloudcount = cloudcount - 1
+                                    if cloudcount == 0 then
+                                        --gPlayerSyncTable[0].powerup = NORMAL not in last impacT!!!!
+                                        obj_mark_for_deletion(gMarioObject.oHiddenBlueCoinSwitch)
+                                    elseif cloudcount == 1 then
+                                        obj_mark_for_deletion(gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch)
+                                    elseif cloudcount == 2 then
+                                        obj_mark_for_deletion(gMarioObject.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch
+                                            .oHiddenBlueCoinSwitch)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
 end
 
@@ -228,3 +406,4 @@ end
 hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
+hook_event(HOOK_MARIO_UPDATE, cloud_powerup)

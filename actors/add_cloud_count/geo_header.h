@@ -1,0 +1,15 @@
+extern const GeoLayout add_cloud_count_geo[];
+extern Lights1 add_cloud_count_f3dlite_material_002_lights;
+extern Lights1 add_cloud_count_Material_0_f3d_002_lights;
+extern u8 add_cloud_count_dot_i8[];
+extern u8 add_cloud_count__0_rgba16[];
+extern Vtx add_cloud_count_000_displaylist_mesh_layer_5_vtx_0[80];
+extern Gfx add_cloud_count_000_displaylist_mesh_layer_5_tri_0[];
+extern Vtx add_cloud_count_000_displaylist_mesh_layer_1_vtx_0[58];
+extern Gfx add_cloud_count_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_add_cloud_count_f3dlite_material_002[];
+extern Gfx mat_revert_add_cloud_count_f3dlite_material_002[];
+extern Gfx mat_add_cloud_count_Material_0_f3d_002[];
+extern Gfx add_cloud_count_000_displaylist_mesh_layer_5[];
+extern Gfx add_cloud_count_000_displaylist_mesh_layer_1[];
+extern Gfx add_cloud_count_material_revert_render_settings[];

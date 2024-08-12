@@ -12,6 +12,7 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded,
     bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags
 
+mark_obj_for_deletion = obj_mark_for_deletion
 if not SM64COOPDX_VERSION then
     gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 end
@@ -78,7 +79,7 @@ end
 
 local function approach_s32_symmetric(curr, targ, inc) approach_s32(curr, targ, inc, inc) end
 
-local function spawn_object(parent, model, behaviorId)
+function spawn_object(parent, model, behaviorId)
     local obj = spawn_non_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
 
@@ -1882,8 +1883,8 @@ end
 local function bhv_bob_level_model_loop(o)
     if gMarioStateExtras[0].fuzzied then
         obj_set_model_extended(o, MODEL_BOB_RAINBOW)
-        if o.oAction ~= 1 and o.oAction ~= 2 and o.oAction ~= 3 then
-            o.oAction = math.random(1, 3)
+        if o.oAction ~= 1 and o.oAction ~= 2  then
+            o.oAction = math.random(1, 2)
         end
     else
         obj_set_model_extended(o, MODEL_BOB_NORMAL)
@@ -1900,15 +1901,11 @@ local function bhv_bob_level_model_loop(o)
     if o.oAction == 1 then
         o.oPosX = o.oPosX + math.random(5, 10)
         o.oPosZ = o.oPosZ + math.random(2, 6)
-        o.oPosY = o.oPosY + 4
     end
 
     if o.oAction == 2 then
-        o.oPosY = o.oPosY + 4
-    end
-
-    if o.oAction == 3 then
-        o.oFaceAngleYaw = o.oFaceAngleYaw + 50
+        o.oFaceAnglePitch = o.oFaceAnglePitch + 10
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 13
     end
 end
 
