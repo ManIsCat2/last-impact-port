@@ -1882,7 +1882,7 @@ local function bhv_bob_level_model_loop(o)
     if gMarioStateExtras[0].fuzzied then
         obj_set_model_extended(o, MODEL_BOB_RAINBOW)
         if o.oAction ~= 1 and o.oAction ~= 2  then
-            o.oAction = math.random(1, 2)
+            o.oAction = math.random(1, 3)
         end
     else
         obj_set_model_extended(o, MODEL_BOB_NORMAL)
@@ -1897,13 +1897,17 @@ local function bhv_bob_level_model_loop(o)
     end
 
     if o.oAction == 1 then
-        o.oPosX = o.oPosX + math.random(5, 10)
+        o.oPosX = o.oPosX + math.random(2, 3)
         o.oPosZ = o.oPosZ + math.random(2, 6)
     end
 
     if o.oAction == 2 then
-        o.oFaceAnglePitch = o.oFaceAnglePitch + 10
-        o.oFaceAngleRoll = o.oFaceAngleRoll + 13
+        o.oFaceAnglePitch = o.oFaceAnglePitch + 2
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 3
+    end
+
+    if o.oAction == 3 then
+        o.oPosY = o.oPosY - 1.5
     end
 end
 
@@ -1942,3 +1946,22 @@ end
 
 --bhvAirBalloon2 (SL)
 hook_behavior(id_bhvClockMinuteHand, OBJ_LIST_LEVEL, true, bhv_air_ballon2, nil)
+
+---@param o Object
+local function bhv_sl_cloudy_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("sl_cloudy_platform_collision")
+    o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
+end
+
+---@param o Object
+local function bhv_sl_cloudy_platform_loop(o)
+    load_object_collision_model()
+    o.oPosY = o.oPosY+ approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
+    if cur_obj_is_mario_on_platform() ~= 0 then
+        o.oPosY = o.oPosY - 3
+    end
+end
+
+bhvSLCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sl_cloudy_platform, bhv_sl_cloudy_platform_loop)
