@@ -27,6 +27,7 @@ smlua_audio_utils_replace_sequence(0x25, 0x11, 75, "25_Seq_custom")
 smlua_audio_utils_replace_sequence(0x27, 0x25, 75, "27_Seq_custom")
 smlua_audio_utils_replace_sequence(0x28, 0x25, 75, "28_Seq_custom")
 smlua_audio_utils_replace_sequence(0x29, 0x25, 75, "29_Seq_custom")
+smlua_audio_utils_replace_sequence(0x2B, 0x25, 75, "2B_Seq_custom")
 smlua_audio_utils_replace_sequence(0x2D, 0x25, 75, "2D_Seq_custom") --cave theme
 smlua_audio_utils_replace_sequence(0x2E, 0x25, 75, "2E_Seq_custom")
 smlua_audio_utils_replace_sequence(0x31, 0x15, 75, "31_Seq_custom")

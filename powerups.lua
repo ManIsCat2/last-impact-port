@@ -55,8 +55,11 @@ end)
 
 -- Resets the player stats when leaving a level or dying
 
+local cloudcount = 0 -- for cloud flower
+
 function on_death_warp()
     gPlayerSyncTable[0].powerup = NORMAL
+    cloudcount = 0
 end
 
 -- Removes the player's powerup on damage
@@ -66,6 +69,7 @@ function damage_check(m)
     if m.playerIndex ~= 0 then return end
     if m.hurtCounter > 0 or m.action == ACT_BURNING_GROUND or m.action == ACT_BURNING_JUMP then
         gPlayerSyncTable[0].powerup = NORMAL
+        cloudcount = 0
     end
 end
 
@@ -138,8 +142,6 @@ function energy_meter()
 end
 
 hook_event(HOOK_UPDATE, energy_meter)
-
-local cloudcount = 0
 
 ---@param powerup integer
 ---@param obj Object
@@ -217,9 +219,7 @@ function bhv_add_cloud_count_loop(obj)
             cur_obj_hide()
             obj.oTimer = 0
             play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
-            if cloudcount ~= 3 and gPlayerSyncTable[0].powerup == CLOUD then
-                cloudcount = cloudcount + 1
-            end
+            cloudcount = cloudcount + 1
         end
     end
 
@@ -302,10 +302,6 @@ function cloudfollowing(o)
     o.oPosX = o.oPosX + (x - o.oPosX) * gapclose
     o.oPosY = o.oPosY + (y - o.oPosY) * gapclose
     o.oPosZ = o.oPosZ + (z - o.oPosZ) * gapclose
-
-    if gPlayerSyncTable[0].powerup ~= CLOUD then
-        mark_obj_for_deletion(o)
-    end
 end
 
 bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv_beesuit_loop)
@@ -334,9 +330,7 @@ end
 MODEL_CLOUDSPAWN = smlua_model_util_get_id("cloudspawn")
 
 function cloud_powerup(m)
-    if gPlayerSyncTable[0].powerup == CLOUD then
-        checkCloudCount()
-    end
+    checkCloudCount()
     --djui_chat_message_create(tostring(cloudcount))
     if m.playerIndex ~= 0 then return end
     local gMarioObject = m.marioObj

@@ -611,8 +611,9 @@ Gfx mat_add_cloud_count_f3dlite_material_002[] = {
 	gsDPPipeSync(),
 	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0),
 	gsSPClearGeometryMode(G_CULL_BACK),
+	gsSPClearGeometryMode(G_LIGHTING),
 	gsSPTexture(65535, 65535, 0, 0, 1),
-	gsDPSetPrimColor(0, 0, 255, 255, 255, 34),
+	gsDPSetPrimColor(0, 0, 255, 255, 255, 98),
 	gsSPSetLights1(add_cloud_count_f3dlite_material_002_lights),
 	gsDPSetTextureImage(G_IM_FMT_I, G_IM_SIZ_8b, 1, add_cloud_count_dot_i8),
 	gsDPSetTile(G_IM_FMT_I, G_IM_SIZ_8b, 1, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
@@ -625,6 +626,7 @@ Gfx mat_add_cloud_count_f3dlite_material_002[] = {
 Gfx mat_revert_add_cloud_count_f3dlite_material_002[] = {
 	gsDPPipeSync(),
 	gsSPSetGeometryMode(G_CULL_BACK),
+	gsSPSetGeometryMode(G_LIGHTING),
 	gsSPEndDisplayList(),
 };
 

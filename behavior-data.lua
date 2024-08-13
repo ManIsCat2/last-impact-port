@@ -1920,3 +1920,25 @@ end
 
 --bhvAirBalloon (TOTWC)
 hook_behavior(id_bhvKoopaShell, OBJ_LIST_LEVEL, true, bhv_air_ballon, nil)
+
+--[[[0021BA7C / 13001C7C] 00 04 0000 // Start Behavior (Object type = 4)
+[0021BA80 / 13001C80] 23 00 00 00 0140 0500 // Set Collision sphere size (XZ radius = 320, Y radius = 1280)
+[0021BA88 / 13001C88] 0E 45 2000 // (Set value) obj->_0x19C = (float)8192
+[0021BA8C / 13001C8C] 04 00 00 00 13000288 // Jump to address 0x13000288 --probably koopa shell?
+[0021A088 / 13000288] 0E 2A 0002 // (Set value) obj->_0x130 = (float)2
+[0021A08C / 1300028C] 08 00 00 00 // Start of loop
+[0021A090 / 13000290]    10 05 0000 // (Set value) obj->_0x9C = 0
+[0021A094 / 13000294]    10 2B 0000 // (Set value) obj->_0x134 = 0
+[0021A098 / 13000298]    09 00 00 00 // End of loop]]
+
+---@param o Object
+local function bhv_air_ballon2(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 320
+    o.hitboxHeight = 1280
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+end
+
+--bhvAirBalloon2 (SL)
+hook_behavior(id_bhvClockMinuteHand, OBJ_LIST_LEVEL, true, bhv_air_ballon2, nil)

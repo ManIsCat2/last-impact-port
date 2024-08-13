@@ -6,24 +6,24 @@ CI (overlworld 2 or 3 idk) 70% done // same for here
 
 BOB - 95% done
 WF - 50% - dead%
-JRB  65%
+JRB  65% done
 CCM - 80% done
 BBH - 90% done
 HMC - 97% done
 LLL - 60% done
 SSL - 50% done
 DDD - 90% done
-SL - 50% - dead%
+SL - 60%
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
-TTC - 60%
+TTC - 60% done
 RR - 93% done
-BITDW - 80%
+BITDW - 80% done
 BITFS - 50% - dead%
 PSS - 50% - dead%
-COTMC - 75%
-TOTWC - 70%
-VCUTM - 70%
+COTMC - 75% done
+TOTWC - 70% done
+VCUTM - 70% done
 WMOTR - 50% - dead%
-SA - 50% - dead%, has working calculator behavior????
+SA - 50% done
