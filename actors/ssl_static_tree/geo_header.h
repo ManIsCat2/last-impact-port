@@ -1,0 +1,15 @@
+extern const GeoLayout ssl_static_tree_geo[];
+extern Lights1 ssl_static_tree_Material_0_f3d_001_lights;
+extern Lights1 ssl_static_tree_Material_1_f3d_001_lights;
+extern u8 ssl_static_tree__0_rgba16[];
+extern u8 ssl_static_tree__1_rgba16[];
+extern Vtx ssl_static_tree_000_displaylist_mesh_layer_4_vtx_0[61];
+extern Gfx ssl_static_tree_000_displaylist_mesh_layer_4_tri_0[];
+extern Vtx ssl_static_tree_000_displaylist_mesh_layer_1_vtx_0[14];
+extern Gfx ssl_static_tree_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_ssl_static_tree_Material_0_f3d_001[];
+extern Gfx mat_revert_ssl_static_tree_Material_0_f3d_001[];
+extern Gfx mat_ssl_static_tree_Material_1_f3d_001[];
+extern Gfx ssl_static_tree_000_displaylist_mesh_layer_4[];
+extern Gfx ssl_static_tree_000_displaylist_mesh_layer_1[];
+extern Gfx ssl_static_tree_material_revert_render_settings[];
