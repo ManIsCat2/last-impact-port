@@ -23,7 +23,7 @@ BITDW - 80% done
 BITFS - 50% - dead%
 PSS - 50% - dead%
 COTMC - 80% done
-TOTWC - 70% done
+TOTWC - 80% done
 VCUTM - 70% done
 WMOTR - 50% - dead%
 SA - 50% done

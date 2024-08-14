@@ -1881,7 +1881,7 @@ end
 local function bhv_bob_level_model_loop(o)
     if gMarioStateExtras[0].fuzzied then
         obj_set_model_extended(o, MODEL_BOB_RAINBOW)
-        if o.oAction ~= 1 and o.oAction ~= 2  then
+        if o.oAction ~= 1 and o.oAction ~= 2 then
             o.oAction = math.random(1, 3)
         end
     else
@@ -1958,9 +1958,9 @@ end
 ---@param o Object
 local function bhv_sl_cloudy_platform_loop(o)
     load_object_collision_model()
-    o.oPosY = o.oPosY+ approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
+    o.oPosY = o.oPosY + approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
     if cur_obj_is_mario_on_platform() ~= 0 then
-        o.oPosY = o.oPosY - 3.5
+        o.oPosY = o.oPosY - 2.5 + (o.oBehParams2ndByte / 100)
     end
 end
 
@@ -1988,3 +1988,13 @@ local function bhv_static_tree(o)
 end
 
 hook_behavior(id_bhvBetaChestBottom, OBJ_LIST_GENACTOR, true, bhv_static_tree, nil)
+
+---@param o Object
+local function bhv_totwc_cloudy_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1600
+    o.collisionData = smlua_collision_util_get("totwc_cloudy_platform_collision")
+    cur_obj_set_home_once()
+end
+
+bhvTOTWCCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_totwc_cloudy_platform, bhv_bob_cloud_platform_loop)

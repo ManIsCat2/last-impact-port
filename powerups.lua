@@ -219,7 +219,9 @@ function bhv_add_cloud_count_loop(obj)
             cur_obj_hide()
             obj.oTimer = 0
             play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
-            cloudcount = cloudcount + 1
+            if cloudcount ~= 3 then
+                cloudcount = cloudcount + 1
+            end
         end
     end
 

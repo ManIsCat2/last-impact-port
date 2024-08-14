@@ -1,0 +1,13 @@
+extern const GeoLayout totwc_cloudy_platform_geo[];
+extern Lights1 totwc_cloudy_platform_Material_0_f3d_001_lights;
+extern Lights1 totwc_cloudy_platform_Material_1_f3d_001_lights;
+extern u8 totwc_cloudy_platform__0_rgba16[];
+extern u8 totwc_cloudy_platform__1_rgba16[];
+extern Vtx totwc_cloudy_platform_000_displaylist_mesh_layer_1_vtx_0[32];
+extern Gfx totwc_cloudy_platform_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx totwc_cloudy_platform_000_displaylist_mesh_layer_1_vtx_1[4];
+extern Gfx totwc_cloudy_platform_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_totwc_cloudy_platform_Material_0_f3d_001[];
+extern Gfx mat_totwc_cloudy_platform_Material_1_f3d_001[];
+extern Gfx totwc_cloudy_platform_000_displaylist_mesh_layer_1[];
+extern Gfx totwc_cloudy_platform_material_revert_render_settings[];
