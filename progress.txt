@@ -13,7 +13,7 @@ HMC - 97% done
 LLL - 60% done
 SSL - 50% done
 DDD - 90% done
-SL - 60%
+SL - 70%
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
@@ -22,7 +22,7 @@ RR - 93% done
 BITDW - 80% done
 BITFS - 50% - dead%
 PSS - 50% - dead%
-COTMC - 75% done
+COTMC - 80% done
 TOTWC - 70% done
 VCUTM - 70% done
 WMOTR - 50% - dead%

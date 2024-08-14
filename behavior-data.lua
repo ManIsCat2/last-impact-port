@@ -1960,8 +1960,31 @@ local function bhv_sl_cloudy_platform_loop(o)
     load_object_collision_model()
     o.oPosY = o.oPosY+ approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
     if cur_obj_is_mario_on_platform() ~= 0 then
-        o.oPosY = o.oPosY - 3
+        o.oPosY = o.oPosY - 3.5
     end
 end
 
 bhvSLCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sl_cloudy_platform, bhv_sl_cloudy_platform_loop)
+
+--[[
+[0021A078 / 13000278] 00 04 0000 // Start Behavior (Object type = 4)
+[0021A07C / 1300027C] 23 00 00 00 00A0 0360 // Set Collision sphere size (XZ radius = 160, Y radius = 864)
+[0021A084 / 13000284] 0E 45 4BFF // (Set value) obj->_0x19C = (float)19455
+[0021A088 / 13000288] 0E 2A 0002 // (Set value) obj->_0x130 = (float)2
+[0021A08C / 1300028C] 08 00 00 00 // Start of loop
+[0021A090 / 13000290]    10 05 0000 // (Set value) obj->_0x9C = 0
+[0021A094 / 13000294]    10 2B 0000 // (Set value) obj->_0x134 = 0
+[0021A098 / 13000298]    09 00 00 00 // End of loop
+]]
+
+---@param o Object
+local function bhv_static_tree(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 160
+    o.hitboxHeight = 864
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+    o.header.gfx.skipInViewCheck = true
+end
+
+hook_behavior(id_bhvBetaChestBottom, OBJ_LIST_GENACTOR, true, bhv_static_tree, nil)
