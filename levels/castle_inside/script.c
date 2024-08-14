@@ -81,7 +81,7 @@ RETURN()
 };
 const LevelScript local_objects_castle_inside_1_[] = {
 OBJECT(0,33,245,-3278,0,-41,0,0xa0000, bhvSpinAirborneWarp),
-OBJECT(0,-7114,1641,2290,0,-154,0,0xb0000, bhvHeaveHoThrowMario),
+OBJECT(0,-7114,1641,2290,0,-154,0,(254 << 16), bhvPoleGrabbing),
 OBJECT(0,-4320,357,-1240,0,77,0,0x0, bhvDeathWarp),
 OBJECT(0,1602,205,471,0,107,0,0x30e60000, bhvWarp),
 OBJECT(0,-666,279,8577,0,-151,0,0x60e70000, bhvWarp),

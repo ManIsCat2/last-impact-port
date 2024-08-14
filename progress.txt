@@ -13,7 +13,7 @@ HMC - 97% done
 LLL - 60% done
 SSL - 60% done
 DDD - 90% done
-SL - 75%
+SL - 80% done
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done

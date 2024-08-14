@@ -1368,7 +1368,7 @@ local function bhv_fading_warp_stand_loop(o)
 end
 
 ---bhvFadingWarpStand
-hook_behavior(id_bhvBowserKeyCourseExit, OBJ_LIST_SURFACE, true, bhv_fading_warp_stand_init, bhv_fading_warp_stand_init)
+hook_behavior(id_bhvBowserKeyCourseExit, OBJ_LIST_SURFACE, true, bhv_fading_warp_stand_init, bhv_fading_warp_stand_loop)
 
 local function bhv_rotating_cupcake_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -2007,11 +2007,12 @@ local function bhv_totwc_cloudy_platform(o)
     cur_obj_set_home_once()
 end
 
-bhvTOTWCCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_totwc_cloudy_platform, bhv_bob_cloud_platform_loop)
+bhvTOTWCCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_totwc_cloudy_platform,
+    bhv_bob_cloud_platform_loop)
 
 local StarSpawned = false
 
-hook_event(HOOK_ON_LEVEL_INIT, function ()
+hook_event(HOOK_ON_LEVEL_INIT, function()
     StarSpawned = false
 end)
 
@@ -2102,15 +2103,15 @@ function bhv_flipswitch_panel_starspawn_loop(obj)
 end
 
 hook_event(HOOK_ON_OBJECT_UNLOAD,
----@param obj Object
-function (obj)
-    -- Force spawn star for newly entering players
-    if obj_has_behavior_id(obj, bhvFlipswitch_Panel_StarSpawn_MOP) == 1 and obj.oHiddenStarTriggerCounter ~= obj.oHealth and not StarSpawned then
-        local starspawn_obj = obj_get_first_with_behavior_id(bhvFlipswitch_Panel_StarSpawn_MOP)
-        spawn_red_coin_cutscene_star(starspawn_obj.oPosX, starspawn_obj.oPosY, starspawn_obj.oPosZ)
-        StarSpawned = true
-    end
-end)
+    ---@param obj Object
+    function(obj)
+        -- Force spawn star for newly entering players
+        if obj_has_behavior_id(obj, bhvFlipswitch_Panel_StarSpawn_MOP) == 1 and obj.oHiddenStarTriggerCounter ~= obj.oHealth and not StarSpawned then
+            local starspawn_obj = obj_get_first_with_behavior_id(bhvFlipswitch_Panel_StarSpawn_MOP)
+            spawn_red_coin_cutscene_star(starspawn_obj.oPosX, starspawn_obj.oPosY, starspawn_obj.oPosZ)
+            StarSpawned = true
+        end
+    end)
 
 ---@param o Object
 local function bhv_sl_windmill_init(o)
@@ -2122,8 +2123,30 @@ end
 
 ---@param o Object
 local function bhv_sl_windmill_loop(o)
-    o.oFaceAngleRoll = o.oFaceAngleRoll + 42
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 67
     load_object_collision_model()
 end
 
 bhvSLWindmill = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sl_windmill_init, bhv_sl_windmill_loop)
+
+local function bhv_sl_explodeable_object_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("sl_explodeable_obj_collision")
+    network_init_object(o, true, nil)
+end
+
+local function bhv_sl_explodeable_object_loop(o)
+    load_object_collision_model()
+
+    if (cur_obj_nearest_object_with_behavior(get_behavior_from_id(id_bhvExplosion))) then
+        if dist_between_objects((cur_obj_nearest_object_with_behavior(get_behavior_from_id(id_bhvExplosion))), o) < 420 then
+            obj_mark_for_deletion(o)
+            --network_send_object(o, true)
+        end
+    end
+end
+
+---bhvSLExplodeableObj
+hook_behavior(id_bhvLllRotatingHexagonalPlatform, OBJ_LIST_SURFACE, true, bhv_sl_explodeable_object_init,
+bhv_sl_explodeable_object_loop)
