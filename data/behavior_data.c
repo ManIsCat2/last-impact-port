@@ -18,3 +18,25 @@ const BehaviorScript bhvCloudFollow[] = {
     CALL_NATIVE(cloudfollowing),
     END_LOOP(),
 };
+
+const BehaviorScript bhvFlipswitch_Panel_StarSpawn_MOP[] = {
+    BEGIN(OBJ_LIST_GENACTOR),
+    ID(id_bhvNewId),
+    CALL_NATIVE(bhv_flipswitch_panel_starspawn_init),
+    BEGIN_LOOP(),
+    CALL_NATIVE(bhv_flipswitch_panel_starspawn_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvFlipswitch_Panel_MOP[] = {
+    BEGIN(OBJ_LIST_SURFACE),
+    ID(id_bhvNewId),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    LOAD_COLLISION_DATA(col_Flipswitch_Panel_MOP_0x7daf78),
+    SET_FLOAT(oCollisionDistance, 1024),
+    CALL_NATIVE(bhv_flipswitch_panel_init),
+    BEGIN_LOOP(),
+    CALL_NATIVE(bhv_flipswitch_panel_loop),
+    CALL_NATIVE(load_object_collision_model),
+    END_LOOP(),
+};

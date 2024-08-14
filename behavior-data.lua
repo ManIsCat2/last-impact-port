@@ -21,6 +21,16 @@ local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
 
+---@param param any
+---@param case_table table<any, function>
+---@return function | nil
+function switch(param, case_table)
+    local case = case_table[param]
+    if case then return case() end
+    local def = case_table['default']
+    return def and def() or nil
+end
+
 function for_each_object_with_behavior(behavior, func) --* function by Isaac
     local o = obj_get_first_with_behavior_id(behavior)
     while o do
@@ -1998,3 +2008,122 @@ local function bhv_totwc_cloudy_platform(o)
 end
 
 bhvTOTWCCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_totwc_cloudy_platform, bhv_bob_cloud_platform_loop)
+
+local StarSpawned = false
+
+hook_event(HOOK_ON_LEVEL_INIT, function ()
+    StarSpawned = false
+end)
+
+local FLIPSWITCH_PANEL_ACT_IDLE = 0
+local FLIPSWITCH_PANEL_ACT_MARIO_IS_ON = 1
+
+E_MODEL_FLIPSWITCH_PANEL = smlua_model_util_get_id("Flipswitch_Panel_MOP")
+
+---@param obj Object
+function bhv_flipswitch_panel_init(obj)
+    obj_set_model_extended(obj, E_MODEL_FLIPSWITCH_PANEL)
+    obj.oPosY = obj.oPosY + 40
+    load_object_collision_model()
+    -- One of the only synced MOPs
+    network_init_object(obj, false, {
+        "oAction",
+        "oAnimState"
+    })
+end
+
+---@param obj Object
+function bhv_flipswitch_panel_loop(obj)
+    -- Always checks for the starspawn mop
+    --[[local starspawn_obj = obj_get_nearest_object_with_behavior_id(obj, bhvFlipswitch_Panel_StarSpawn_MOP)
+    if not starspawn_obj then return end
+    if not is_current_area_sync_valid() then return end
+    if obj.parentObj ~= starspawn_obj then
+        obj.parentObj = starspawn_obj
+    end]]
+
+    -- Turn green and don't allow further change
+    if StarSpawned then
+        obj.oAnimState = 2
+    else
+        switch(obj.oAction, {
+            [FLIPSWITCH_PANEL_ACT_IDLE] = function()
+                if cur_obj_is_mario_on_platform() == 1 and not is_bubbled(gMarioStates[0]) then
+                    -- Causes the panel to change colors upon being pressed multiple times
+                    -- Doesn't sync properly, the starspawn itself now checks each panel
+                    --obj.parentObj.oHiddenStarTriggerCounter = obj.parentObj.oHiddenStarTriggerCounter + 1 - (2 * obj.oAnimState)
+                    obj.oAnimState = obj.oAnimState ~ 1
+
+                    cur_obj_play_sound_1(SOUND_GENERAL_BIG_CLOCK)
+                    obj.oAction = FLIPSWITCH_PANEL_ACT_MARIO_IS_ON
+                    network_send_object(obj, true)
+                end
+            end,
+            [FLIPSWITCH_PANEL_ACT_MARIO_IS_ON] = function()
+                local closest_player = nearest_player_to_object(obj)
+                if not closest_player or (cur_obj_is_mario_on_platform() == 0 and closest_player.platform ~= obj) then
+                    obj.oAction = FLIPSWITCH_PANEL_ACT_IDLE
+                end
+            end
+        })
+    end
+end
+
+---@param obj Object
+function bhv_flipswitch_panel_starspawn_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj.oHealth = 0
+end
+
+---@param obj Object
+function bhv_flipswitch_panel_starspawn_loop(obj)
+    local amount_of_panels = obj_count_objects_with_behavior_id(bhvFlipswitch_Panel_MOP)
+    -- Prevents the starspawn mop from prematurely assume all panels have been pressed
+    if amount_of_panels > obj.oHealth or obj.oHealth == 0 then
+        obj.oHealth = amount_of_panels
+        return
+    end
+
+    -- Force check every panel
+    obj.oHiddenStarTriggerCounter = 0
+    local panel = obj_get_first_with_behavior_id(bhvFlipswitch_Panel_MOP)
+    while panel do
+        if panel.oAnimState == 1 then
+            obj.oHiddenStarTriggerCounter = obj.oHiddenStarTriggerCounter + 1
+        end
+        panel = obj_get_next_with_same_behavior_id(panel)
+    end
+
+    if obj.oHiddenStarTriggerCounter == obj.oHealth and not StarSpawned then
+        spawn_red_coin_cutscene_star(obj.oPosX, obj.oPosY, obj.oPosZ)
+        StarSpawned = true
+        obj_mark_for_deletion(obj)
+    end
+end
+
+hook_event(HOOK_ON_OBJECT_UNLOAD,
+---@param obj Object
+function (obj)
+    -- Force spawn star for newly entering players
+    if obj_has_behavior_id(obj, bhvFlipswitch_Panel_StarSpawn_MOP) == 1 and obj.oHiddenStarTriggerCounter ~= obj.oHealth and not StarSpawned then
+        local starspawn_obj = obj_get_first_with_behavior_id(bhvFlipswitch_Panel_StarSpawn_MOP)
+        spawn_red_coin_cutscene_star(starspawn_obj.oPosX, starspawn_obj.oPosY, starspawn_obj.oPosZ)
+        StarSpawned = true
+    end
+end)
+
+---@param o Object
+local function bhv_sl_windmill_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 4500
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("sl_windmill_collision")
+end
+
+---@param o Object
+local function bhv_sl_windmill_loop(o)
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 42
+    load_object_collision_model()
+end
+
+bhvSLWindmill = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sl_windmill_init, bhv_sl_windmill_loop)

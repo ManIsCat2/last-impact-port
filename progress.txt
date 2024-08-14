@@ -1,6 +1,6 @@
 CG (overworld 1) 98% done
-CC (overlworld 2 or 3 idk) 70% done //theres not really behaviors so its higher than 0% lol
-CI (overlworld 2 or 3 idk) 70% done // same for here
+CC (overlworld 3) 70% done //theres not really behaviors so its higher than 0% lol
+CI (overlworld 2) 80% done // same for here
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
 
@@ -13,7 +13,7 @@ HMC - 97% done
 LLL - 60% done
 SSL - 60% done
 DDD - 90% done
-SL - 70%
+SL - 75%
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
