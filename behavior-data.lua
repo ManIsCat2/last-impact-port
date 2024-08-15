@@ -1968,9 +1968,9 @@ end
 ---@param o Object
 local function bhv_sl_cloudy_platform_loop(o)
     load_object_collision_model()
-    o.oPosY = o.oPosY + approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.1)
+    o.oPosY = o.oPosY + approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.4)
     if cur_obj_is_mario_on_platform() ~= 0 then
-        o.oPosY = o.oPosY - 2.5 + (o.oBehParams2ndByte / 100)
+        o.oPosY = o.oPosY - 9 + (o.oBehParams2ndByte / 100)
     end
 end
 
@@ -2119,6 +2119,7 @@ local function bhv_sl_windmill_init(o)
     o.oCollisionDistance = 4500
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("sl_windmill_collision")
+    o.oAngleVelRoll = 67
 end
 
 ---@param o Object
@@ -2149,4 +2150,27 @@ end
 
 ---bhvSLExplodeableObj
 hook_behavior(id_bhvLllRotatingHexagonalPlatform, OBJ_LIST_SURFACE, true, bhv_sl_explodeable_object_init,
-bhv_sl_explodeable_object_loop)
+    bhv_sl_explodeable_object_loop)
+
+local function bhv_konami_code_gate(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 2000
+    o.collisionData = smlua_collision_util_get("konami_code_gate_collision")
+end
+
+local function bhv_konami_code_gate_loop(o)
+    load_object_collision_model() --not coded yet
+end
+
+bhvKonamiCodeGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_konami_code_gate, bhv_konami_code_gate_loop)
+
+
+local function bhv_ci_cloud_collision(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1500
+    o.collisionData = smlua_collision_util_get("ci_cloud_collision_collision")
+end
+
+bhvCICloudCollision = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ci_cloud_collision, function (o) load_object_collision_model() end)
