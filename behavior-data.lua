@@ -2173,4 +2173,72 @@ local function bhv_ci_cloud_collision(o)
     o.collisionData = smlua_collision_util_get("ci_cloud_collision_collision")
 end
 
-bhvCICloudCollision = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ci_cloud_collision, function (o) load_object_collision_model() end)
+bhvCICloudCollision = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ci_cloud_collision,
+    function(o) load_object_collision_model() end)
+
+local function bhv_rr_cart_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+local sRRkartTrajectory = {
+    { timer = 30 + 10, moveangle = 20600 },
+    { timer = 115,     moveangle = 26000 },
+    { timer = 200,     moveangle = -32240 },
+    { timer = 275,     moveangle = -27500 },
+    { timer = 445,     moveangle = -22500 },
+    { timer = 520,     moveangle = -16000 },
+    { timer = 615,     moveangle = -6830 },
+    { timer = 702,     moveangle = -750 },
+    { timer = 830,     moveangle = 2350 },
+    { timer = 985,     moveangle = 1380 },
+    { timer = 1170,    moveangle = -5000 },
+}
+
+---@param o Object
+---only moves for local player
+local function bhv_rr_cart_loop(o)
+    local mariostate = gMarioStates[0]
+    local curP = mariostate.marioObj
+
+    move_obj_with_physics(true, o)
+
+    for i = 1, #sRRkartTrajectory do
+        if o.oAnimState == sRRkartTrajectory[i].timer then
+            o.oMoveAngleYaw = sRRkartTrajectory[i].moveangle
+        end
+    end
+
+    if o.oAction == 0 then
+        if obj_check_hitbox_overlap(o, curP) then
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.oAnimState = o.oAnimState + 1
+        local object_pos_vec3f = { x = o.oPosX, y = o.oPosY, z = o.oPosZ }
+        vec3f_copy(mariostate.pos, object_pos_vec3f)
+        mariostate.faceAngle.y = o.oFaceAngleYaw
+        set_mario_animation(mariostate, MARIO_ANIM_SLIDE)
+        mariostate.marioObj.header.gfx.pos.y = mariostate.pos.y
+        o.oVelY = o.oVelY - 3
+
+        if o.oAnimState < 1275 then
+            o.oForwardVel = 8
+        else
+            o.oForwardVel = approach_s16_symmetric(o.oForwardVel, 0, 1)
+        end
+
+        if mariostate.controller.buttonPressed & A_BUTTON ~= 0 then
+            o.oVelY = 60
+        end
+
+        if mariostate.controller.buttonPressed & B_BUTTON ~= 0 then
+            mariostate.action = ACT_DIVE
+            mariostate.vel.y = 30
+            mariostate.forwardVel = 20
+            obj_mark_for_deletion(o)
+        end
+    end
+end
+
+bhvRRRideableCart = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rr_cart_init, bhv_rr_cart_loop)

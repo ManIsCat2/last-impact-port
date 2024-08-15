@@ -9,7 +9,7 @@ NestPlacementsVanilla = {
             { x = -16078, y = -298, z = -9239, area = 1 },
         },
     },
-
+    --- luna park
     [LEVEL_COTMC] = {
         nests = {
             { x = 6322, y = -50, z = 6797, area = 1 },

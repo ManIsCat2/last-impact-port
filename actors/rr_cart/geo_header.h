@@ -1,0 +1,18 @@
+extern const GeoLayout rr_cart_geo[];
+extern Lights1 rr_cart_Material_0_f3d_001_lights;
+extern Lights1 rr_cart_Material_1_f3d_001_lights;
+extern Lights1 rr_cart_Material_2_f3d_001_lights;
+extern u8 rr_cart__0_rgba16[];
+extern u8 rr_cart__1_rgba16[];
+extern u8 rr_cart__2_rgba16[];
+extern Vtx rr_cart_000_displaylist_mesh_layer_1_vtx_0[148];
+extern Gfx rr_cart_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx rr_cart_000_displaylist_mesh_layer_1_vtx_1[26];
+extern Gfx rr_cart_000_displaylist_mesh_layer_1_tri_1[];
+extern Vtx rr_cart_000_displaylist_mesh_layer_1_vtx_2[22];
+extern Gfx rr_cart_000_displaylist_mesh_layer_1_tri_2[];
+extern Gfx mat_rr_cart_Material_0_f3d_001[];
+extern Gfx mat_rr_cart_Material_1_f3d_001[];
+extern Gfx mat_rr_cart_Material_2_f3d_001[];
+extern Gfx rr_cart_000_displaylist_mesh_layer_1[];
+extern Gfx rr_cart_material_revert_render_settings[];
