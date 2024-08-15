@@ -571,7 +571,7 @@ end
 ---@param o Object
 local function bhv_launch_star_loop(o)
     local m = gMarioStates[0]
-    if obj_check_hitbox_overlap(m.marioObj, o) and o.oAction == LAUNCH_STAR_ACT_IDLE and m.action ~= ACT_SHOT_FROM_CANNON then
+    if obj_check_hitbox_overlap(m.marioObj, o) and o.oAction == LAUNCH_STAR_ACT_IDLE and m.action ~= ACT_SHOT_FROM_CANNON and m.action == ACT_GROUND_POUND then
         o.oTimer = 0
         m.vel.y = 0
         o.oAction = LAUNCH_STAR_ACT_LAUNCH
@@ -585,7 +585,7 @@ local function bhv_launch_star_loop(o)
             set_mario_action(m, ACT_GROUND_POUND, 0)
         end
 
-        if m.vel.y < -50 then
+        if m.actionTimer > 14 then
             set_mario_action(m, ACT_SHOT_FROM_CANNON, 0)
             yVel = (o.oBehParams >> 24) & 0XFF
             forwardVel = o.oBehParams2ndByte
