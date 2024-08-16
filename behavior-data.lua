@@ -578,7 +578,12 @@ local function bhv_launch_star_loop(o)
         playerLaunched = true
     end
 
+    if o.oAction == LAUNCH_STAR_ACT_IDLE then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 340
+    end
+
     if o.oAction == LAUNCH_STAR_ACT_LAUNCH then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 400 * 6
         if o.oTimer == 0 then
             pos = { x = o.oPosX, y = o.oPosY, z = o.oPosZ }
             vec3f_copy(m.pos, pos)
@@ -2179,6 +2184,9 @@ bhvCICloudCollision = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ci_cloud_co
 local function bhv_rr_cart_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE
     o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
+    -- home yaw
+    o.oFishYawVel = o.oMoveAngleYaw
 end
 
 local sRRkartTrajectory = {
@@ -2210,6 +2218,7 @@ local function bhv_rr_cart_loop(o)
     end
 
     if o.oAction == 0 then
+        o.oMoveAngleYaw = o.oFishYawVel
         if obj_check_hitbox_overlap(o, curP) then
             o.oAction = 1
         end
@@ -2236,7 +2245,11 @@ local function bhv_rr_cart_loop(o)
             mariostate.action = ACT_DIVE
             mariostate.vel.y = 30
             mariostate.forwardVel = 20
-            obj_mark_for_deletion(o)
+            o.oAction = 0
+            cur_obj_set_pos_to_home()
+            o.oVelY = 0
+            o.oAnimState = 0
+            o.oForwardVel = 0
         end
     end
 end

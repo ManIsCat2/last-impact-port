@@ -2,6 +2,7 @@
 
 local function bhv_thwomp_custom(o)
     o.collisionData = smlua_collision_util_get("rainbow_thwomp_collision")
+    o.oCollisionDistance = 1500
     if o.oAction >= 2 then
         o.oAnimState = 1
     else
