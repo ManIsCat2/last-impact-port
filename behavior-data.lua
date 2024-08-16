@@ -1327,7 +1327,7 @@ end
 
 local function rr_rotating_thing_loop(o)
     load_object_collision_model()
-    o.oFaceAngleRoll = o.oFaceAngleRoll + 600
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 230
     o.oFaceAngleYaw = 69500
 end
 
@@ -2281,7 +2281,7 @@ bhvRRRideableCart = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rr_cart_init, b
 
 local function fake_rr_wind(o)
     o.hitboxRadius = 200
-    o.hitboxHeight = 1200
+    o.hitboxHeight = 1100
     o.oIntangibleTimer = 0
     if obj_check_hitbox_overlap(o, gMarioStates[0].marioObj) then
         gMarioStates[0].action = ACT_DOUBLE_JUMP
