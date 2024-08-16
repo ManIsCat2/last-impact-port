@@ -97,6 +97,14 @@ function spawn_object(parent, model, behaviorId)
     return obj
 end
 
+local function spawn_object2(parent, model, behaviorId)
+    local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
+    if not obj then return nil end
+
+    obj_copy_pos_and_angle(obj, parent)
+    return obj
+end
+
 ---function from SM64: Through the ages
 ---@param clampFloor boolean
 ---@param o Object
@@ -2255,3 +2263,64 @@ local function bhv_rr_cart_loop(o)
 end
 
 bhvRRRideableCart = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rr_cart_init, bhv_rr_cart_loop)
+
+local function fake_rr_wind(o)
+    o.hitboxRadius = 200
+    o.hitboxHeight = 1200
+    o.oIntangibleTimer = 0
+    if obj_check_hitbox_overlap(o, gMarioStates[0].marioObj) then
+        gMarioStates[0].action = ACT_DOUBLE_JUMP
+        gMarioStates[0].vel.y = 15
+    end
+end
+
+bhvFakeRRWind = hook_behavior(nil, OBJ_LIST_LEVEL, true, nil, fake_rr_wind)
+
+--bhvRainbowSnakeBlock
+
+MODEL_SNAKE_BLOCK_RAINBOW = smlua_model_util_get_id("rainbow_snake_block_geo")
+
+local function bhv_rainbow_snake_block_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1500
+    o.collisionData = smlua_collision_util_get("rainbow_snake_block_collision")
+end
+
+-----------@nope, not doing it. im not mentally insane
+---@param o Object
+local function bhv_rainbow_snake_block_loop(o)
+    load_object_collision_model()
+
+    if cur_obj_is_any_player_on_platform() == 1 then
+
+    end
+end
+
+--bhvRainbowSnakeBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rainbow_snake_block_init, bhv_rainbow_snake_block_loop)
+---@param o Object
+local function bhv_moving_chomp_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.header.gfx.skipInViewCheck = true
+    o.oFriction = 1
+    obj_scale(o, 2)
+    obj_set_hitbox_radius_and_height(o, 400, 400)
+    o.oForwardVel = 16
+    o.oAnimations = gObjectAnimations.chain_chomp_seg6_anims_06025178
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_DAMAGE
+    o.oDamageOrCoinValue = 2
+    o.hitboxDownOffset = 60
+    o.oGraphYOffset = 130
+    cur_obj_init_animation(0)
+    network_init_object(o, true, { "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ" })
+end
+
+---@param o Object
+local function bhv_moving_chomp_loop(o)
+    object_step()
+    o.oMoveAngleYaw = o.oMoveAngleYaw + 0x100
+    o.oFaceAnglePitch = o.oFaceAnglePitch + 0x500
+end
+
+bhvMovingChomp = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_moving_chomp_init, bhv_moving_chomp_loop)

@@ -34,7 +34,7 @@ const LevelScript level_rr_entry[] = {
 	// Unspecified Models
 	LOAD_MODEL_FROM_GEO(22,  warp_pipe_geo),
 	LOAD_MODEL_FROM_GEO(23, meteor_geo),
-	// LOAD_MODEL_FROM_GEO(24, 0x19001d60),
+	LOAD_MODEL_FROM_GEO(24, rainbow_snake_block_geo),
 	// LOAD_MODEL_FROM_GEO(25, 0x19001da0),
 	LOAD_MODEL_FROM_GEO(27,  palm_tree_geo),
 	LOAD_MODEL_FROM_GEO(29,  haunted_door_geo),
@@ -115,7 +115,7 @@ const LevelScript local_objects_rr_1_[] = {
 	OBJECT_WITH_ACTS(55, -456, -7, -604, 0, 112, 0, 0x74300000,  bhvThwomp, 63),
 	OBJECT_WITH_ACTS(55, -1317, -7, -253, 0, 112, 0, 0x74340000,  bhvThwomp, 63),
 	OBJECT_WITH_ACTS(55, 7803, 2443, -4311, 0, 111, 0, 0x5c440000,  bhvThwomp, 63),
-	OBJECT_WITH_ACTS(0, 7838, 337, -1873, 0, 112, 0, 0x0,  Bhv_Custom_0x13003d10, 63),
+	OBJECT_WITH_ACTS(0, 7838, 337, -1873, 0, 112, 0, 0x0,  bhvFakeRRWind, 63),
 	OBJECT_WITH_ACTS(56, 64, 2368, 2555, 0, 112, 0, 0x30000000,  bhvNoteblock_MOP, 63),
 	OBJECT_WITH_ACTS(56, -490, 3612, 974, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
 	OBJECT_WITH_ACTS(56, -290, 3612, 774, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
@@ -125,11 +125,11 @@ const LevelScript local_objects_rr_1_[] = {
 	OBJECT_WITH_ACTS(56, 2030, 4994, 498, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
 	OBJECT_WITH_ACTS(56, 2230, 4994, 498, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
 	OBJECT_WITH_ACTS(56, 2030, 4994, 298, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
-	OBJECT_WITH_ACTS(102, 4874, 3095, -7073, 0, 0, 0, 0x30000000,  Bhv_Custom_0x13003d54, 63),
-	OBJECT_WITH_ACTS(102, 4291, 3098, -5335, 0, 21, 0, 0x40000000,  Bhv_Custom_0x13003d54, 63),
-	OBJECT_WITH_ACTS(102, 5463, 3095, -3210, 0, 51, 0, 0x1c000000,  Bhv_Custom_0x13003d54, 63),
-	OBJECT_WITH_ACTS(102, 4838, 3095, -6042, 0, -13, 0, 0xd7000000,  Bhv_Custom_0x13003d54, 63),
-	OBJECT_WITH_ACTS(102, 5327, 3095, -4779, 0, 31, 0, 0xe0000000,  Bhv_Custom_0x13003d54, 63),
+	OBJECT_WITH_ACTS(102, 4874, 3095, -7073, 0, 0, 0, 0x30000000,  bhvMovingChomp, 63),
+	OBJECT_WITH_ACTS(102, 4291, 3098, -5335, 0, 21, 0, 0x40000000,  bhvMovingChomp, 63),
+	OBJECT_WITH_ACTS(102, 5463, 3095, -3210, 0, 51, 0, 0x1c000000,  bhvMovingChomp, 63),
+	OBJECT_WITH_ACTS(102, 4838, 3095, -6042, 0, -13, 0, 0xd7000000,  bhvMovingChomp, 63),
+	OBJECT_WITH_ACTS(102, 5327, 3095, -4779, 0, 31, 0, 0xe0000000,  bhvMovingChomp, 63),
 	OBJECT_WITH_ACTS(0, 5936, 3095, -3414, 0, 0, 0, 0x20000,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(0, 7869, 287, -2462, 0, 0, 0, 0x110000,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(116, 3007, 2313, -1738, 0, 0, 0, 0x0,  bhvOneCoin, 63),
@@ -170,7 +170,21 @@ const LevelScript local_objects_rr_1_[] = {
 	OBJECT_WITH_ACTS(23, -4949, 0, -3954, -151, 0, 232, 0xc0000000,  bhvStaticObject, 63),
 	OBJECT_WITH_ACTS(23, 16454, 4017, 460, -112, 0, 25, 0x50010000,  bhvStaticObject, 63),
 	OBJECT_WITH_ACTS(23, 1110, -2585, 13374, 120, 0, 42, 0x84000000,  bhvStaticObject, 63),
-	OBJECT_WITH_ACTS(24, 2101, -143, -4101, 0, -113, 0, 0x10000,  Bhv_Custom_0x13003f44, 63),
+	//OBJECT_WITH_ACTS(24, 2101, -143, -4101, 0, -113, 0, 0x10000,  bhvRainbowSnakeBlock, 63),
+	OBJECT_WITH_ACTS(56, 1676, -143, -4245, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+
+	OBJECT_WITH_ACTS(56, 993, -143, -4553, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+
+	OBJECT_WITH_ACTS(56, -321, 397, -5122, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+
+	OBJECT_WITH_ACTS(56, -1030, 397, -5448, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+
+	OBJECT_WITH_ACTS(56, -2088, 847, -5003, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+	
+	OBJECT_WITH_ACTS(56, -2929, 1057, -3610, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+
+	OBJECT_WITH_ACTS(56, -3670, 2167, -4014, 0, 0, 0, 0x0,  bhvNoteblock_MOP, 63),
+	//end
 	OBJECT_WITH_ACTS(0, -1822, 870, -5727, 0, 0, 0, 0x0,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(0, -291, 3609, 1719, 0, 24, 0, 0x0,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(140, 6057, -85, -1546, 0, -23, 0, 0x10000,  bhvBlueCoinSwitch, 63),
