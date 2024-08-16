@@ -2261,7 +2261,9 @@ local function bhv_rr_cart_loop(o)
         end
 
         if mariostate.controller.buttonPressed & A_BUTTON ~= 0 then
-            o.oVelY = 60
+            if o.oPosY < find_floor_height(o.oPosX, o.oPosY, o.oPosZ) + 72 then
+                o.oVelY = 60
+            end
         end
 
         if mariostate.controller.buttonPressed & B_BUTTON ~= 0 then
@@ -2428,3 +2430,15 @@ end
 
 bhvRotatingStaircase = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rotating_staircase_init,
     bhv_rotating_staircase_loop)
+
+---@param o Object
+local function bhv_ttc_static_tree(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 128
+    o.hitboxHeight = 288
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+    o.header.gfx.skipInViewCheck = true
+end
+
+bhvTTCStaticTree = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_ttc_static_tree, nil)

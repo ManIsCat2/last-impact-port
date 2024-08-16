@@ -17,7 +17,7 @@ SL - 82% done
 WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
-TTC - 60% done
+TTC - 65% done
 RR - 95% done
 BITDW - 80% done
 BITFS - 75% done
