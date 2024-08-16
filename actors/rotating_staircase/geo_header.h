@@ -1,0 +1,13 @@
+extern const GeoLayout rotating_staircase_geo[];
+extern Lights1 rotating_staircase_Material_0_f3d_001_lights;
+extern Lights1 rotating_staircase_Material_1_f3d_001_lights;
+extern u8 rotating_staircase__0_rgba16[];
+extern u8 rotating_staircase__1_rgba16[];
+extern Vtx rotating_staircase_000_displaylist_mesh_layer_1_vtx_0[36];
+extern Gfx rotating_staircase_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx rotating_staircase_000_displaylist_mesh_layer_1_vtx_1[140];
+extern Gfx rotating_staircase_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_rotating_staircase_Material_0_f3d_001[];
+extern Gfx mat_rotating_staircase_Material_1_f3d_001[];
+extern Gfx rotating_staircase_000_displaylist_mesh_layer_1[];
+extern Gfx rotating_staircase_material_revert_render_settings[];

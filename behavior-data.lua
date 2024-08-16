@@ -39,6 +39,21 @@ function for_each_object_with_behavior(behavior, func) --* function by Isaac
     end
 end
 
+---function from SM64 Land
+---@param course integer
+---@param star integer
+---@param is100star boolean|nil
+---@return boolean
+function is_star_colected(course, star, is100star)
+    courseReal = course - 1
+    starflags = save_file_get_star_flags(get_current_save_file_num() - 1, courseReal)
+    if starflags & (1 << star) ~= 0 then
+        return true
+    else
+        return false
+    end
+end
+
 ---@param m MarioState
 ---@return boolean
 local function is_bubbled(m)
@@ -1626,7 +1641,7 @@ local function bhv_bitdw_floating_boat_init(o)
     o.header.gfx.skipInViewCheck = true
     o.oMoveAngleYaw = -16384
     o.oFaceAngleYaw = o.oFaceAngleYaw + 16384
-    save_file_set_flags(SAVE_FLAG_HAVE_KEY_1)
+    --save_file_set_flags(SAVE_FLAG_HAVE_KEY_1)
     --network_init_object(o, true, { "oAction", "oSubAction", "oForwardVel" })
 end
 
@@ -1713,7 +1728,7 @@ end
 ---@param o Object
 local function bhv_bowser_door_key_loop(o)
     load_object_collision_model()
-    if save_has_key(SAVE_FLAG_HAVE_KEY_1) then
+    if is_star_colected(COURSE_BITDW, 1) then
         if dist_between_objects(o, nearest_player_to_object(o)) < 1200 then
             o.oAction = 1
         end
@@ -2347,8 +2362,8 @@ bhvBITFSCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_cl
     bhv_bitfs_cloudy_platform_loop)
 
 local angleAdjust2 = {
-    [248] = s50Time10,
-    [8] = Ns50Time10,
+    [248] = Ns50Time10 / 5,
+    [8] = s50Time10 / 5,
 }
 
 ---@param o Object
@@ -2356,7 +2371,7 @@ local function bhv_bitfs_gear_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("bitfs_gear_collision")
-    o.oAngleVelRoll = ((o.oBehParams >> 24) & 0xFF) == 248 and s50Time10 or Ns50Time10
+    o.oAngleVelRoll = ((o.oBehParams >> 24) & 0xFF) == 248 and Ns50Time10 / 5 or s50Time10 / 5
 end
 
 ---@param o Object
@@ -2371,3 +2386,45 @@ end
 
 ---bhvBITFSGear
 hook_behavior(id_bhvSLWalkingPenguin, OBJ_LIST_SURFACE, true, bhv_bitfs_gear_init, bhv_bitfs_gear_loop)
+
+---@param o Object
+local function bhv_bitfs_cloudy_rotating_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1000
+    o.collisionData = smlua_collision_util_get("bitfs_cloudy_rotating_platform_collision")
+    cur_obj_set_home_once()
+    o.oAngleVelYaw = 0x80
+end
+
+---@param o Object
+local function bhv_bitfs_cloudy_rotating_platform_loop(o)
+    load_object_collision_model()
+    o.oPosY = o.oPosY + approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.55)
+    if cur_obj_is_mario_on_platform() ~= 0 then
+        o.oPosY = o.oPosY - 8
+    end
+
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x80
+end
+
+
+bhvBITFSCloudyRotatingPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_cloudy_rotating_platform,
+    bhv_bitfs_cloudy_rotating_platform_loop)
+
+---@param o Object
+local function bhv_rotating_staircase_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1600
+    o.collisionData = smlua_collision_util_get("rotating_staircase_collision")
+end
+
+---@param o Object
+local function bhv_rotating_staircase_loop(o)
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 0x80
+    load_object_collision_model()
+end
+
+
+bhvRotatingStaircase = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rotating_staircase_init,
+    bhv_rotating_staircase_loop)
