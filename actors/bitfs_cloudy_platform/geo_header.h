@@ -1,0 +1,9 @@
+extern const GeoLayout bitfs_cloudy_platform_geo[];
+extern Lights1 bitfs_cloudy_platform_Material_0_f3d_001_lights;
+extern u8 bitfs_cloudy_platform__0_rgba16[];
+extern Vtx bitfs_cloudy_platform_000_displaylist_mesh_layer_1_vtx_0[12];
+extern Gfx bitfs_cloudy_platform_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_bitfs_cloudy_platform_Material_0_f3d_001[];
+extern Gfx mat_revert_bitfs_cloudy_platform_Material_0_f3d_001[];
+extern Gfx bitfs_cloudy_platform_000_displaylist_mesh_layer_1[];
+extern Gfx bitfs_cloudy_platform_material_revert_render_settings[];

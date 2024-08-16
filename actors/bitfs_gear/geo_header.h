@@ -1,0 +1,13 @@
+extern const GeoLayout bitfs_gear_geo[];
+extern Lights1 bitfs_gear_Material_0_f3d_001_lights;
+extern Lights1 bitfs_gear_Material_1_f3d_001_lights;
+extern u8 bitfs_gear__0_rgba16[];
+extern u8 bitfs_gear__1_rgba16[];
+extern Vtx bitfs_gear_000_displaylist_mesh_layer_1_vtx_0[48];
+extern Gfx bitfs_gear_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bitfs_gear_000_displaylist_mesh_layer_1_vtx_1[42];
+extern Gfx bitfs_gear_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_bitfs_gear_Material_0_f3d_001[];
+extern Gfx mat_bitfs_gear_Material_1_f3d_001[];
+extern Gfx bitfs_gear_000_displaylist_mesh_layer_1[];
+extern Gfx bitfs_gear_material_revert_render_settings[];

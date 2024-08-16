@@ -2324,3 +2324,50 @@ local function bhv_moving_chomp_loop(o)
 end
 
 bhvMovingChomp = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_moving_chomp_init, bhv_moving_chomp_loop)
+
+---@param o Object
+local function bhv_bitfs_cloudy_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 900
+    o.collisionData = smlua_collision_util_get("bitfs_cloudy_platform_collision")
+    cur_obj_set_home_once()
+end
+
+---@param o Object
+local function bhv_bitfs_cloudy_platform_loop(o)
+    load_object_collision_model()
+    o.oPosY = o.oPosY + approach_f32_asymptotic(o.oVelY, (o.oHomeY - o.oPosY) / 8, 0.5)
+    if cur_obj_is_mario_on_platform() ~= 0 then
+        o.oPosY = o.oPosY - 6
+    end
+end
+
+
+bhvBITFSCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_cloudy_platform,
+    bhv_bitfs_cloudy_platform_loop)
+
+local angleAdjust2 = {
+    [248] = s50Time10,
+    [8] = Ns50Time10,
+}
+
+---@param o Object
+local function bhv_bitfs_gear_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bitfs_gear_collision")
+    o.oAngleVelRoll = ((o.oBehParams >> 24) & 0xFF) == 248 and s50Time10 or Ns50Time10
+end
+
+---@param o Object
+local function bhv_bitfs_gear_loop(o)
+    load_object_collision_model()
+    local beh1st = (o.oBehParams >> 24) & 0xFF
+
+    if angleAdjust2[beh1st] then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + angleAdjust2[beh1st]
+    end
+end
+
+---bhvBITFSGear
+hook_behavior(id_bhvSLWalkingPenguin, OBJ_LIST_SURFACE, true, bhv_bitfs_gear_init, bhv_bitfs_gear_loop)

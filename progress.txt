@@ -20,7 +20,7 @@ THI - 80% done
 TTC - 60% done
 RR - 95% done
 BITDW - 80% done
-BITFS - 50% - dead%
+BITFS - 65% done
 PSS - 50% - dead%
 COTMC - 80% done
 TOTWC - 80% done
