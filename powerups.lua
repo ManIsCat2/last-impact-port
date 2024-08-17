@@ -6,18 +6,29 @@
 E_MODEL_BEE_MARIO = smlua_model_util_get_id("bee_mario_geo")
 E_MODEL_CLOUD_MARIO = smlua_model_util_get_id("cloud_mario_geo")
 
+-- Sounds
+
+local audio_rainbowmario = audio_stream_load("RainbowMario.mp3")
+
 -- Powerups enum
 
 NORMAL = 0
 BEE = 1
 CLOUD = 2
+RAINBOW = 3
+
+-- Powerup Relateds
+local cloudcount = 0        -- for cloud flower
+local rainbow_timer = 0     -- for rainbow star
+local savedBGM = 0          -- for rainbow star
+local rainbow_music = false -- for rainbow star
 
 characterPowerupModels = {
-    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
-    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
-    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
-    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
-    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, },
+    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
+    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
+    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
+    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
+    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
 }
 
 -- Powerups are a PlayerSyncTable by the way.
@@ -31,6 +42,7 @@ function get_character_model(m)
         [NORMAL] = { modelId = nil },
         [BEE] = { modelId = CPM.bee and CPM.bee or CPMM.bee },
         [CLOUD] = { modelId = CPM.cloud and CPM.cloud or CPMM.cloud },
+        [RAINBOW] = { modelId = CPM.rainbow and CPM.rainbow or CPMM.rainbow },
     }
 end
 
@@ -55,11 +67,12 @@ end)
 
 -- Resets the player stats when leaving a level or dying
 
-local cloudcount = 0 -- for cloud flower
-
 function on_death_warp()
     gPlayerSyncTable[0].powerup = NORMAL
     cloudcount = 0
+    audio_stream_stop(audio_rainbowmario)
+    rainbow_timer = 0
+    rainbow_music = false
 end
 
 -- Removes the player's powerup on damage
@@ -68,8 +81,14 @@ function damage_check(m)
     --djui_chat_message_create(tostring(cloudcount))
     if m.playerIndex ~= 0 then return end
     if m.hurtCounter > 0 or m.action == ACT_BURNING_GROUND or m.action == ACT_BURNING_JUMP then
+        if gPlayerSyncTable[0].powerup == RAINBOW then
+            set_background_music(0, savedBGM, 0)
+        end
         gPlayerSyncTable[0].powerup = NORMAL
         cloudcount = 0
+        rainbow_timer = 0
+        rainbow_music = false
+        audio_stream_stop(audio_rainbowmario)
     end
 end
 
@@ -155,6 +174,11 @@ function general_powerup_handler(obj, powerup)
                 obj.oTimer = 0
                 cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
                 gPlayerSyncTable[i].powerup = powerup
+                if powerup == RAINBOW then
+                    if m.playerIndex == 0 then
+                        rainbow_timer = 0
+                    end
+                end
             end
         end
     end
@@ -166,8 +190,8 @@ function general_powerup_handler(obj, powerup)
             obj.oTimer = 0
             obj.oAction = 0
             cur_obj_unhide()
-            obj.hitboxRadius = 30
-            obj.hitboxHeight = 30
+            obj.hitboxRadius = 65
+            obj.hitboxHeight = 65
         end
     end
 end
@@ -198,6 +222,15 @@ function bhv_cloudflower_init(obj)
 end
 
 ---@param obj Object
+function bhv_rainbow_star_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj.hitboxRadius = 60
+    obj.hitboxHeight = 60
+    obj.oIntangibleTimer = 0
+    network_init_object(obj, true, nil)
+end
+
+---@param obj Object
 function bhv_beesuit_loop(obj)
     object_step()
     general_powerup_handler(obj, BEE)
@@ -206,6 +239,12 @@ end
 ---@param obj Object
 function bhv_cloudflower_loop(obj)
     general_powerup_handler(obj, CLOUD)
+end
+
+---@param obj Object
+function bhv_rainbow_star_loop(obj)
+    obj.oFaceAngleYaw = obj.oFaceAngleYaw + 0x860
+    general_powerup_handler(obj, RAINBOW)
 end
 
 ---only deletes for local player
@@ -308,6 +347,7 @@ end
 
 bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv_beesuit_loop)
 bhvCloudFlower = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cloudflower_init, bhv_cloudflower_loop)
+bhvRainbowStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rainbow_star_init, bhv_rainbow_star_loop)
 
 ---@param m MarioState
 function bee_update(m)
@@ -399,7 +439,83 @@ function act_fly(m)
     m.marioObj.header.gfx.angle.y = m.faceAngle.y - 0x8000
 end
 
+--best one yet
+--[[            i = i + 20
+                j = gt / 50
+                local r = math.sin(0.00 + i / 15 + gMarioObject.oTimer / 2) * 127 + 127
+                local g = math.sin(0.33 + i / 33 + j) * 127 + 127
+                local b = math.sin(0.66 + i / 77 + j) * 127 + 127]]
+
+local rainbow_acts = {
+    [ACT_JUMP] = true,
+    [ACT_HOLD_JUMP] = true,
+    [ACT_DOUBLE_JUMP] = true,
+    [ACT_TRIPLE_JUMP] = true,
+}
+
+---@param m MarioState
+function rainbow_powerup(m)
+    if m.playerIndex ~= 0 then return end
+    local gMarioObject = m.marioObj
+
+    local gt = get_global_timer()
+    --djui_chat_message_create(tostring(gMarioObject.oHiddenBlueCoinSwitch))
+    if gPlayerSyncTable[0].powerup == RAINBOW then
+        if not rainbow_music then
+            audio_stream_set_looping(audio_rainbowmario, true)
+            audio_stream_play(audio_rainbowmario, true, 1.2)
+            rainbow_music = true
+        end
+
+        rainbow_timer = rainbow_timer + 1
+        set_background_music(0, 0, 0)
+
+        m.particleFlags = PARTICLE_SPARKLES
+
+        if rainbow_acts[m.action] then
+            m.action = ACT_SPECIAL_TRIPLE_JUMP
+        end
+
+
+        if m.action == ACT_WALKING then
+            m.forwardVel = 40
+        end
+        ---@type PlayerPart
+        for part = PANTS, PLAYER_PART_MAX - 1 do
+            for i = 0, 255 do
+                i = i + 20
+                j = gt / 50
+                local r = math.sin(0.00 + i / 15 + gMarioObject.oTimer / 2) * 127 + 127
+                local g = math.sin(0.33 + i / 33 + j) * 127 + 127
+                local b = math.sin(0.66 + i / 77 + j) * 127 + 127
+                --local x = 64 + i
+                --local y = 64 + i + math.sin(i / 40 + j) * 64
+                --[[if i == 255 then
+                    r = 0
+                    g = 0
+                    b = 0
+                end]]
+
+                --djui_chat_message_create(tostring(i))
+                network_player_set_override_palette_color(gNetworkPlayers[0], part, { r = r, g = g, b = b })
+            end
+        end
+
+        if rainbow_timer > (20 * 30) then
+            gPlayerSyncTable[0].powerup = NORMAL
+            rainbow_timer = 0
+            rainbow_music = false
+            audio_stream_stop(audio_rainbowmario)
+            set_background_music(0, savedBGM, 0)
+        end
+    else
+        network_player_reset_override_palette(gNetworkPlayers[0])
+        savedBGM = get_current_background_music()
+    end
+end
+
 hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
+hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)

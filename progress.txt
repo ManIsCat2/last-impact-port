@@ -25,5 +25,5 @@ PSS - 50% - dead%
 COTMC - 80% done
 TOTWC - 80% done
 VCUTM - 70% done
-WMOTR - 50% - dead%
+WMOTR - 50% - dead% // minigame house
 SA - 50% done

@@ -1,4 +1,4 @@
-local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags =
+local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale, cutscene_object_with_dialog, smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle, approach_s16_symmetric, math_sin, nearest_mario_state_to_object, nearest_player_to_object, save_file_get_total_star_count, spawn_sync_object, get_current_save_file_num, sins, coss, cur_obj_resolve_wall_collisions, load_object_collision_model, object_step, smlua_collision_util_get, smlua_model_util_get_id, cur_obj_is_mario_on_platform, approach_f32_asymptotic, cur_obj_init_animation, dist_between_objects, cur_obj_play_sound_1, cur_obj_play_sound_2, approach_f32_symmetric, cur_obj_is_mario_ground_pounding_platform, cur_obj_hide, cur_obj_become_intangible, cur_obj_unhide, cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded, bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags, save_file_get_star_flags =
     find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behavior_id, obj_scale,
     cutscene_object_with_dialog,
     smlua_anim_util_set_animation, obj_angle_to_object, obj_check_hitbox_overlap, play_puzzle_jingle,
@@ -10,7 +10,8 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     cur_obj_is_mario_ground_pounding_platform, cur_obj_hide,
     cur_obj_become_intangible, cur_obj_unhide,
     cur_obj_become_tangible, cur_obj_scale_over_time, obj_scale_xyz, cur_obj_was_attacked_or_ground_pounded,
-    bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags
+    bhv_pole_base_loop, obj_get_next_with_same_behavior_id, obj_get_first_with_behavior_id, save_file_get_flags,
+    save_file_get_star_flags
 
 mark_obj_for_deletion = obj_mark_for_deletion
 if not SM64COOPDX_VERSION then
@@ -56,7 +57,7 @@ end
 
 ---@param m MarioState
 ---@return boolean
-local function is_bubbled(m)
+function is_bubbled(m)
     return m.action == ACT_BUBBLED
 end
 
@@ -549,7 +550,7 @@ end
 
 ---@param o Object
 function bhv_pink_piranha_loop(o)
-    obj_mark_for_deletion(o) -----not coded for now
+    obj_mark_for_deletion(o) -----not done for now
     if o.oInteractStatus ~= 0 then
         o.oInteractStatus = 0
     end
@@ -2188,7 +2189,7 @@ local function bhv_konami_code_gate(o)
 end
 
 local function bhv_konami_code_gate_loop(o)
-    load_object_collision_model() --not coded yet
+    load_object_collision_model() --not done yet
 end
 
 bhvKonamiCodeGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_konami_code_gate, bhv_konami_code_gate_loop)
@@ -2336,8 +2337,21 @@ end
 ---@param o Object
 local function bhv_moving_chomp_loop(o)
     object_step()
+    o.oInteractStatus = 0
     o.oMoveAngleYaw = o.oMoveAngleYaw + 0x100
     o.oFaceAnglePitch = o.oFaceAnglePitch + 0x500
+
+    if gPlayerSyncTable[network_local_index_from_global(nearest_player_to_object(o).globalPlayerIndex)].powerup == RAINBOW then
+        o.oInteractType = 0
+        if obj_check_hitbox_overlap(o, nearest_player_to_object(o)) then
+            obj_mark_for_deletion(o)
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            obj_spawn_yellow_coins(o, 3)
+            play_sound(SOUND_OBJ_KING_WHOMP_DEATH, gGlobalSoundSource)
+        end
+    else
+        o.oInteractType = INTERACT_DAMAGE
+    end
 end
 
 bhvMovingChomp = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_moving_chomp_init, bhv_moving_chomp_loop)
@@ -2442,3 +2456,18 @@ local function bhv_ttc_static_tree(o)
 end
 
 bhvTTCStaticTree = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_ttc_static_tree, nil)
+
+---@param o Object
+function bhv_ttc_cloud(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1500
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("ttc_cloud_collision")
+end
+
+---@param o Object
+function bhv_ttc_cloud_loop(o)
+    load_object_collision_model() -- not done yet
+end
+
+bhvTTCCloud = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ttc_cloud, bhv_ttc_cloud_loop)
