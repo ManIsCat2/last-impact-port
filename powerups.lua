@@ -478,7 +478,7 @@ function rainbow_powerup(m)
 
 
         if m.action == ACT_WALKING then
-            m.forwardVel = 40
+            m.forwardVel = 45
         end
         ---@type PlayerPart
         for part = PANTS, PLAYER_PART_MAX - 1 do
@@ -488,15 +488,6 @@ function rainbow_powerup(m)
                 local r = math.sin(0.00 + i / 15 + gMarioObject.oTimer / 2) * 127 + 127
                 local g = math.sin(0.33 + i / 33 + j) * 127 + 127
                 local b = math.sin(0.66 + i / 77 + j) * 127 + 127
-                --local x = 64 + i
-                --local y = 64 + i + math.sin(i / 40 + j) * 64
-                --[[if i == 255 then
-                    r = 0
-                    g = 0
-                    b = 0
-                end]]
-
-                --djui_chat_message_create(tostring(i))
                 network_player_set_override_palette_color(gNetworkPlayers[0], part, { r = r, g = g, b = b })
             end
         end

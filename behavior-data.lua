@@ -2336,7 +2336,7 @@ local function bhv_moving_chomp_init(o)
     o.header.gfx.skipInViewCheck = true
     o.oFriction = 1
     obj_scale(o, 2)
-    obj_set_hitbox_radius_and_height(o, 400, 400)
+    obj_set_hitbox_radius_and_height(o, 350, 350)
     o.oForwardVel = 16
     o.oAnimations = gObjectAnimations.chain_chomp_seg6_anims_06025178
     o.oIntangibleTimer = 0
