@@ -18,9 +18,9 @@ WDW - 50% - dead%
 TTM - 50% done
 THI - 80% done
 TTC - 65% done
-RR - 95% done
+RR - 98% done
 BITDW - 80% done
-BITFS - 75% done
+BITFS - 80% done
 PSS - 50% - dead%
 COTMC - 80% done
 TOTWC - 80% done

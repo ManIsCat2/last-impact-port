@@ -61,6 +61,20 @@ function is_bubbled(m)
     return m.action == ACT_BUBBLED
 end
 
+---@param o Object
+---@return boolean
+function is_any_mario_groundpounding_obj(o)
+    for i = 0, 15 do
+        local mstate = gMarioStates[i]
+        if mstate.marioObj.platform == o then
+            if mstate.action == ACT_GROUND_POUND_LAND then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 function get_curr_star_count()
     return save_file_get_total_star_count(get_current_save_file_num() - 1, COURSE_NONE, COURSE_SA)
 end
@@ -2471,3 +2485,45 @@ function bhv_ttc_cloud_loop(o)
 end
 
 bhvTTCCloud = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_ttc_cloud, bhv_ttc_cloud_loop)
+
+---@param o Object
+function bhv_bitfs_slime_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bitfs_slime_collision")
+    network_init_object(o, true, nil)
+end
+
+slimesize_amount = 0.015
+slimesize_amount_fast = 0.025
+
+---@param o Object
+function bhv_bitfs_slime_loop(o)
+    load_object_collision_model()
+
+    if o.oAction == 0 then
+        if cur_obj_is_any_player_on_platform() == 1 then
+            o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 0, slimesize_amount)
+            o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 2, slimesize_amount)
+            o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 2, slimesize_amount)
+        else
+            o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 1, slimesize_amount)
+            o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 1, slimesize_amount)
+            o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, slimesize_amount)
+        end
+
+        if is_any_mario_groundpounding_obj(o) then
+            o.oAction = 1
+            o.oTimer = 0
+        end
+    elseif o.oAction == 1 then
+        o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 0, slimesize_amount_fast)
+        o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 2, slimesize_amount_fast)
+        o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 2, slimesize_amount_fast)
+        if o.oTimer > 40 then
+            o.oAction = 0
+        end
+    end
+end
+
+bhvBITFSSlime = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_slime_init, bhv_bitfs_slime_loop)
