@@ -154,6 +154,7 @@ OBJECT(0,-1429,-7582,-876,0,0,0,0x8050000, bhvWarp),
 OBJECT(0,-1428,-7465,-1029,0,0,0,0x8050000, bhvWarp),
 OBJECT(0,-1431,-7465,-1182,0,0,0,0x8050000, bhvWarp),
 OBJECT(0,-1429,-7465,-876,0,0,0,0x8050000, bhvWarp),
+OBJECT(MODEL_SHADOW_MARIO,15373,-2204,-5338,0,0,0,0, bhvShadowMarioBoss),
 RETURN()
 };
 const LevelScript local_warps_bitfs_1_[] = {

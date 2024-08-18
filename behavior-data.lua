@@ -55,6 +55,21 @@ function is_star_colected(course, star, is100star)
     end
 end
 
+---@param obj Object
+---@param animTable table
+---@param animIndex integer
+function obj_init_animation_from_custom_table(obj, animTable, animIndex, vanillaAnim, speed)
+    local setAnim = animTable[animIndex]
+    if animTable then
+        obj.header.gfx.animInfo.animAccel = speed and speed * 65536 or 65536
+        if not vanillaAnim then
+            smlua_anim_util_set_animation(obj, setAnim)
+        else
+            obj.header.gfx.animInfo.curAnim = setAnim
+        end
+    end
+end
+
 ---@param m MarioState
 ---@return boolean
 function is_bubbled(m)
@@ -2491,11 +2506,11 @@ function bhv_bitfs_slime_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("bitfs_slime_collision")
-    network_init_object(o, true, nil)
+    network_init_object(o, true, { "oAction", "oTimer" })
 end
 
 slimesize_amount = 0.015
-slimesize_amount_fast = 0.025
+slimesize_amount_fast = 0.045
 
 ---@param o Object
 function bhv_bitfs_slime_loop(o)
@@ -2527,3 +2542,149 @@ function bhv_bitfs_slime_loop(o)
 end
 
 bhvBITFSSlime = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_slime_init, bhv_bitfs_slime_loop)
+
+bossShadowMarioAnims = {
+    [0] = get_mario_vanilla_animation(MARIO_ANIM_FIRST_PERSON),
+    get_mario_vanilla_animation(MARIO_ANIM_RUNNING),
+    get_mario_vanilla_animation(MARIO_ANIM_FIRST_PUNCH),
+    get_mario_vanilla_animation(MARIO_ANIM_DIVE),
+    get_mario_vanilla_animation(MARIO_ANIM_FORWARD_SPINNING),
+    get_mario_vanilla_animation(MARIO_ANIM_SLIDEFLIP),
+    get_mario_vanilla_animation(MARIO_ANIM_GROUND_BONK),
+}
+
+MODEL_SHADOW_MARIO = smlua_model_util_get_id("shadow_mario_geo")
+
+---@param o Object
+function bhv_boss_shadow_mario_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+
+    obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 0, true)
+
+    o.oGraphYOffset = 40
+
+    o.oFriction = 1
+    o.oGravity = 3
+
+    o.oInteractType = INTERACT_DAMAGE
+    o.oIntangibleTimer = 0
+    o.oDamageOrCoinValue = 2
+    
+    o.oHealth = 6
+
+    obj_set_hitbox_radius_and_height(o, 85, 120)
+
+    network_init_object(o, true,
+        { "oAction", "oBirdSpeed", "oMoveAngleYaw", "oAnimState", "oInteractStatus", "oForwardVel", "oSubAction",
+            "oHeldState", "oHealth" })
+end
+
+---@param o Object
+function bhv_boss_shadow_mario_loop(o)
+    local nearestP = nearest_player_to_object(o)
+    local nearestMstate = nearest_mario_state_to_object(o)
+
+    djui_chat_message_create(tostring(o.oHealth))
+
+    object_step()
+
+    if o.oAction ~= 0 then
+        -- check if this bigger than 260, set allow dive to true
+        o.oBirdSpeed = o.oBirdSpeed + 9
+        ---check if this bigger then 320 then allow jump
+        o.oHeldState = o.oHeldState + 14
+        if o.oBirdSpeed > 260 then
+            o.oBirdSpeed = 0
+            o.oAnimState = 1
+        end
+
+        if o.oHeldState > 360 then
+            o.oHeldState = 0
+            o.oAnimState = 2
+        end
+        if o.oAction ~= 2 then
+            if o.oAction ~= 3 and o.oAction ~= 4 and o.oAction ~= 5 then
+                o.oForwardVel = 30
+                o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearestP), 0x530)
+            end
+        end
+    end
+
+    if o.oAction == 0 then
+        if dist_between_objects(nearestP, o) < 2300 then
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.oInteractType = INTERACT_DAMAGE
+        obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 1, true, 3.2)
+        if o.oInteractStatus & INT_STATUS_ATTACKED_MARIO ~= 0 and o.oAnimState == 0 then
+            o.oInteractStatus = 0
+            o.oAction = 2
+        end
+
+        if dist_between_objects(o, nearestP) < 300 and o.oAnimState == 1 then
+            o.oAction = 3
+        end
+
+        if dist_between_objects(o, nearestP) < 250 and o.oAnimState == 2 then
+            o.oAction = 4
+        end
+    elseif o.oAction == 2 then
+        o.oInteractStatus = 0
+        o.oForwardVel = 0
+        obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 2, true, 0.1)
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 20 then
+            o.oAction = 1
+        end
+    elseif o.oAction == 3 then
+        o.oInteractStatus = 0
+        o.oForwardVel = 48
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction < 15 then
+            obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 3, true, 1)
+        else
+            obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 4, true, 1)
+            if o.oSubAction > 25 then
+                o.oAnimState = 0
+                o.oAction = 1
+            end
+        end
+    elseif o.oAction == 4 then
+        o.oInteractStatus = 0
+        if o.oSubAction == 0 then
+            o.oVelY = 40
+        end
+
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 20 then
+            o.oAnimState = 0
+            o.oAction = 1
+            o.oSubAction = 0
+        end
+        obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 5, true, 1)
+        o.oForwardVel = 29
+    elseif o.oAction == 5 then
+        o.oInteractType = 0
+        o.oForwardVel = -4
+        o.oSubAction = o.oSubAction + 1
+        obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 6, true, 1)
+        if o.oSubAction > 35 then
+            o.oAction = 1
+        end
+    end
+
+    if dist_between_objects(o, nearestP) < 180 and o.oAction ~= 5 then
+        if nearestMstate.action == ACT_JUMP_KICK or nearestMstate.action == ACT_PUNCHING or nearestMstate.action == ACT_MOVE_PUNCHING or nearestMstate.action == ACT_GROUND_POUND_LAND then
+            o.oAction = 5
+            o.oHealth = o.oHealth - 1
+        end
+    end
+
+    if o.oHealth <= 0 then
+        spawn_triangle_break_particles(20, 138, 3.0, 4);
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvShadowMarioBoss = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_boss_shadow_mario_init, bhv_boss_shadow_mario_loop)
