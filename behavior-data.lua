@@ -14,6 +14,10 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
     save_file_get_star_flags
 
 mark_obj_for_deletion = obj_mark_for_deletion
+
+gGlobalSyncTable.goombabros1killed = false
+gGlobalSyncTable.goombabros1 = false
+
 if not SM64COOPDX_VERSION then
     gGlobalSoundSource = { x = 0, y = 0, z = 0 }
 end
@@ -2568,8 +2572,8 @@ function bhv_boss_shadow_mario_init(o)
 
     o.oInteractType = INTERACT_DAMAGE
     o.oIntangibleTimer = 0
-    o.oDamageOrCoinValue = 2
-    
+    o.oDamageOrCoinValue = 1
+
     o.oHealth = 6
 
     obj_set_hitbox_radius_and_height(o, 85, 120)
@@ -2674,6 +2678,7 @@ function bhv_boss_shadow_mario_loop(o)
 
     if dist_between_objects(o, nearestP) < 130 and o.oAction ~= 5 then
         if nearestMstate.action == ACT_JUMP_KICK or nearestMstate.action == ACT_PUNCHING or nearestMstate.action == ACT_MOVE_PUNCHING or nearestMstate.action == ACT_GROUND_POUND then
+            play_sound(SOUND_ACTION_HIT_2, gGlobalSoundSource)
             o.oAction = 5
             o.oHealth = o.oHealth - 1
         end
@@ -2686,3 +2691,122 @@ function bhv_boss_shadow_mario_loop(o)
 end
 
 bhvShadowMarioBoss = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_boss_shadow_mario_init, bhv_boss_shadow_mario_loop)
+
+MODEL_GOOMBABROS_TRIANGLE = smlua_model_util_get_id("goomba_bros_triangle_geo")
+
+function bhv_goomba_bros_triangle_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW|OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.oGravity = -3
+    o.collisionData = smlua_collision_util_get("goomba_bros_triangle_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+function bhv_goomba_bros_triangle_loop(o)
+    obj_mark_for_deletion(o) -- not done
+    load_object_collision_model()
+    if gGlobalSyncTable.goombabros1 then
+        cur_obj_enable_rendering()
+        cur_obj_become_tangible()
+    else
+        cur_obj_disable_rendering()
+        cur_obj_become_intangible()
+    end
+
+    --[[if is_star_colected(COURSE_NONE, 1) then
+        obj_mark_for_deletion(o)
+    end]]
+
+    if not gGlobalSyncTable.goombabros1 then return end
+    if o.oAction == 1 then
+        o.oMoveAngleYaw = o.oMoveAngleYaw + 0x220
+        o.oForwardVel = 12
+    end
+end
+
+bhvGoombaBrosTraingle = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_goomba_bros_triangle_init, bhv_goomba_bros_triangle_loop)
+
+---gomba bros!!
+MODEL_GOOMBA_BRO1 = smlua_model_util_get_id("goomba_bro_1_geo")
+MODEL_GOOMBA_BRO2 = smlua_model_util_get_id("goomba_bro_2_geo")
+MODEL_GOOMBA_BRO3 = smlua_model_util_get_id("goomba_bro_3_geo")
+
+---@param o Object
+function bhv_goomba_bros_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW|OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.oAnimations = gObjectAnimations.goomba_seg8_anims_0801DA4C
+    cur_obj_init_animation(0)
+
+    o.oGravity = -3
+
+    cur_obj_scale(1.3)
+
+    network_init_object(o, false, nil)
+end
+
+---@param o Object
+function bhv_goomba_bros_loop(o) --not done
+    local nearestPlayer = nearest_player_to_object(o)
+    local nearestMario = nearest_mario_state_to_object(o)
+
+    ---@type MarioState
+    local gMarioState = gMarioStates[0]
+
+    if get_curr_star_count() >= 30 then
+        gGlobalSyncTable.goombabros1 = true
+    end
+
+    if gGlobalSyncTable.goombabros1 then
+        cur_obj_enable_rendering()
+        cur_obj_become_tangible()
+    else
+        cur_obj_disable_rendering()
+        cur_obj_become_intangible()
+    end
+
+    if is_star_colected(COURSE_NONE, 1) then
+        obj_mark_for_deletion(o)
+    end
+
+    if not gGlobalSyncTable.goombabros1 then return end
+
+    if o.oAction == 0 then
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearestPlayer),
+            0x300)
+
+        if dist_between_objects(o, gMarioState.marioObj) < 800 then
+            if gMarioState.pos.y == gMarioState.floorHeight then
+                gMarioState.action = ACT_READING_NPC_DIALOG
+                if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 147) ~= 0 then
+                    for_each_object_with_behavior(bhvGoombaBros,
+                        function(o)
+                            o.oAction = 1
+                            o.oMoveAngleYaw = 0
+                            if (o.oBehParams >> 24) & 0xFF == 1 then
+                                o.oPosX = 5935
+                                o.oPosY = -670
+                                o.oPosZ = -630
+                            end
+
+                            if (o.oBehParams >> 24) & 0xFF == 0 then
+                                o.oPosX = 5665
+                                o.oPosY = -670
+                                o.oPosZ = -971
+                            end
+
+                            obj_get_nearest_object_with_behavior_id(o, bhvGoombaBrosTraingle).oAction = 1
+                            network_send_object(o, true)
+                        end)
+                end
+            end
+        end
+    end
+
+    if o.oAction == 1 then
+        --cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearestPlayer), 0x230)
+        o.oMoveAngleYaw = o.oMoveAngleYaw + 0x220
+        o.oForwardVel = 12
+        network_send_object(o, true)
+    end
+end
+
+bhvGoombaBros = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_goomba_bros_init, bhv_goomba_bros_loop)
