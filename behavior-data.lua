@@ -2584,8 +2584,6 @@ function bhv_boss_shadow_mario_loop(o)
     local nearestP = nearest_player_to_object(o)
     local nearestMstate = nearest_mario_state_to_object(o)
 
-    djui_chat_message_create(tostring(o.oHealth))
-
     object_step()
 
     if o.oAction ~= 0 then
@@ -2674,8 +2672,8 @@ function bhv_boss_shadow_mario_loop(o)
         end
     end
 
-    if dist_between_objects(o, nearestP) < 180 and o.oAction ~= 5 then
-        if nearestMstate.action == ACT_JUMP_KICK or nearestMstate.action == ACT_PUNCHING or nearestMstate.action == ACT_MOVE_PUNCHING or nearestMstate.action == ACT_GROUND_POUND_LAND then
+    if dist_between_objects(o, nearestP) < 130 and o.oAction ~= 5 then
+        if nearestMstate.action == ACT_JUMP_KICK or nearestMstate.action == ACT_PUNCHING or nearestMstate.action == ACT_MOVE_PUNCHING or nearestMstate.action == ACT_GROUND_POUND then
             o.oAction = 5
             o.oHealth = o.oHealth - 1
         end
