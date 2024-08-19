@@ -1403,7 +1403,7 @@ slimesize_amount = 0.015
 slimesize_amount_fast = 0.045
 ]]
 marshmallow_inc_dec_slow = 0.015
-marshmallow_inc_dec_fast = 0.06
+marshmallow_inc_dec_fast = 0.082
 
 local function bhv_marshmallow_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -1441,7 +1441,7 @@ local function bhv_marshmallow_loop(o)
 
         o.oSubAction = o.oSubAction + 1
 
-        if o.oSubAction > 30 then
+        if o.oSubAction > 15 then
             o.oAction = 2
         end
     elseif o.oAction == 2 then
@@ -1451,7 +1451,7 @@ local function bhv_marshmallow_loop(o)
 
         o.oSubAction = o.oSubAction + 1
 
-        if o.oSubAction > 15 then
+        if o.oSubAction > 5 then
             o.oAction = 0
             o.oSubAction = 0
             o.oAnimState = 1
@@ -2573,7 +2573,7 @@ function bhv_bitfs_slime_loop(o)
             o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, slimesize_amount)
         end
 
-        if is_any_mario_groundpounding_obj(o) then
+        if is_any_mario_groundpounding_obj(o) or (_G.OmmEnabled and nearest_mario_state_to_object(o).action == _G.OmmApi["ACT_OMM_SPIN_POUND_LAND"] and nearest_mario_state_to_object(o).marioObj.platform == o) then
             o.oAction = 1
             o.oTimer = 0
         end
@@ -2728,6 +2728,7 @@ function bhv_boss_shadow_mario_loop(o)
 
     if o.oHealth <= 0 then
         spawn_triangle_break_particles(20, 138, 3.0, 4);
+        spawn_default_star(nearestMstate.pos.x, nearestMstate.pos.y + 230, nearestMstate.pos.z)
         obj_mark_for_deletion(o)
     end
 end
@@ -2869,7 +2870,10 @@ function bhv_floating_platform_generator_init(o)
         for i = 0, o.oBehParams2ndByte do
             spawn_non_sync_object(bhvFloatingPlatformGenerator, MODEL_FLOATING_PLATFORM_GENERATOR,
                 i & 1 == 0 and o.oPosX + (i * floating_platform_generators_distance) or
-                o.oPosX - (i * floating_platform_generators_distance), o.oPosY, o.oPosZ, function (obj) obj.oFaceAngleYaw = 16384; obj_set_model_extended(o, MODEL_FLOATING_PLATFORM_GENERATOR) end)
+                o.oPosX - (i * floating_platform_generators_distance), o.oPosY, o.oPosZ,
+                function(obj)
+                    obj.oFaceAngleYaw = 16384; obj_set_model_extended(o, MODEL_FLOATING_PLATFORM_GENERATOR)
+                end)
         end
     end
 end
