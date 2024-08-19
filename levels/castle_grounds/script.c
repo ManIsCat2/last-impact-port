@@ -148,7 +148,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		WARP_NODE(206, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
 		WARP_NODE(191, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
 		WARP_NODE(207, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
-		OBJECT(60, -310, -394, -278, 0, 90, 0, 0x120000, Bhv_Custom_0x130013b8),
+		OBJECT(E_MODEL_NONE, -310, -394, -278, 0, 90, 0, 0x120000, bhvFloatingPlatformGenerator),
 		OBJECT(0, -260, -266, -313, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),
 		OBJECT(0, -7448, 16, -885, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),
 		OBJECT(0, -1771, -1164, -2344, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),

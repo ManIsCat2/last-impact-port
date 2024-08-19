@@ -1,0 +1,18 @@
+extern const GeoLayout floating_platform_generator_geo[];
+extern Lights1 floating_platform_generator_Material_0_f3d_001_lights;
+extern Lights1 floating_platform_generator_Material_1_f3d_001_lights;
+extern Lights1 floating_platform_generator_Material_2_f3d_001_lights;
+extern u8 floating_platform_generator__0_rgba16[];
+extern u8 floating_platform_generator__1_rgba16[];
+extern u8 floating_platform_generator__2_rgba16[];
+extern Vtx floating_platform_generator_node_mesh_layer_1_vtx_0[8];
+extern Gfx floating_platform_generator_node_mesh_layer_1_tri_0[];
+extern Vtx floating_platform_generator_node_mesh_layer_1_vtx_1[19];
+extern Gfx floating_platform_generator_node_mesh_layer_1_tri_1[];
+extern Vtx floating_platform_generator_node_mesh_layer_1_vtx_2[84];
+extern Gfx floating_platform_generator_node_mesh_layer_1_tri_2[];
+extern Gfx mat_floating_platform_generator_Material_0_f3d_001[];
+extern Gfx mat_floating_platform_generator_Material_1_f3d_001[];
+extern Gfx mat_floating_platform_generator_Material_2_f3d_001[];
+extern Gfx floating_platform_generator_node_mesh_layer_1[];
+extern Gfx floating_platform_generator_material_revert_render_settings[];

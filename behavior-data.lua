@@ -2853,3 +2853,31 @@ function bhv_goomba_bros_loop(o) --not done
 end
 
 bhvGoombaBros = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_goomba_bros_init, bhv_goomba_bros_loop)
+
+MODEL_FLOATING_PLATFORM_GENERATOR = smlua_model_util_get_id("floating_platform_generator_geo")
+
+floating_platform_generators_distance = 260
+
+---@param o Object
+function bhv_floating_platform_generator_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oCollisionDistance = 1500
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("floating_platform_generator_collision")
+
+    if o.oBehParams2ndByte == 18 then
+        for i = 0, o.oBehParams2ndByte do
+            spawn_non_sync_object(bhvFloatingPlatformGenerator, MODEL_FLOATING_PLATFORM_GENERATOR,
+                i & 1 == 0 and o.oPosX + (i * floating_platform_generators_distance) or
+                o.oPosX - (i * floating_platform_generators_distance), o.oPosY, o.oPosZ, function (obj) obj.oFaceAngleYaw = 16384; obj_set_model_extended(o, MODEL_FLOATING_PLATFORM_GENERATOR) end)
+        end
+    end
+end
+
+---@param o Object
+function bhv_floating_platform_generator_loop(o)
+    load_object_collision_model()
+end
+
+bhvFloatingPlatformGenerator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_floating_platform_generator_init,
+    bhv_floating_platform_generator_loop)
