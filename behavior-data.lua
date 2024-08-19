@@ -1398,6 +1398,13 @@ end
 
 bhvTHIFan = hook_behavior(nil, --[[not sure]] OBJ_LIST_LEVEL, true, bhv_thi_fan_init, bhv_thi_fan_loop)
 
+--[[
+slimesize_amount = 0.015
+slimesize_amount_fast = 0.045
+]]
+marshmallow_inc_dec_slow = 0.015
+marshmallow_inc_dec_fast = 0.06
+
 local function bhv_marshmallow_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
@@ -1407,17 +1414,52 @@ end
 
 local function bhv_marshmallow_loop(o)
     load_object_collision_model()
-    if cur_obj_is_mario_ground_pounding_platform() == 1 and o.oAction == 0 then
-        o.oAction = 1
-    end
 
-    if o.oAction == 1 then
-        o.oSubAction = o.oSubAction + 0.5
-        obj_act_squished(o.oSubAction)
+    if o.oAction == 0 then
+        if cur_obj_is_mario_on_platform() == 1 then
+            o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 0.7, marshmallow_inc_dec_slow)
+            o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 1.1, marshmallow_inc_dec_slow)
+            o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1.1, marshmallow_inc_dec_slow)
+            if o.oAnimState == 1 then
+                gMarioStates[0].action = ACT_TRIPLE_JUMP
+                gMarioStates[0].vel.y = 120
+                o.oAnimState = 0
+            end
+        else
+            o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 1, marshmallow_inc_dec_slow)
+            o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 1, marshmallow_inc_dec_slow)
+            o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, marshmallow_inc_dec_slow)
+            o.oAnimState = 0
+        end
+        if cur_obj_is_mario_ground_pounding_platform() == 1 then
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 0.4, marshmallow_inc_dec_fast)
+        o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 2, marshmallow_inc_dec_fast)
+        o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 2, marshmallow_inc_dec_fast)
+
+        o.oSubAction = o.oSubAction + 1
+
+        if o.oSubAction > 30 then
+            o.oAction = 2
+        end
+    elseif o.oAction == 2 then
+        o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 1, marshmallow_inc_dec_fast)
+        o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 1, marshmallow_inc_dec_fast)
+        o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, marshmallow_inc_dec_fast)
+
+        o.oSubAction = o.oSubAction + 1
+
+        if o.oSubAction > 15 then
+            o.oAction = 0
+            o.oSubAction = 0
+            o.oAnimState = 1
+        end
     end
 end
 
-bhvMarshMallow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_marshmallow_init, bhv_noteblock_loop)
+bhvMarshMallow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_marshmallow_init, bhv_marshmallow_loop)
 
 local function bhv_fading_warp_stand_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -2723,7 +2765,8 @@ function bhv_goomba_bros_triangle_loop(o)
     end
 end
 
-bhvGoombaBrosTraingle = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_goomba_bros_triangle_init, bhv_goomba_bros_triangle_loop)
+bhvGoombaBrosTraingle = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_goomba_bros_triangle_init,
+    bhv_goomba_bros_triangle_loop)
 
 ---gomba bros!!
 MODEL_GOOMBA_BRO1 = smlua_model_util_get_id("goomba_bro_1_geo")
