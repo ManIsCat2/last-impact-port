@@ -61,7 +61,7 @@ hook_event(HOOK_OBJECT_SET_MODEL, function(o)
             obj_set_model_extended(o, gPlayerSyncTable[i].modelId)
         end
 
-        if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[0].powerup = NORMAL end
+        if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[i].powerup = NORMAL end
     end
 end)
 
@@ -165,23 +165,23 @@ hook_event(HOOK_UPDATE, energy_meter)
 ---@param powerup integer
 ---@param obj Object
 function general_powerup_handler(obj, powerup)
-    for i = 0, 15 do
-        local m = gMarioStates[i]
-        if obj.oAction == 0 then
-            if obj_check_hitbox_overlap(m.marioObj, obj) then
-                obj.oAction = 1
-                cur_obj_hide()
-                obj.oTimer = 0
-                cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
-                gPlayerSyncTable[i].powerup = powerup
-                if powerup == RAINBOW then
-                    if m.playerIndex == 0 then
-                        rainbow_timer = 0
-                    end
+    local nreaetsplayertopwoerup = nearest_player_to_object(obj)
+    local nearestmariotopowerup = nearest_mario_state_to_object(obj)
+    if obj.oAction == 0 then
+        if obj_check_hitbox_overlap(nreaetsplayertopwoerup, obj) then
+            obj.oAction = 1
+            cur_obj_hide()
+            obj.oTimer = 0
+            cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
+            gPlayerSyncTable[network_local_index_from_global(nreaetsplayertopwoerup.globalPlayerIndex)].powerup = powerup
+            if powerup == RAINBOW then
+                if nearestmariotopowerup.playerIndex == 0 then
+                    rainbow_timer = 0
                 end
             end
         end
     end
+
 
     if obj.oAction == 1 then
         obj.hitboxRadius = 0
