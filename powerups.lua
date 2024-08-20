@@ -57,11 +57,15 @@ end
 hook_event(HOOK_OBJECT_SET_MODEL, function(o)
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
         local i = network_local_index_from_global(o.globalPlayerIndex)
+
+        if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[i].powerup = NORMAL end
+
+        if charSelect then
+            if charSelect.character_get_current_number() ~= 1 then return end
+        end
         if gPlayerSyncTable[i].modelId ~= nil and obj_has_model_extended(o, gPlayerSyncTable[i].modelId) == 0 then
             obj_set_model_extended(o, gPlayerSyncTable[i].modelId)
         end
-
-        if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[i].powerup = NORMAL end
     end
 end)
 

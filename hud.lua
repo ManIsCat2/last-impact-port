@@ -80,15 +80,15 @@ function base_hud()
         -- Life Counter
 
         local lifeIcon = charSelect and charSelect.character_get_life_icon(0) or m.character.hudHeadTexture
-        djui_hud_render_texture(lifeIcon, 22, 15, 1, 1)
+        djui_hud_render_texture(lifeIcon, 22, 15, charSelect and 16/lifeIcon.width or 1, charSelect and 16/lifeIcon.height or 1)
 
         djui_hud_print_text("@", 38, 15, 1)
         djui_hud_print_text(tostring(m.numLives), 54, 15, 1)
 
         -- Star Counter
 
-        local starIcon = charSelect and charSelect.character_get_star_icon(0) or gTextures.star
-        djui_hud_render_texture(starIcon, 22, screenHeight - 32, 1, 1)
+        local starIcon = charSelect and charSelect.character_get_current_table(0).starIcon or gTextures.star
+        djui_hud_render_texture(starIcon, 22, screenHeight - 32, charSelect and 16/starIcon.width or 1, charSelect and 16/starIcon.height or 1)
 
         djui_hud_print_text("@", 38, screenHeight - 32, 1)
         djui_hud_print_text(tostring(m.numStars), 54, screenHeight - 32, 1)
