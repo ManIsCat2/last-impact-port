@@ -50,8 +50,8 @@ end
 ---@param is100star boolean|nil
 ---@return boolean
 function is_star_colected(course, star, is100star)
-    courseReal = course - 1
-    starflags = save_file_get_star_flags(get_current_save_file_num() - 1, courseReal)
+    local courseReal = course - 1
+    local starflags = save_file_get_star_flags(get_current_save_file_num() - 1, courseReal)
     if starflags & (1 << star) ~= 0 then
         return true
     else
@@ -63,6 +63,7 @@ end
 ---@param animTable table
 ---@param animIndex integer
 function obj_init_animation_from_custom_table(obj, animTable, animIndex, vanillaAnim, speed)
+    ---@type string|Animation
     local setAnim = animTable[animIndex]
     if animTable then
         obj.header.gfx.animInfo.animAccel = speed and speed * 65536 or 65536
@@ -2911,3 +2912,15 @@ end
 
 bhvBitfsGeneralUseGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bitfs_general_use_gate_init,
     bitfs_general_use_gate_loop)
+
+
+---@param o Object
+function bhv_sunken_thwomp(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("sunken_thwomp_collision")
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1600
+end
+
+bhvSunkenThwomp = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sunken_thwomp,
+    function(o) load_object_collision_model(); end)
