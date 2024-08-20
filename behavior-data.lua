@@ -2728,7 +2728,6 @@ function bhv_boss_shadow_mario_loop(o)
 
     if o.oHealth <= 0 then
         spawn_triangle_break_particles(20, 138, 3.0, 4);
-        spawn_default_star(nearestMstate.pos.x, nearestMstate.pos.y + 230, nearestMstate.pos.z)
         obj_mark_for_deletion(o)
     end
 end
@@ -2885,3 +2884,30 @@ end
 
 bhvFloatingPlatformGenerator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_floating_platform_generator_init,
     bhv_floating_platform_generator_loop)
+
+
+-- the door in bitfs (shadow factory)
+
+---@param o Object
+function bitfs_general_use_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("bitfs_general_use_cage_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+function bitfs_general_use_gate_loop(o)
+    load_object_collision_model()
+    if o.oBehParams == 0 then
+        if is_star_colected(COURSE_BITFS, 2) and get_curr_star_count() >= 45 then
+            obj_mark_for_deletion(o)
+        end
+    elseif (o.oBehParams >> 24) & 0xff == 1 and o.oBehParams2ndByte == 1 then
+        if not obj_get_nearest_object_with_behavior_id(o, bhvShadowMarioBoss) then
+            obj_mark_for_deletion(o)
+        end
+    end
+end
+
+bhvBitfsGeneralUseGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bitfs_general_use_gate_init,
+    bitfs_general_use_gate_loop)

@@ -1,0 +1,9 @@
+extern const GeoLayout bitfs_general_use_cage_geo[];
+extern Lights1 bitfs_general_use_cage_f3dlite_material_lights;
+extern u8 bitfs_general_use_cage__0_ia8[];
+extern Vtx bitfs_general_use_cage_000_displaylist_mesh_layer_4_vtx_0[4];
+extern Gfx bitfs_general_use_cage_000_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_bitfs_general_use_cage_f3dlite_material[];
+extern Gfx mat_revert_bitfs_general_use_cage_f3dlite_material[];
+extern Gfx bitfs_general_use_cage_000_displaylist_mesh_layer_4[];
+extern Gfx bitfs_general_use_cage_material_revert_render_settings[];
