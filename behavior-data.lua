@@ -26,6 +26,47 @@ local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
 
+-- (can) place Mario in dialog?
+-- initiate dialog?
+-- return values:
+-- 0 = not in dialog
+-- 1 = starting dialog
+-- 2 = speaking
+
+MARIO_DIALOG_STATUS_NONE = 0
+MARIO_DIALOG_STATUS_START = 1
+MARIO_DIALOG_STATUS_SPEAK = 2
+
+MARIO_DIALOG_STOP = 0
+MARIO_DIALOG_LOOK_FRONT = 1
+MARIO_DIALOG_LOOK_UP = 2
+MARIO_DIALOG_LOOK_DOWN = 3
+
+function set_mario_npc_dialog(actionArg, object)
+    local dialogState = MARIO_DIALOG_STATUS_NONE
+    local gMarioState = nearest_mario_state_to_object(object)
+
+    -- in dialog
+    if gMarioState.action == ACT_READING_NPC_DIALOG then
+        if gMarioState.actionState < 8 then
+            dialogState = MARIO_DIALOG_STATUS_START -- starting dialog
+        end
+        if gMarioState.actionState == 8 then
+            if actionArg == MARIO_DIALOG_STOP then
+                gMarioState.actionState = gMarioState.actionState + 1 -- exit dialog
+            else
+                dialogState = MARIO_DIALOG_STATUS_SPEAK
+            end
+        end
+    elseif actionArg ~= MARIO_DIALOG_STOP and mario_ready_to_speak(gMarioState) then
+        gMarioState.usedObj = object
+        set_mario_action(gMarioState, ACT_READING_NPC_DIALOG, actionArg)
+        dialogState = MARIO_DIALOG_STATUS_START -- starting dialog
+    end
+
+    return dialogState
+end
+
 ---@param param any
 ---@param case_table table<any, function>
 ---@return function | nil
@@ -1545,32 +1586,59 @@ bhvChocolate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_chocolate_init,
         load_object_collision_model()
     end)
 
+function bhv_whomp_moving_platform_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("whomp_moving_car_collision")
+    o.oMoveAngleYaw = -15300
+    network_init_object(o, true, nil)
+end
+
+function bhv_whomp_moving_platform_loop(o)
+    load_object_collision_model()
+end
+
+bhvWhompMovingCar = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_whomp_moving_platform_init,
+    bhv_whomp_moving_platform_loop)
+
+
 ---@param o Object
 local function bhv_whomp_npc_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.oInteractionSubtype = INT_SUBTYPE_NPC
     o.oInteractType = INTERACT_TEXT
-    o.hitboxRadius = 150
-    o.hitboxHeight = 350
+    o.collisionData = gGlobalObjectCollisionData.whomp_seg6_collision_06020A0C
     o.oIntangibleTimer = 0
     o.oAnimations = gObjectAnimations.whomp_seg6_anims_06020A04
+    o.oCollisionDistance = 900
     cur_obj_init_animation(0)
+    network_init_object(o, true, nil)
 end
+
+MODEL_WHOMP_MOVING_CAR = smlua_model_util_get_id("whomp_moving_car_geo")
 
 ---@param o Object
 local function bhv_whomp_npc_loop(o)
+    load_object_collision_model()
+    local mariostate = nearest_mario_state_to_object(o)
     if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
-        gMarioStates[0].action = ACT_READING_NPC_DIALOG
-        local response = cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, DIALOG_069)
-        if response == 1 then
-            o.oInteractStatus = 0 --not done yet, sooo i do that instead
-        elseif response == 2 then
-            o.oInteractStatus = 0
+        if should_start_or_continue_dialog(mariostate, o) ~= 0 then
+            local response = cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, 69)
+            if response == 1 then
+                spawn_sync_object(bhvWhompMovingCar, MODEL_WHOMP_MOVING_CAR, -1912, -493, 10909, nil).oMoveAngleYaw = -15300
+                o.oInteractType = 0
+
+                mariostate.action = ACT_IDLE
+                o.oInteractStatus = 0
+            elseif response == 2 then
+                mariostate.action = ACT_IDLE
+                o.oInteractStatus = 0
+            end
         end
     end
 end
 
-bhvWhompNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_whomp_npc_init, bhv_whomp_npc_loop)
+bhvWhompNPC = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_whomp_npc_init, bhv_whomp_npc_loop)
 
 local function bhv_thi2_platform(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
