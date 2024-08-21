@@ -58,7 +58,7 @@ function set_mario_npc_dialog(actionArg, object)
                 dialogState = MARIO_DIALOG_STATUS_SPEAK
             end
         end
-    elseif actionArg ~= MARIO_DIALOG_STOP and mario_ready_to_speak(gMarioState) then
+    elseif actionArg ~= MARIO_DIALOG_STOP and mario_ready_to_speak(gMarioState) == 1 then
         gMarioState.usedObj = object
         set_mario_action(gMarioState, ACT_READING_NPC_DIALOG, actionArg)
         dialogState = MARIO_DIALOG_STATUS_START -- starting dialog

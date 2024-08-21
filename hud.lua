@@ -43,6 +43,8 @@ POWER_METER_FIVE = get_texture_info("Five Power Meter")
 POWER_METER_SIX = get_texture_info("Six Power Meter")
 
 local sPowerMeterTexturesInfo = {
+    nil,
+    nil,
     POWER_METER_LEFT,
     POWER_METER_RIGHT,
     POWER_METER_ONE,
@@ -60,11 +62,11 @@ local sPowerMeterTexturesInfo = {
 --- @param width number
 --- @param height number
 function hud_render_power_meter(health, x, y, width, height)
-    djui_hud_render_texture(sPowerMeterTexturesInfo[1], x, y, width / 64, height / 64)
-    djui_hud_render_texture(sPowerMeterTexturesInfo[2], x + (width - 2) / 2, y, width / 64, height / 64)
-    local numWedges = math.min(math.max(math.floor((health >> 8) * 3 / 4), 0), 6)
-    if numWedges ~= 0 then
-        djui_hud_render_texture(sPowerMeterTexturesInfo[numWedges + 2], x + (width - 4) / 4, y + height / 4, width / 64,
+    djui_hud_render_texture(sPowerMeterTexturesInfo[3], x, y, width / 64, height / 64)
+    djui_hud_render_texture(sPowerMeterTexturesInfo[4], x + (width - 2) / 2, y, width / 64, height / 64)
+    local numWedges = (health >> 8) + 4
+    if numWedges ~= 4 then
+        djui_hud_render_texture(sPowerMeterTexturesInfo[numWedges], x + (width - 4) / 4, y + height / 4, width / 64,
             height / 64)
     end
 end

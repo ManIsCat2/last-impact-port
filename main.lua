@@ -45,6 +45,19 @@ function fuzzy_dizziness(m)
     end
 end
 
+function health_fix(m)
+    if m.playerIndex ~= 0 then return end
+
+    if (m.health >> 8) > 6 then
+        m.health = 6 << 8
+    end
+end
+
+function mario_update_hooks(m)
+    health_fix(m)
+    fuzzy_dizziness(m)
+end
+
 function remove_all_extra_states()
     local e = gMarioStateExtras[0]
     e.fuzzied = false
@@ -54,6 +67,6 @@ function remove_all_extra_states()
     end
 end
 
-hook_event(HOOK_MARIO_UPDATE, fuzzy_dizziness)
+hook_event(HOOK_MARIO_UPDATE, mario_update_hooks)
 hook_event(HOOK_ON_DEATH, remove_all_extra_states)
 hook_event(HOOK_ON_WARP, remove_all_extra_states)
