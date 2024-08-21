@@ -2868,9 +2868,11 @@ function bhv_goomba_bros_init(o)
 end
 
 ---@param o Object
-function bhv_goomba_bros_loop(o) --not done
+function bhv_goomba_bros_loop(o)
     local nearestPlayer = nearest_player_to_object(o)
     local nearestMario = nearest_mario_state_to_object(o)
+
+    obj_mark_for_deletion(o) -- not done
 
     ---@type MarioState
     local gMarioState = gMarioStates[0]
@@ -3019,7 +3021,7 @@ function bhv_quicksand_shadow_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.collisionData = smlua_collision_util_get("quicksand_shadow_collision")
     o.header.gfx.skipInViewCheck = true
-    network_init_object(o, true, {"oMoveAngleYaw", "oPosX", "oPosZ", "oForwardVel"})
+    network_init_object(o, true, { "oMoveAngleYaw", "oPosX", "oPosZ", "oForwardVel" })
 end
 
 ---@param o Object
@@ -3041,3 +3043,19 @@ end
 
 bhvQuicksandShadow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_quicksand_shadow_init,
     bhv_quicksand_shadow_loop)
+
+function bhv_pianta_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE| OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+    o.hitboxRadius = 130
+    o.hitboxHeight = 150
+    o.oIntangibleTimer = 0
+    smlua_anim_util_set_animation(o, "anim_pianta_idle")
+end
+
+function bhv_pianta_loop(o) -- maybe not done
+    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
+    
+end
+
+bhvPianta = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pianta_init, bhv_pianta_loop)
