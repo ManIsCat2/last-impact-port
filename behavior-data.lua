@@ -3019,17 +3019,23 @@ function bhv_quicksand_shadow_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.collisionData = smlua_collision_util_get("quicksand_shadow_collision")
     o.header.gfx.skipInViewCheck = true
+    network_init_object(o, true, {"oMoveAngleYaw", "oPosX", "oPosZ", "oForwardVel"})
 end
 
 ---@param o Object
 function bhv_quicksand_shadow_loop(o)
     load_object_collision_model();
     if o.oBehParams2ndByte == 0 then
-        o.oPosX = o.oPosX + math_sin(o.oTimer * 0.07) * 30
+        o.oForwardVel = math_sin(o.oTimer * 0.07) * 28
     end
 
     if o.oBehParams2ndByte == 2 then
         o.oForwardVel = math_sin(o.oTimer * 0.07) * 25
+    end
+
+    if o.oBehParams2ndByte == 1 then
+        o.oForwardVel = 9
+        o.oMoveAngleYaw = o.oMoveAngleYaw + 0x84
     end
 end
 
