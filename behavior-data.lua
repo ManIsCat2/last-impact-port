@@ -2689,6 +2689,8 @@ function bhv_boss_shadow_mario_init(o)
 
     obj_set_hitbox_radius_and_height(o, 85, 120)
 
+    cur_obj_set_home_once()
+
     network_init_object(o, true,
         { "oAction", "oBirdSpeed", "oMoveAngleYaw", "oAnimState", "oInteractStatus", "oForwardVel", "oSubAction",
             "oHeldState", "oHealth" })
@@ -2723,10 +2725,20 @@ function bhv_boss_shadow_mario_loop(o)
         end
     end
 
+    if nearestMstate.pos.z > -7221 and nearestMstate.pos.z < -3342
+        and nearestMstate.pos.x > 11379 and nearestMstate.pos.x < 19254 and o.oAction == 0 then
+        o.oAction = 1
+    elseif nearestMstate.pos.x < 11379 and o.oAction ~= 0 then
+        o.oAction = 0
+        cur_obj_set_pos_to_home()
+        o.oMoveAngleYaw = 16384
+    end
+
+
+
     if o.oAction == 0 then
-        if dist_between_objects(nearestP, o) < 2300 then
-            o.oAction = 1
-        end
+        o.oForwardVel = 0
+        obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 0, true)
     elseif o.oAction == 1 then
         o.oInteractType = INTERACT_DAMAGE
         obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 1, true, 3.2)
@@ -2962,6 +2974,7 @@ function bitfs_general_use_gate_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("bitfs_general_use_cage_collision")
     o.header.gfx.skipInViewCheck = true
+    cur_obj_set_home_once()
 end
 
 ---@param o Object
@@ -2975,6 +2988,14 @@ function bitfs_general_use_gate_loop(o)
         if not obj_get_nearest_object_with_behavior_id(o, bhvShadowMarioBoss) then
             obj_mark_for_deletion(o)
         end
+    elseif (o.oBehParams >> 24) & 0xff == 0 and o.oBehParams2ndByte == 1 then
+        if obj_get_nearest_object_with_behavior_id(o, bhvShadowMarioBoss) and obj_get_nearest_object_with_behavior_id(o, bhvShadowMarioBoss).oAction ~= 0 then
+            o.oPosY = -2128
+        else
+            o.oPosY = o.oHomeY
+        end
+    elseif not obj_get_nearest_object_with_behavior_id(o, bhvShadowMarioBoss) then
+        obj_mark_for_deletion(o)
     end
 end
 
