@@ -3013,3 +3013,25 @@ end
 
 bhvSunkenThwomp = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sunken_thwomp,
     function(o) load_object_collision_model(); end)
+
+---@param o Object
+function bhv_quicksand_shadow_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.collisionData = smlua_collision_util_get("quicksand_shadow_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+function bhv_quicksand_shadow_loop(o)
+    load_object_collision_model();
+    if o.oBehParams2ndByte == 0 then
+        o.oPosX = o.oPosX + math_sin(o.oTimer * 0.07) * 30
+    end
+
+    if o.oBehParams2ndByte == 2 then
+        o.oForwardVel = math_sin(o.oTimer * 0.07) * 25
+    end
+end
+
+bhvQuicksandShadow = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_quicksand_shadow_init,
+    bhv_quicksand_shadow_loop)

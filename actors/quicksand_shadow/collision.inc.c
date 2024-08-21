@@ -1,0 +1,13 @@
+const Collision quicksand_shadow_collision[] = {
+	COL_INIT(),
+	COL_VERTEX_INIT(4),
+	COL_VERTEX(174, 9, 174),
+	COL_VERTEX(-174, 9, -174),
+	COL_VERTEX(-174, 9, 174),
+	COL_VERTEX(174, 9, -174),
+	COL_TRI_INIT(SURFACE_INSTANT_QUICKSAND, 2),
+	COL_TRI(0, 1, 2),
+	COL_TRI(1, 0, 3),
+	COL_TRI_STOP(),
+	COL_END()
+};
