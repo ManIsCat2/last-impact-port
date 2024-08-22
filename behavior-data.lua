@@ -146,40 +146,6 @@ function save_has_key(key)
     return (save_file_get_flags() & key) ~= 0
 end
 
-local function obj_rotate_pitch_toward(o, target, increment)
-    local startPitch = o.oMoveAnglePitch
-    o.oMoveAnglePitch = approach_s16_symmetric(o.oMoveAnglePitch, target, increment)
-    o.oFaceAnglePitch = approach_s16_symmetric(o.oFaceAnglePitch, target, increment)
-
-    o.oAngleVelPitch = o.oMoveAnglePitch - startPitch
-
-    return o.oAngleVelPitch == 0
-end
-
-local function obj_pitch_angle_to_object(obj1, obj2)
-    if obj1 == nil or obj2 == nil then
-        return 0
-    end
-
-    local z1, x1, y1, z2, x2, y2, h, v
-    local angle
-
-    z1 = obj1.oPosZ
-    z2 = obj2.oPosZ
-    x1 = obj1.oPosX
-    x2 = obj2.oPosX
-    y1 = obj1.oPosY
-    y2 = obj2.oPosY
-
-    h = math.sqrt((z2 - z1) ^ 2 + (x2 - x1) ^ 2)
-    v = y2 - y1
-
-    angle = -atan2s(h, v)
-    return angle
-end
-
-local function approach_s32_symmetric(curr, targ, inc) approach_s32(curr, targ, inc, inc) end
-
 function spawn_object(parent, model, behaviorId)
     local obj = spawn_non_sync_object(behaviorId, model, 0, 0, 0, nil)
     if not obj then return nil end
@@ -913,6 +879,7 @@ bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_
 
 local function bhv_gummy_bear_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("gummy_bear_collision")
     o.oCollisionDistance = 1200
     o.header.gfx.skipInViewCheck = true
 end
@@ -1587,15 +1554,48 @@ bhvChocolate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_chocolate_init,
     end)
 
 function bhv_whomp_moving_platform_init(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("whomp_moving_car_collision")
     o.oMoveAngleYaw = -15300
     network_init_object(o, true, nil)
 end
 
+local sHMCWhompCarTraj = {
+    { timer = 400, moveangle = -18688, pitch = -7000 },
+}
+
+---@param o Object
 function bhv_whomp_moving_platform_loop(o)
-    load_object_collision_model()
+    load_object_collision_model() -- not done 
+
+    --djui_chat_message_create(tostring(o.oAnimState))
+
+    --o.oPosY = find_floor_height(o.oPosX, o.oPosY, o.oPosZ)
+
+    --o.oAngleVelYaw = o.oForwardVel * sins(o.oMoveAngleYaw)
+    --o.oPosZ = o.oPosZ + o.oForwardVel * coss(o.oMoveAngleYaw)
+
+
+    --cur_obj_update_floor_and_walls()
+    --cur_obj_move_standard(-78)
+
+    for i = 1, #sHMCWhompCarTraj do
+        if o.oAnimState == sHMCWhompCarTraj[i].timer then
+            o.oMoveAngleYaw = sHMCWhompCarTraj[i].moveangle
+            o.oMoveAnglePitch = sHMCWhompCarTraj[i].pitch
+        end
+    end
+
+    if o.oAction == 0 then
+        o.oForwardVel = 0
+        if cur_obj_is_any_player_on_platform() == 1 then
+            --o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.oForwardVel = 15
+        o.oAnimState = o.oAnimState + 1
+    end
 end
 
 bhvWhompMovingCar = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_whomp_moving_platform_init,
@@ -3054,8 +3054,7 @@ function bhv_pianta_init(o)
 end
 
 function bhv_pianta_loop(o) -- maybe not done
-    o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
-    
+    ---o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, o.oAngleToMario, 0x170)
 end
 
 bhvPianta = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pianta_init, bhv_pianta_loop)
