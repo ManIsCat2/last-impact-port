@@ -1,0 +1,12 @@
+extern const GeoLayout red_and_white_target_geo[];
+extern Lights1 red_and_white_target_Material_0_f3d_001_lights;
+extern Lights1 red_and_white_target_Material_1_f3d_001_lights;
+extern u8 red_and_white_target__0_rgba16[];
+extern u8 red_and_white_target__1_rgba16[];
+extern Vtx red_and_white_target_000_displaylist_mesh_layer_1_vtx_0[27];
+extern Gfx red_and_white_target_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx red_and_white_target_000_displaylist_mesh_layer_1_vtx_1[14];
+extern Gfx red_and_white_target_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_red_and_white_target_Material_0_f3d_001[];
+extern Gfx mat_red_and_white_target_Material_1_f3d_001[];
+extern Gfx red_and_white_target_000_displaylist_mesh_layer_1[];

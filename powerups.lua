@@ -17,7 +17,7 @@ BEE = 1
 CLOUD = 2
 RAINBOW = 3
 
--- Powerup Relateds
+-- Powerup Relatives
 local cloudcount = 0        -- for cloud flower
 local rainbow_timer = 0     -- for rainbow star
 local savedBGM = 0          -- for rainbow star
@@ -34,6 +34,14 @@ characterPowerupModels = {
 -- Powerups are a PlayerSyncTable by the way.
 
 -- Powerup States, to add more powerups here, you must first add them to the enum and assign a number
+
+-- To fix script errors on startup
+local powerupStates = {
+    [NORMAL] = { modelId = nil },
+    [BEE] = { modelId = nil },
+    [CLOUD] = { modelId = nil },
+    [RAINBOW] = { modelId = nil },
+}
 function get_character_model(m)
     if m.playerIndex ~= 0 then return end
     CPM = characterPowerupModels[m.character.type] -- To get the model easily

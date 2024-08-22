@@ -1567,7 +1567,7 @@ local sHMCWhompCarTraj = {
 
 ---@param o Object
 function bhv_whomp_moving_platform_loop(o)
-    load_object_collision_model() -- not done 
+    load_object_collision_model() -- not done
 
     --djui_chat_message_create(tostring(o.oAnimState))
 
@@ -3058,3 +3058,109 @@ function bhv_pianta_loop(o) -- maybe not done
 end
 
 bhvPianta = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_pianta_init, bhv_pianta_loop)
+
+---@param o Object
+local function bhv_red_and_white_target_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxRadius = 270
+    o.hitboxHeight = 1000
+    o.oIntangibleTimer = 0
+    o.oCollisionDistance = 2000
+    o.oInteractType = INTERACT_BREAKABLE
+    o.collisionData = smlua_collision_util_get("red_and_white_target_collision")
+    network_init_object(o, true, { "oInteractStatus" })
+end
+
+---@param o Object
+local function bhv_red_and_white_target_loop(o)
+    load_object_collision_model()
+
+    if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+        spawn_triangle_break_particles(20, 138, 3.0, 4);
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvRedAndWhiteTarget = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_red_and_white_target_init,
+    bhv_red_and_white_target_loop)
+
+
+---@param o Object
+function bhv_swinging_ship_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 4000
+    o.collisionData = smlua_collision_util_get("swinging_ship_collision")
+end
+
+---@param o Object
+function bhv_swinging_ship_loop(o)
+    load_object_collision_model() -- not done
+end
+
+bhvSwingingShip = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_swinging_ship_init,
+    bhv_swinging_ship_loop)
+
+
+---@param o Object
+function bhv_up_and_down_ride_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1300
+    o.collisionData = smlua_collision_util_get("up_and_down_ride_collision")
+    network_init_object(o, true, { "oVelY", "oPosY", "oAnimState", "oHauntedChairUnkFC" })
+    cur_obj_set_home_once()
+end
+
+---@param o Object
+function bhv_up_and_down_ride_loop(o)
+    load_object_collision_model()
+
+    --djui_chat_message_create(tostring(o.oAction))
+
+    if o.oAction == 0 then
+        if cur_obj_is_any_player_on_platform() == 1 then
+            o.oAnimState = o.oAnimState + 1
+            if o.oAnimState > 10 then
+                o.oAction = 1
+                o.oAnimState = 0
+            end
+        end
+    elseif o.oAction == 1 then
+        -- pos is f32 (float) but idc lmao
+        o.oPosY = approach_s16_symmetric(o.oPosY, 7450, 40)
+
+        if o.oPosY == 7450 then
+            o.oHauntedChairUnkFC = o.oHauntedChairUnkFC + 1
+            if o.oHauntedChairUnkFC > 70 then
+                o.oAction = 2
+            end
+        end
+    elseif o.oAction == 2 then
+        o.oPosY = approach_s16_symmetric(o.oPosY, o.oHomeY, 65)
+        if o.oPosY == o.oHomeY then
+            o.oAction = 0
+            o.oHauntedChairUnkFC = 0
+            o.oAnimState = 0
+        end
+    end
+end
+
+bhvUpAndDownRide = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_up_and_down_ride_init,
+    bhv_up_and_down_ride_loop)
+
+---@param o Object
+function bhv_luna_park_ent_part1(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+end
+
+MODEL_LP_ENT1 = smlua_model_util_get_id("luna_park_entrance_part1_geo")
+
+---@param o Object
+function bhv_luna_park_ent_part1_loop(o)
+    obj_set_model_extended(o, MODEL_LP_ENT1)
+end
+
+bhvLPEntP1 = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_luna_park_ent_part1,
+    bhv_luna_park_ent_part1_loop)
