@@ -1,6 +1,6 @@
 CG (overworld 1) 98% done
 CI (overlworld 2) 85% done 
-CC (overlworld 3) 70% done
+CC (overlworld 3) 80% done
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
 
@@ -14,7 +14,7 @@ LLL - 60% done
 SSL - 60% done
 DDD - 90% done
 SL - 82% done
-WDW - 50% - dead%
+WDW - 50% done
 TTM - 65% done
 THI - 80% done
 TTC - 65% done
@@ -22,7 +22,7 @@ RR - 98% done
 BITDW - 80% done
 BITFS - 90% done
 PSS - 50% - dead%
-COTMC - 80% done
+COTMC - 90% done
 TOTWC - 80% done
 VCUTM - 70% done
 WMOTR - 50% - dead% // minigame house, will not be coded.

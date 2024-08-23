@@ -3108,8 +3108,8 @@ function bhv_up_and_down_ride_init(o)
     o.header.gfx.skipInViewCheck = true
     o.oCollisionDistance = 1300
     o.collisionData = smlua_collision_util_get("up_and_down_ride_collision")
-    network_init_object(o, true, { "oVelY", "oPosY", "oAnimState", "oHauntedChairUnkFC" })
     cur_obj_set_home_once()
+    network_init_object(o, true, { "oVelY", "oPosY", "oAnimState", "oHauntedChairUnkFC" })
 end
 
 ---@param o Object
@@ -3164,3 +3164,44 @@ end
 
 bhvLPEntP1 = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_luna_park_ent_part1,
     bhv_luna_park_ent_part1_loop)
+
+---blooping
+
+---@param o Object
+function bhv_blooper_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW|OBJ_FLAG_MOVE_XZ_USING_FVEL
+    smlua_anim_util_set_animation(o, "anim_blooper")
+    o.oForwardVel = 10
+    o.oDamageOrCoinValue = 1
+    o.oInteractType = INTERACT_BOUNCE_TOP
+    o.oIntangibleTimer = 0
+    o.oNumLootCoins = -1
+    o.hitboxDownOffset = 30
+    cur_obj_set_home_once();
+    network_init_object(o, true, { "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ", "oHealth", "oInteractStatus" })
+end
+
+---@param o Object
+function bhv_blooper_loop(o)
+    local nearP = nearest_player_to_object(o)
+    local nearMS = nearest_mario_state_to_object(o)
+
+    if dist_between_objects(nearP, o) < 900 then
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearP), 0x90 * 4)
+        o.oPosY = approach_s16_symmetric(o.oPosY, nearMS.pos.y + 60, 3)
+    else
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, cur_obj_angle_to_home(), 0x90 * 4)
+        o.oPosY = approach_s16_symmetric(o.oPosY, o.oHomeY, 3)
+    end
+
+    if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+        o.oHealth = 0
+        spawn_mist_particles()
+        obj_die_if_health_non_positive()
+    elseif o.oInteractStatus & INT_STATUS_ATTACKED_MARIO ~= 0 then
+        o.oInteractStatus = 0
+    end
+end
+
+bhvBlooper = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_blooper_init,
+    bhv_blooper_loop)
