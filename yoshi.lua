@@ -98,7 +98,7 @@ function bhv_yoshi_rideable_loop(o)
         elseif rider.action == ACT_RIDE_YOSHI_FLUTTER then
             smlua_anim_util_set_animation(o, "YOSHI_FLUTTER")
             if animFrame == 0 or animFrame == 3 then
-                audio_sample_play(SOUND_YOSHI_FLUTTER_SHORT, rider.marioObj.header.gfx.cameraToObject, 1)
+                audio_sample_play(SOUND_YOSHI_FLUTTER_SHORT, rider.pos, 1)
             end
         else
             mario_stop_riding_object(rider)
@@ -107,7 +107,7 @@ function bhv_yoshi_rideable_loop(o)
         if (o.oInteractStatus & INT_STATUS_STOP_RIDING) ~= 0 then
             o.heldByPlayerIndex = 0
             if rider.hurtCounter ~= 0 then
-                audio_sample_play(SOUND_YOSHI_HIT, rider.marioObj.header.gfx.cameraToObject, 1)
+                audio_sample_play(SOUND_YOSHI_HIT, rider.pos, 1)
                 o.oAction = 2
             else
                 o.oAction = 0

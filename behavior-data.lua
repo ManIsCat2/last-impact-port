@@ -3188,7 +3188,7 @@ function bhv_blooper_loop(o)
 
     if dist_between_objects(nearP, o) < 900 then
         o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearP), 0x90 * 4)
-        o.oPosY = approach_s16_symmetric(o.oPosY, nearMS.pos.y + 60, 3)
+        o.oPosY = approach_s16_symmetric(o.oPosY, nearMS.pos.y + 65, 3)
     else
         o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, cur_obj_angle_to_home(), 0x90 * 4)
         o.oPosY = approach_s16_symmetric(o.oPosY, o.oHomeY, 3)
