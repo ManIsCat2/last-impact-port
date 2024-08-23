@@ -3178,6 +3178,9 @@ function bhv_blooper_init(o)
     o.oNumLootCoins = -1
     o.hitboxDownOffset = 30
     cur_obj_set_home_once();
+    obj_scale(o, 1.75)
+    o.hitboxRadius = 60
+    o.hitboxHeight = 60
     network_init_object(o, true, { "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ", "oHealth", "oInteractStatus" })
 end
 
