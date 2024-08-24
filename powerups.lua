@@ -55,11 +55,10 @@ function get_character_model(m)
     }
 end
 
+--- Charselect Model fix. By OneCalledRPG
 function cs_model_set(m)
-    --if _G.charSelectExists then return end
-
     if _G.charSelectExists then
-		if _G.charSelect.character_get_current_number() == 1 then 	
+		if _G.charSelect.character_get_current_number() == 1 then
 			get_character_model(m)
 		else
 			powerupStates = {

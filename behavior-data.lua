@@ -3219,7 +3219,8 @@ function bhv_mouth_water_thing_init(o)
     o.oBobombBuddyPosYCopy = 0
     o.oBobombBuddyPosZCopy = 0
 
-    network_init_object(o, true, { "oAction", "oAnimState" })
+    network_init_object(o, true,
+        { "oAction", "oAnimState", "oBobombBuddyPosXCopy", "oBobombBuddyPosYCopy", "oBobombBuddyPosYCopy" })
 end
 
 ---@param o Object

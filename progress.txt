@@ -21,7 +21,7 @@ TTC - 65% done
 RR - 98% done
 BITDW - 80% done
 BITFS - 90% done
-PSS - 50% - dead%
+PSS - 50% done
 COTMC - 90% done
 TOTWC - 80% done
 VCUTM - 70% done
