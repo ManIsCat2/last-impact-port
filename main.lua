@@ -53,9 +53,9 @@ function health_fix(m)
     end
 end
 
-local wdwmodf1 = 0.006
-local wdwmodf2 = 1000
-local wdwmodf3 = 3000
+local wdwmodf1 = 0.002
+local wdwmodf2 = 500
+local wdwmodf3 = 3300
 
 function wdw_water_behavior(m)
     ---o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
