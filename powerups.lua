@@ -46,6 +46,7 @@ function get_character_model(m)
     if m.playerIndex ~= 0 then return end
     CPM = characterPowerupModels[m.character.type] -- To get the model easily
     CPMM = characterPowerupModels[CT_MARIO]        -- To get Mario's model easily
+
     powerupStates = {
         [NORMAL] = { modelId = nil },
         [BEE] = { modelId = CPM.bee and CPM.bee or CPMM.bee },
@@ -54,7 +55,26 @@ function get_character_model(m)
     }
 end
 
-hook_event(HOOK_MARIO_UPDATE, get_character_model)
+function cs_model_set(m)
+    --if _G.charSelectExists then return end
+
+    if _G.charSelectExists then
+		if _G.charSelect.character_get_current_number() == 1 then 	
+			get_character_model(m)
+		else
+			powerupStates = {
+                [NORMAL] = { modelId = nil },
+                [BEE] = { modelId = nil },
+                [CLOUD] = { modelId = nil },
+                [RAINBOW] = { modelId = nil },
+            }
+		end
+	else
+		get_character_model(m)
+	end
+end
+
+hook_event(HOOK_MARIO_UPDATE, cs_model_set)
 
 -- Powerup Model Functions --
 
@@ -68,12 +88,10 @@ hook_event(HOOK_OBJECT_SET_MODEL, function(o)
 
         if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[i].powerup = NORMAL end
 
-        if charSelect then
-            if charSelect.character_get_current_number() ~= 1 then return end
-        end
         if gPlayerSyncTable[i].modelId ~= nil and obj_has_model_extended(o, gPlayerSyncTable[i].modelId) == 0 then
             obj_set_model_extended(o, gPlayerSyncTable[i].modelId)
         end
+        return
     end
 end)
 
