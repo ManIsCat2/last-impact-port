@@ -11,8 +11,15 @@
 
 #include "levels/scripts.h"
 
+
+/* Fast64 begin persistent block [includes] */
+/* Fast64 end persistent block [includes] */
+
 #include "make_const_nonconst.h"
 #include "levels/castle_grounds/header.h"
+
+/* Fast64 begin persistent block [scripts] */
+/* Fast64 end persistent block [scripts] */
 
 const LevelScript level_castle_grounds_entry[] = {
 	INIT_LEVEL(),
@@ -20,6 +27,9 @@ const LevelScript level_castle_grounds_entry[] = {
 	LOAD_MIO0(0xa, _water_skybox_mio0SegmentRomStart, _water_skybox_mio0SegmentRomEnd), 
 	ALLOC_LEVEL_POOL(),
 	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
+
+	/* Fast64 begin persistent block [level commands] */
+	/* Fast64 end persistent block [level commands] */
 
 	AREA(1, castle_grounds_area_1),
 		WARP_NODE(153, LEVEL_ENDING, 1, 10, WARP_NO_CHECKPOINT),
@@ -47,26 +57,25 @@ const LevelScript level_castle_grounds_entry[] = {
 		WARP_NODE(34, LEVEL_ENDING, 1, 12, WARP_NO_CHECKPOINT),
 		WARP_NODE(33, LEVEL_ENDING, 1, 12, WARP_NO_CHECKPOINT),
 		WARP_NODE(32, LEVEL_CASTLE_GROUNDS, 2, 10, WARP_NO_CHECKPOINT),
-		OBJECT(MODEL_NONE, -1965, -729, -1635, 0, -90, 0, (80 << 24) | (11 << 16), bhvWarp),
-		OBJECT(212, 8624, 486, -3677, 0, 0, 0, 0x0, bhv1Up),
+		MARIO_POS(0x01, 90, 3174, -376, 438),
 		OBJECT(53, 1699, -533, -4073, 0, -154, 0, 0x0, Bhv_Custom_0x1300001c),
 		OBJECT(53, 1337, -648, -3526, 0, 0, 0, 0x0, Bhv_Custom_0x1300001c),
-		OBJECT(MODEL_BOAT, 1455, -1573, -2871, 38, -23, -67, 0x0, bhvBoat),
+		OBJECT(MODEL_BOAT, 1455, -1573, -2871, -2, -44, -58, 0x0, bhvBoat),
 		OBJECT(MODEL_BOAT, 256, -865, -1635, 0, -90, 0, 0x10000, bhvBoat),
 		OBJECT(0, 1344, -2079, -3346, 0, -100, 0, 0x30000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8426, -552, 5820, 40, 11, -13, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8435, -573, 5639, -17, -38, -64, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8245, -573, 5990, -23, -6, -13, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8530, -469, 5346, -33, 63, 8, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8504, -353, 5535, -14, 1, 4, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8385, -359, 5961, 18, -1, 2, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8809, -263, 5382, -45, 37, 16, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8687, -340, 5514, -49, 58, -144, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8487, -203, 5937, -31, 15, 24, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8683, -167, 5816, -13, 7, -154, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8727, -111, 6043, -15, -5, -16, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8426, -552, 5820, 41, 0, -17, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8435, -573, 5639, -41, 0, -70, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8245, -573, 5990, -24, 0, -14, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8530, -469, 5346, -40, 60, 5, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8504, -353, 5535, -14, 0, 4, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8385, -359, 5961, 18, 0, 2, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8809, -263, 5382, -53, 21, 21, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8687, -340, 5514, 70, 0, -115, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8487, -203, 5937, -34, 0, 28, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8683, -167, 5816, 15, 0, -153, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8727, -111, 6043, -16, 0, -17, 0x81130000, Bhv_Custom_0x1300024c),
 		OBJECT(56, 8621, -223, 6217, 0, 0, 0, 0x81130000, Bhv_Custom_0x1300024c),
-		OBJECT(56, 8846, -223, 6298, 50, 26, -20, 0x81130000, Bhv_Custom_0x1300024c),
+		OBJECT(56, 8846, -223, 6298, 55, 0, -32, 0x81130000, Bhv_Custom_0x1300024c),
 		OBJECT(56, 8584, -223, 5738, 0, 0, 0, 0x81130000, Bhv_Custom_0x1300024c),
 		OBJECT(MODEL_CG_20_GATE, 7507, -663, 5470, 0, -25, 0, 0x2130000, bhvCG20Gate),
 		OBJECT(MODEL_CG_20_GATE, 7674, -655, 5108, 0, 155, 0, 0x2130000, bhvCG20Gate),
@@ -90,13 +99,14 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(0, 6588, -429, 114, 0, 0, 0, 0x10030000, Bhv_Custom_0x13004830),
 		OBJECT(MODEL_GOOMBA_BRO2, 5940, -676, -977, 0, 0, 0, 0x2000000, bhvGoombaBros),
 		OBJECT(MODEL_GOOMBA_BRO3, 5625, -660, -732, 0, 0, 0, 0x0, bhvGoombaBros),
+		OBJECT(212, 8624, 486, -3677, 0, 0, 0, 0x0, bhv1Up),
 		OBJECT(0, 7645, -200, -3293, 0, 120, 0, 0xe20000, bhvAirborneStarCollectWarp),
 		OBJECT(0, 903, -586, -2529, 0, 0, 0, 0xe30000, bhvAirborneStarCollectWarp),
 		OBJECT(0, 347, -455, 4834, 0, -85, 0, 0xe10000, bhvAirborneStarCollectWarp),
 		OBJECT(0, 7451, -79, -38, 0, 90, 0, 0xef0000, bhvAirborneStarCollectWarp),
 		OBJECT(0, 2421, -657, -2147, 0, -90, 0, 0xe40000, bhvAirborneStarCollectWarp),
 		OBJECT(0, 4500, 463, -4506, 0, -153, 0, 0xd50000, bhvAirborneStarCollectWarp),
-		OBJECT(61, 7786, -257, -35, 0, 0, 0, 0x0, bhvBetaMovingFlames),
+		OBJECT(MODEL_TOTWC_ENTRY_LIGHT, 7781, -257, -28, 0, 0, 0, (14 << 16), bhvTOTWCEntryLight),
 		OBJECT(150, 3163, -652, -1897, 0, 0, 0, 0x0, bhvBowserShockWave),
 		OBJECT(150, 3170, -639, -1881, 0, 0, 0, 0x0, bhvBowserShockWave),
 		OBJECT(150, 3164, -656, -1918, 0, 0, 0, 0x0, bhvBowserShockWave),
@@ -116,7 +126,6 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(0, 160, -697, -3329, 0, 0, 0, 0x0, bhvMrI),
 		OBJECT(E_MODEL_PEACH, 4060, -373, 4537, 0, 0, 0, 0x0, bhvTalkingPeach),
 		OBJECT(0, 3174, -376, 438, 0, 90, 0, (10 << 16), bhvSpinAirborneWarp),
-		MARIO_POS(0x01, 90, 3174, -376, 438),
 		OBJECT(0, 7012, -590, 5056, 0, -108, 0, 0x200000, bhvSpinAirborneWarp),
 		OBJECT(0, 6478, -633, 1063, 0, -119, 0, 0x780000, bhvSpinAirborneWarp),
 		OBJECT(0, 4212, -473, 5396, 0, 0, 0, 0x990000, bhvSpinAirborneWarp),
@@ -128,6 +137,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(0, 8401, -635, 5661, 0, 0, 0, 0x40200000, bhvWarp),
 		OBJECT(MODEL_MINIGAME_HOUSE, 7099, -600, 1561, 0, -120, 0, 0x0, id_bhvStaticObject),
 		OBJECT(MODEL_NONE, 4076, 4440, -5412, 0, -153, 0, (9 << 16), bhvWarp),
+		OBJECT(MODEL_NONE, -1965, -729, -1635, 0, -90, 0, (80 << 24) | (11 << 16), bhvWarp),
 		TERRAIN(castle_grounds_area_1_collision),
 		MACRO_OBJECTS(castle_grounds_area_1_macro_objs),
 		SET_BACKGROUND_MUSIC(0x00, 0),
@@ -148,7 +158,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		WARP_NODE(206, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
 		WARP_NODE(191, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
 		WARP_NODE(207, LEVEL_PSS, 1, 10, WARP_NO_CHECKPOINT),
-		OBJECT(E_MODEL_NONE, -310, -394, -278, 0, 90, 0, 0x120000, bhvFloatingPlatformGenerator),
+		OBJECT(MODEL_FLOATING_PLATFORM_GENERATOR, -310, -394, -278, 0, 90, 0, 0x120000, bhvFloatingPlatformGenerator),
 		OBJECT(0, -260, -266, -313, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),
 		OBJECT(0, -7448, 16, -885, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),
 		OBJECT(0, -1771, -1164, -2344, 0, 0, 0, 0x0, Bhv_Custom_0x13001bf0),
