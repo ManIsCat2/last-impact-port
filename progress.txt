@@ -14,7 +14,7 @@ LLL - 60% done
 SSL - 60% done
 DDD - 90% done
 SL - 82% done
-WDW - 75% done
+WDW - 80% done
 TTM - 65% done
 THI - 80% done
 TTC - 65% done

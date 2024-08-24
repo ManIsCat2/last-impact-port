@@ -3215,27 +3215,37 @@ function bhv_mouth_water_thing_init(o)
     o.oHealth = get_water_level(1)
     o.oVelY = get_water_level(2)
 
+    o.oBobombBuddyPosXCopy = 0
+    o.oBobombBuddyPosYCopy = 0
+    o.oBobombBuddyPosZCopy = 0
+
     network_init_object(o, true, { "oAction", "oAnimState" })
 end
 
 ---@param o Object
 function bhv_mouth_water_thing_loop(o)
     if o.oAction == 0 then
-        set_water_level(0, o.oHeldState, true)
-        set_water_level(1, o.oHealth, true)
-        set_water_level(2, o.oVelY, true)
         if obj_check_hitbox_overlap(o, nearest_player_to_object(o)) then
             cur_obj_shake_screen(SHAKE_POS_LARGE)
             o.oAction = 1
         end
     elseif o.oAction == 1 then
-        set_water_level(0, 1500, true)
-        set_water_level(1, 1130, true)
-        set_water_level(2, 1500, true)
+        o.oBobombBuddyPosXCopy = approach_f32_symmetric(o.oBobombBuddyPosXCopy, 1500, 40)
+        o.oBobombBuddyPosYCopy = approach_f32_symmetric(o.oBobombBuddyPosYCopy, 1130, 40)
+        o.oBobombBuddyPosZCopy = approach_f32_symmetric(o.oBobombBuddyPosZCopy, 1500, 40)
+        set_water_level(0, o.oBobombBuddyPosXCopy, true)
+        set_water_level(1, o.oBobombBuddyPosYCopy, true)
+        set_water_level(2, o.oBobombBuddyPosZCopy, true)
         o.oAnimState = o.oAnimState + 1
         if o.oAnimState > 200 then
             o.oAction = 0
             o.oAnimState = 0
+            o.oBobombBuddyPosXCopy = 0
+            o.oBobombBuddyPosYCopy = 0
+            o.oBobombBuddyPosZCopy = 0
+            set_water_level(0, o.oHeldState, true)
+            set_water_level(1, o.oHeldState, true)
+            set_water_level(2, o.oVelY, true)
         end
     end
 end
