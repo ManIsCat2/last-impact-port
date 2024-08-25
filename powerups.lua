@@ -356,6 +356,41 @@ bhvAddCloudCount = hook_behavior(nil, OBJ_LIST_GENACTOR, true,
     function(obj) obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE end,
     bhv_add_cloud_count_loop)
 
+---@param o Object
+function bhv_fire_flower_fire_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.oGravity = 2.16
+
+    o.oBounciness = 30
+
+    o.oBuoyancy = 2
+
+    o.oFriction = 1
+    obj_set_billboard(o)
+end
+
+local fireBouncyness = 20
+
+---@param o Object
+function bhv_fire_flower_fire_loop(o)
+    o.oAnimState = o.oAnimState + 2
+
+    o.oForwardVel = 53
+
+    local objStep = object_step()
+
+    if objStep & OBJ_COL_FLAG_GROUNDED  == 1 then
+        o.oVelY = fireBouncyness
+    end
+
+    if o.oTimer > 100 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvFireFlowerFire = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_flower_fire_init, bhv_fire_flower_fire_loop)
+
 function cloudbox(o)
     o.oCollisionDistance = 1400
     o.oFaceAnglePitch = 0
@@ -595,15 +630,15 @@ function fire_powerup(m)
             network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
         if m.action == ACT_PUNCHING or m.action == ACT_MOVE_PUNCHING then
             if not flameThrown then
-                spawn_sync_object(id_bhvBouncingFireballFlame, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200), m.pos.y,
+                spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200),
+                    m.pos.y,
                     m.pos.z + (coss(m.faceAngle.y) * 200),
 
                     ---@param f Object
                     function(f)
                         f.oMoveAngleYaw = m.faceAngle.y
                         f.oGraphYOffset = 64
-                        f.oForwardVel = 60
-                        f.oVelY = 70
+                        f.oVelY = fireBouncyness
                         obj_scale(f, 5)
                     end)
 

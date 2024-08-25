@@ -6,7 +6,7 @@ CC (overlworld 3) 80% done //ready for release (2 bhv left, second train part an
 
 BOB - 100% done //ready for release
 WF - 50% - dead%
-JRB  65% done
+JRB  75% done
 CCM - 83% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release

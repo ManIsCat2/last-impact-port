@@ -1,0 +1,16 @@
+extern const GeoLayout tnt_and_boulder_geo[];
+extern Lights1 tnt_and_boulder_Material_1_f3d_lights;
+extern Lights1 tnt_and_boulder_Material_2_f3d_lights;
+extern Lights1 tnt_and_boulder_f3dlite_material_004_lights;
+extern u8 tnt_and_boulder__1_rgba16[];
+extern u8 tnt_and_boulder__2_rgba16[];
+extern Vtx tnt_and_boulder_000_displaylist_mesh_layer_1_vtx_0[76];
+extern Gfx tnt_and_boulder_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx tnt_and_boulder_000_displaylist_mesh_layer_1_vtx_1[28];
+extern Gfx tnt_and_boulder_000_displaylist_mesh_layer_1_tri_1[];
+extern Vtx tnt_and_boulder_000_displaylist_mesh_layer_1_vtx_2[16];
+extern Gfx tnt_and_boulder_000_displaylist_mesh_layer_1_tri_2[];
+extern Gfx mat_tnt_and_boulder_Material_1_f3d[];
+extern Gfx mat_tnt_and_boulder_Material_2_f3d[];
+extern Gfx mat_tnt_and_boulder_f3dlite_material_004[];
+extern Gfx tnt_and_boulder_000_displaylist_mesh_layer_1[];

@@ -1019,7 +1019,7 @@ local function bhv_crocodile_loop(o)
         end
     end
 
-    local nearestfire = obj_get_nearest_object_with_behavior_id(o, id_bhvBouncingFireballFlame)
+    local nearestfire = obj_get_nearest_object_with_behavior_id(o, bhvFireFlowerFire)
 
     if nearestfire then
         if obj_check_hitbox_overlap(o, nearestfire) then
@@ -3354,7 +3354,7 @@ end
 bhvFIBreather = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_fi_breather_init, bhv_fi_breather_loop)
 
 ---@param o Object
- function bhv_pss_cloudy_platform(o)
+function bhv_pss_cloudy_platform(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("pss_cloudy_platform_collision")
     o.header.gfx.skipInViewCheck = true
@@ -3362,5 +3362,37 @@ bhvFIBreather = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_fi_breather_init, b
     cur_obj_set_home_once()
 end
 
-
 bhvPSSCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_cloudy_platform, bhv_sl_cloudy_platform_loop)
+
+function bhv_tnt_and_boulder_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("tnt_and_boulder_collision")
+    o.oCollisionDistance = 1200
+    o.hitboxRadius = 300
+    o.hitboxHeight = 400
+    o.oIntangibleTimer = 0
+    network_init_object(o, true, { "oAction", "oAnimState" })
+end
+
+function bhv_tnt_and_boulder_loop(o)
+    load_object_collision_model()
+    local nfire = obj_get_nearest_object_with_behavior_id(o, bhvFireFlowerFire)
+    if o.oAction == 0 then
+        if nfire then
+            if obj_check_hitbox_overlap(o, nfire) then
+                obj_mark_for_deletion(nfire)
+                o.oAction = 1
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oAnimState = o.oAnimState + 1
+        if o.oAnimState > 70 then
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
+            obj_mark_for_deletion(o)
+        end
+    end
+end
+
+bhvTNTAndBoulder = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_tnt_and_boulder_init, bhv_tnt_and_boulder_loop)
