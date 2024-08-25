@@ -1019,7 +1019,7 @@ local function bhv_crocodile_loop(o)
         end
     end
 
-    local nearestfire = obj_get_nearest_object_with_behavior_id(o, id_bhvFlameBouncing)
+    local nearestfire = obj_get_nearest_object_with_behavior_id(o, id_bhvBouncingFireballFlame)
 
     if nearestfire then
         if obj_check_hitbox_overlap(o, nearestfire) then
@@ -2114,7 +2114,7 @@ local function bhv_air_ballon(o)
 end
 
 --bhvAirBalloon (TOTWC)
-hook_behavior(id_bhvKoopaShell, OBJ_LIST_LEVEL, true, bhv_air_ballon, nil)
+bhvAirBalloon = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_air_ballon, nil)
 
 --[[[0021BA7C / 13001C7C] 00 04 0000 // Start Behavior (Object type = 4)
 [0021BA80 / 13001C80] 23 00 00 00 0140 0500 // Set Collision sphere size (XZ radius = 320, Y radius = 1280)
@@ -3352,3 +3352,15 @@ function bhv_fi_breather_loop(o) -- not done
 end
 
 bhvFIBreather = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_fi_breather_init, bhv_fi_breather_loop)
+
+---@param o Object
+ function bhv_pss_cloudy_platform(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("pss_cloudy_platform_collision")
+    o.header.gfx.skipInViewCheck = true
+    obj_set_model_extended(o, smlua_model_util_get_id("pss_cloudy_platform_geo"))
+    cur_obj_set_home_once()
+end
+
+
+bhvPSSCloudyPlatform = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_cloudy_platform, bhv_sl_cloudy_platform_loop)

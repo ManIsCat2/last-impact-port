@@ -595,14 +595,15 @@ function fire_powerup(m)
             network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
         if m.action == ACT_PUNCHING or m.action == ACT_MOVE_PUNCHING then
             if not flameThrown then
-                spawn_sync_object(id_bhvFlameBouncing, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200), m.pos.y,
+                spawn_sync_object(id_bhvBouncingFireballFlame, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200), m.pos.y,
                     m.pos.z + (coss(m.faceAngle.y) * 200),
 
                     ---@param f Object
                     function(f)
                         f.oMoveAngleYaw = m.faceAngle.y
                         f.oGraphYOffset = 64
-                        f.oForwardVel = 40
+                        f.oForwardVel = 60
+                        f.oVelY = 70
                         obj_scale(f, 5)
                     end)
 
