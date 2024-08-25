@@ -1,0 +1,13 @@
+extern const GeoLayout fire_flower_geo[];
+extern u8 fire_flower_castle_grounds_dl_CloudFlower_ci4_002_ci4[];
+extern u8 fire_flower_castle_grounds_dl_CloudFlower_ci4_002_pal_rgba16[];
+extern u8 fire_flower_castle_grounds_dl__1200px_New_Super_Mario_Bros__U_Deluxe_Fi_001_rgba16[];
+extern Vtx fire_flower_Bone_mesh_layer_4_vtx_0[10];
+extern Gfx fire_flower_Bone_mesh_layer_4_tri_0[];
+extern Vtx fire_flower_Bone_mesh_layer_4_vtx_1[4];
+extern Gfx fire_flower_Bone_mesh_layer_4_tri_1[];
+extern Gfx mat_fire_flower_f3dlite_material_009[];
+extern Gfx mat_revert_fire_flower_f3dlite_material_009[];
+extern Gfx mat_fire_flower_f3dlite_material_010[];
+extern Gfx mat_revert_fire_flower_f3dlite_material_010[];
+extern Gfx fire_flower_Bone_mesh_layer_4[];

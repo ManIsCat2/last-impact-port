@@ -1,3 +1,6 @@
+--- @file powerups.lua
+--- This file contains the code for every powerup in the game.
+
 -- Placed here to remove the need of setting models for every powerup
 -- Uses the definitive model check
 
@@ -16,6 +19,7 @@ NORMAL = 0
 BEE = 1
 CLOUD = 2
 RAINBOW = 3
+FIRE = 4
 
 -- Powerup Relatives
 local cloudcount = 0        -- for cloud flower
@@ -24,11 +28,11 @@ local savedBGM = 0          -- for rainbow star
 local rainbow_music = false -- for rainbow star
 
 characterPowerupModels = {
-    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
-    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
-    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
-    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
-    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil },
+    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
+    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
+    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
+    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
+    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
 }
 
 -- Powerups are a PlayerSyncTable by the way.
@@ -41,6 +45,7 @@ local powerupStates = {
     [BEE] = { modelId = nil },
     [CLOUD] = { modelId = nil },
     [RAINBOW] = { modelId = nil },
+    [FIRE] = { modelId = nil },
 }
 function get_character_model(m)
     if m.playerIndex ~= 0 then return end
@@ -52,25 +57,27 @@ function get_character_model(m)
         [BEE] = { modelId = CPM.bee and CPM.bee or CPMM.bee },
         [CLOUD] = { modelId = CPM.cloud and CPM.cloud or CPMM.cloud },
         [RAINBOW] = { modelId = CPM.rainbow and CPM.rainbow or CPMM.rainbow },
+        [FIRE] = { modelId = CPM.fire and CPM.fire or CPMM.fire },
     }
 end
 
 --- Charselect Model fix. By OneCalledRPG
 function cs_model_set(m)
     if _G.charSelectExists then
-		if _G.charSelect.character_get_current_number() == 1 then
-			get_character_model(m)
-		else
-			powerupStates = {
+        if _G.charSelect.character_get_current_number() == 1 then
+            get_character_model(m)
+        else
+            powerupStates = {
                 [NORMAL] = { modelId = nil },
                 [BEE] = { modelId = nil },
                 [CLOUD] = { modelId = nil },
                 [RAINBOW] = { modelId = nil },
+                [FIRE] = { modelId = nil },
             }
-		end
-	else
-		get_character_model(m)
-	end
+        end
+    else
+        get_character_model(m)
+    end
 end
 
 hook_event(HOOK_MARIO_UPDATE, cs_model_set)
@@ -98,6 +105,7 @@ end)
 
 function on_death_warp()
     gPlayerSyncTable[0].powerup = NORMAL
+    network_player_reset_override_palette(gNetworkPlayers[0])
     cloudcount = 0
     audio_stream_stop(audio_rainbowmario)
     rainbow_timer = 0
@@ -114,6 +122,7 @@ function damage_check(m)
             set_background_music(0, savedBGM, 0)
         end
         gPlayerSyncTable[0].powerup = NORMAL
+        network_player_reset_override_palette(gNetworkPlayers[0])
         cloudcount = 0
         rainbow_timer = 0
         rainbow_music = false
@@ -127,8 +136,6 @@ hook_event(HOOK_ON_DEATH, on_death_warp)
 hook_event(HOOK_ON_WARP, on_death_warp)
 
 -- Actual powerups
-
--- Bee Powerup --
 
 E_MODEL_BEE_SHROOM = smlua_model_util_get_id("bee_shroom_geo")
 
@@ -225,6 +232,23 @@ function general_powerup_handler(obj, powerup)
     end
 end
 
+---@param powerup integer
+---@param obj Object
+function general_powerup_handler2(obj, powerup)
+    local nreaetsplayertopwoerup = nearest_player_to_object(obj)
+    local nearestmariotopowerup = nearest_mario_state_to_object(obj)
+    if obj_check_hitbox_overlap(nreaetsplayertopwoerup, obj) then
+        cur_obj_play_sound_2(SOUND_MENU_EXIT_PIPE)
+        gPlayerSyncTable[network_local_index_from_global(nreaetsplayertopwoerup.globalPlayerIndex)].powerup = powerup
+        obj_mark_for_deletion(obj)
+    end
+
+
+    if obj.oTimer > 500 then
+        obj_flicker_and_disappear(obj, 500)
+    end
+end
+
 ---@param obj Object
 function bhv_beesuit_init(obj)
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -259,6 +283,21 @@ function bhv_rainbow_star_init(obj)
     network_init_object(obj, true, nil)
 end
 
+MODEL_FIRE_FLOWER = smlua_model_util_get_id("fire_flower_geo")
+
+---@param obj Object
+function bhv_fire_flower_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj.hitboxRadius = 65
+    obj.hitboxHeight = 65
+    obj.oIntangibleTimer = 0
+    obj.oGravity = 3
+    obj_scale(obj, 0.7)
+    --obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
+    obj_set_model_extended(obj, MODEL_FIRE_FLOWER)
+    network_init_object(obj, true, nil)
+end
+
 ---@param obj Object
 function bhv_beesuit_loop(obj)
     object_step()
@@ -274,6 +313,12 @@ end
 function bhv_rainbow_star_loop(obj)
     obj.oFaceAngleYaw = obj.oFaceAngleYaw + 0x860
     general_powerup_handler(obj, RAINBOW)
+end
+
+---@param obj Object
+function bhv_fire_flower_loop(obj)
+    object_step()
+    general_powerup_handler2(obj, FIRE)
 end
 
 ---only deletes for local player
@@ -377,6 +422,8 @@ end
 bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv_beesuit_loop)
 bhvCloudFlower = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cloudflower_init, bhv_cloudflower_loop)
 bhvRainbowStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rainbow_star_init, bhv_rainbow_star_loop)
+---bhvFireFlower
+hook_behavior(id_bhvMetalCap, OBJ_LIST_GENACTOR, true, bhv_fire_flower_init, bhv_fire_flower_loop)
 
 ---@param m MarioState
 function bee_update(m)
@@ -523,14 +570,47 @@ function rainbow_powerup(m)
 
         if rainbow_timer > (20 * 30) then
             gPlayerSyncTable[0].powerup = NORMAL
+            network_player_reset_override_palette(gNetworkPlayers[0])
             rainbow_timer = 0
             rainbow_music = false
             audio_stream_stop(audio_rainbowmario)
             set_background_music(0, savedBGM, 0)
         end
     else
-        network_player_reset_override_palette(gNetworkPlayers[0])
         savedBGM = get_current_background_music()
+    end
+end
+
+local flameThrown = false
+local numFlamesThrown = 0
+
+---@param m MarioState
+function fire_powerup(m)
+    if m.playerIndex ~= 0 then return end
+    local gMarioObject = m.marioObj
+    if gPlayerSyncTable[0].powerup == FIRE then
+        network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT, { r = 255, g = 255, b = 255 })
+        network_player_set_override_palette_color(gNetworkPlayers[0], CAP, { r = 255, g = 255, b = 255 })
+        network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
+            network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
+        if m.action == ACT_PUNCHING or m.action == ACT_MOVE_PUNCHING then
+            if not flameThrown then
+                spawn_sync_object(id_bhvFlameBouncing, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200), m.pos.y,
+                    m.pos.z + (coss(m.faceAngle.y) * 200),
+
+                    ---@param f Object
+                    function(f)
+                        f.oMoveAngleYaw = m.faceAngle.y
+                        f.oGraphYOffset = 64
+                        f.oForwardVel = 40
+                        obj_scale(f, 5)
+                    end)
+
+                flameThrown = true
+            end
+        else
+            flameThrown = false
+        end
     end
 end
 
@@ -538,4 +618,5 @@ hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
 hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
+hook_event(HOOK_MARIO_UPDATE, fire_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)

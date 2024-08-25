@@ -18,10 +18,6 @@ mark_obj_for_deletion = obj_mark_for_deletion
 gGlobalSyncTable.goombabros1killed = false
 gGlobalSyncTable.goombabros1 = false
 
-if not SM64COOPDX_VERSION then
-    gGlobalSoundSource = { x = 0, y = 0, z = 0 }
-end
-
 local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
@@ -1022,6 +1018,17 @@ local function bhv_crocodile_loop(o)
             o.oAction = 0
         end
     end
+
+    local nearestfire = obj_get_nearest_object_with_behavior_id(o, id_bhvFlameBouncing)
+
+    if nearestfire then
+        if obj_check_hitbox_overlap(o, nearestfire) then
+            play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
+            obj_explode_and_spawn_coins(46, 1)
+            obj_mark_for_deletion(nearestfire)
+            obj_mark_for_deletion(o)
+        end
+    end
 end
 
 --bhvCrocodile
@@ -1604,7 +1611,7 @@ local function bhv_whomp_npc_init(o)
     o.oAnimations = gObjectAnimations.whomp_seg6_anims_06020A04
     o.oCollisionDistance = 900
     cur_obj_init_animation(0)
-    network_init_object(o, true, nil)
+    --network_init_object(o, true, nil)
 end
 
 MODEL_WHOMP_MOVING_CAR = smlua_model_util_get_id("whomp_moving_car_geo")
@@ -1612,11 +1619,19 @@ MODEL_WHOMP_MOVING_CAR = smlua_model_util_get_id("whomp_moving_car_geo")
 ---@param o Object
 local function bhv_whomp_npc_loop(o)
     load_object_collision_model()
+    o.oBehParams = (3 << 24)
     local mariostate = nearest_mario_state_to_object(o)
-    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
-        if should_start_or_continue_dialog(mariostate, o) ~= 0 then
-            local response = cutscene_object_with_dialog(CUTSCENE_RACE_DIALOG, o, 69)
-            if response == 1 then
+
+    if o.oAction == 0 then
+        if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+            gMarioStates[0].action = ACT_READING_NPC_DIALOG
+            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_069) ~= 0 then
+                spawn_default_star(mariostate.pos.x, mariostate.pos.y + 200, mariostate.pos.z)
+                o.oInteractStatus = 0
+                o.oAction = 1
+                o.oInteractType = INTERACT_IGLOO_BARRIER
+            end
+            --[[if response == 1 then
                 spawn_sync_object(bhvWhompMovingCar, MODEL_WHOMP_MOVING_CAR, -1912, -493, 10909, nil).oMoveAngleYaw = -15300
                 o.oInteractType = 0
 
@@ -1626,6 +1641,7 @@ local function bhv_whomp_npc_loop(o)
                 mariostate.action = ACT_IDLE
                 o.oInteractStatus = 0
             end
+        end]]
         end
     end
 end
@@ -3087,7 +3103,8 @@ end
 
 ---@param o Object
 function bhv_swinging_ship_loop(o)
-    load_object_collision_model() -- not done
+    load_object_collision_model()
+    o.oFaceAnglePitch = math_sin(o.oTimer * 0.02) * 4300
 end
 
 bhvSwingingShip = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_swinging_ship_init,
@@ -3268,6 +3285,7 @@ const BehaviorScript bhvWarp[] = {
     END_LOOP(),
 };
 ]]
+
 ---@param o Object
 function bhv_totwc_entry_light(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE

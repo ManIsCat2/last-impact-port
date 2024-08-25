@@ -611,7 +611,7 @@ If you press the\
 [Z] button, I'll shoot\
 you up into the air!"))
 
-smlua_text_utils_dialog_replace(DIALOG_069,1,6,30,200, ("Let's not have the\
+--[[smlua_text_utils_dialog_replace(DIALOG_069,1,6,30,200, ("Let's not have the\
 usual brainless battle.\
 I want to challenge you!\
 I bet you can't take\
@@ -621,7 +621,9 @@ If you fall off the\
 cart or die, you lose.\
 Do you think you can\
 win that bet?\
-//Yes////No way"))
+//Yes////No way"))]]
+
+smlua_text_utils_dialog_replace(DIALOG_069,1,6,30,200, ("Have this Star!"))
 
 smlua_text_utils_dialog_replace(DIALOG_070,1,5,30,200, ("The cart is right on the\
 huge railway! Jump on it\
