@@ -3304,3 +3304,51 @@ bhvTOTWCEntryLight = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_totwc_entry_li
             obj_mark_for_deletion(o)
         end
     end)
+
+
+function bhv_bbh_spinning_meteor_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bbh_spinning_meteor_collision")
+    o.oAnimState = math.random(1, 3)
+end
+
+function bhv_bbh_spinning_meteor_loop(o)
+    load_object_collision_model()
+
+    if o.oAnimState == 1 then
+        o.oFaceAnglePitch = o.oFaceAnglePitch + 400
+    elseif o.oAnimState == 2 then
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 500
+    elseif o.oAnimState == 3 then
+        o.oFaceAngleRoll = o.oFaceAngleRoll + 600
+    end
+end
+
+bhvBBHSpinningMeteor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bbh_spinning_meteor_init,
+    bhv_bbh_spinning_meteor_loop)
+
+function bhv_meteor_cage_blocker(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("meteor_cage_blocker_collision")
+    o.oCollisionDistance = 3500
+end
+
+bhvMeteorCageBlocker = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_meteor_cage_blocker,
+    function(o)
+        load_object_collision_model()
+    end)
+
+
+function bhv_fi_breather_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    bhv_animstate_by_param2(o)
+end
+
+function bhv_fi_breather_loop(o) -- not done
+
+end
+
+bhvFIBreather = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_fi_breather_init, bhv_fi_breather_loop)

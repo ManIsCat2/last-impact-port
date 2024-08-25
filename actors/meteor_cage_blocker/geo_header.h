@@ -1,0 +1,9 @@
+extern const GeoLayout meteor_cage_blocker_geo[];
+extern Lights1 meteor_cage_blocker_f3dlite_material_001_lights;
+extern u8 meteor_cage_blocker__0_ci8[];
+extern u8 meteor_cage_blocker__0_pal_rgba16[];
+extern Vtx meteor_cage_blocker_000_displaylist_mesh_layer_4_vtx_0[71];
+extern Gfx meteor_cage_blocker_000_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_meteor_cage_blocker_f3dlite_material_001[];
+extern Gfx mat_revert_meteor_cage_blocker_f3dlite_material_001[];
+extern Gfx meteor_cage_blocker_000_displaylist_mesh_layer_4[];

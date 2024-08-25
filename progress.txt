@@ -1,29 +1,29 @@
-CG (overworld 1) 98% done
-CI (overlworld 2) 85% done 
-CC (overlworld 3) 80% done
+CG (overworld 1) 98% done //ready for release (1 bhv left, coconuts)
+CI (overlworld 2) 85% done  //ready for release (2 bhv left, camera, cages for cannon and stuff)
+CC (overlworld 3) 80% done //ready for release (2 bhv left, second train part and cage)
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
 
-BOB - 95% done
+BOB - 100% done //ready for release
 WF - 50% - dead%
 JRB  65% done
-CCM - 83% done
-BBH - 90% done
-HMC - 97% done
-LLL - 60% done
+CCM - 83% done //ready for release
+BBH - 100% done //ready for release 
+HMC - 100% done //ready for release
+LLL - 60% done 
 SSL - 60% done
-DDD - 90% done
-SL - 82% done
-WDW - 80% done
+DDD - 90% done //ready for release
+SL - 82% done //ready for release (2 bhv left, flying goomba, pink and blue enemy)
+WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
 TTM - 65% done
-THI - 80% done
+THI - 80% done //ready for release
 TTC - 65% done
-RR - 98% done
+RR - 100% done //ready for release
 BITDW - 80% done
-BITFS - 90% done
+BITFS - 90% done  //ready for release
+BITS - 50% - dead%
 PSS - 50% done
-COTMC - 90% done
-TOTWC - 80% done
-VCUTM - 70% done
-WMOTR - 50% - dead% // minigame house, will not be coded.
+COTMC - 100% done //ready for release 
+TOTWC - 80% done //ready for release (2 bhv left)
+VCUTM - 70% done //ready for release
 SA - 50% done

@@ -141,10 +141,10 @@ const LevelScript local_objects_rr_1_[] = {
 	OBJECT_WITH_ACTS(0, 7856, 1480, -1860, 0, 0, 0, 0x20000,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(57, 6227, 3674, -7558, 0, 0, 0, 0x430000,  bhvRainbowStar, 63),
 	OBJECT_WITH_ACTS(0, 10363, 1968, -3127, 0, -11, 0, 0x0,  bhvCoinFormation, 63),
-	OBJECT_WITH_ACTS(84, 10119, 2556, -4370, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),
+	/*OBJECT_WITH_ACTS(84, 10119, 2556, -4370, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),
 	OBJECT_WITH_ACTS(84, 10156, 2166, -2292, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),
 	OBJECT_WITH_ACTS(84, 7135, 3812, -4063, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),
-	OBJECT_WITH_ACTS(84, -1246, 1130, -4800, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),
+	OBJECT_WITH_ACTS(84, -1246, 1130, -4800, 0, 0, 0, 0x0,  bhvBigBoulderGenerator, 63),*/
 	OBJECT_WITH_ACTS(60, 3331, -41, 2426, 0, 90, 0, 0x0,  bhvRRRideableCart, 63),
 	OBJECT_WITH_ACTS(122, -2168, 7737, 7916, 0, 102, 0, 0x0,  bhvFakeStar, 63),
 	OBJECT_WITH_ACTS(122, 4179, 8127, 6658, 0, 118, 0, 0x0,  bhvFakeStar, 63),
@@ -240,17 +240,17 @@ const LevelScript local_area_rr_2_[] = {
 const LevelScript local_objects_rr_2_[] = {
 	OBJECT_WITH_ACTS(0, -3408, 0, 8, 0, 90, 0, 0x880a0000,  bhvSpinAirborneWarp, 63),
 	OBJECT_WITH_ACTS(0, -3940, 0, 11, 0, 90, 0, 0x280a0000,  bhvWarp, 63),
-	OBJECT_WITH_ACTS(0, 0, 0, 0, 0, 0, 0, 0x0,  Bhv_Custom_0x13003d8c, 63),
+	//OBJECT_WITH_ACTS(0, 0, 0, 0, 0, 0, 0, 0x0,  Bhv_Custom_0x13003d8c, 63),
 	OBJECT_WITH_ACTS(0, 5, -829, 19, 0, 107, 0, 0x20000,  bhvCoinFormation, 63),
 	OBJECT_WITH_ACTS(140, 2850, -82, 0, 0, 0, 0, 0x0,  bhvBlueCoinSwitch, 63),
 	OBJECT_WITH_ACTS(118, 1500, -735, 0, 0, 0, 0, 0x0,  bhvHiddenBlueCoin, 63),
 	OBJECT_WITH_ACTS(118, 0, -735, -1500, 0, 0, 0, 0x0,  bhvHiddenBlueCoin, 63),
 	OBJECT_WITH_ACTS(118, 0, -735, 1500, 0, 0, 0, 0x0,  bhvHiddenBlueCoin, 63),
 	OBJECT_WITH_ACTS(118, -1500, -735, 0, 0, 0, 0, 0x0,  bhvHiddenBlueCoin, 63),
-	OBJECT_WITH_ACTS(25, -878, 1744, -878, 0, 45, 0, 0x0,  Bhv_Custom_0x13003f64, 63),
+	/*OBJECT_WITH_ACTS(25, -878, 1744, -878, 0, 45, 0, 0x0,  Bhv_Custom_0x13003f64, 63),
 	OBJECT_WITH_ACTS(25, 878, 1744, -878, 0, -45, 0, 0x0,  Bhv_Custom_0x13003f64, 63),
 	OBJECT_WITH_ACTS(25, -878, 1744, 878, 0, 135, 0, 0x0,  Bhv_Custom_0x13003f64, 63),
-	OBJECT_WITH_ACTS(25, 878, 1744, 878, 0, 225, 0, 0x0,  Bhv_Custom_0x13003f64, 63),
+	OBJECT_WITH_ACTS(25, 878, 1744, 878, 0, 225, 0, 0x0,  Bhv_Custom_0x13003f64, 63),*/
 	RETURN()
 };
 
