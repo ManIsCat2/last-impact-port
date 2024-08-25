@@ -1,0 +1,9 @@
+extern const GeoLayout fire_openable_gate_geo[];
+extern Lights1 fire_openable_gate_f3dlite_material_002_lights;
+extern u8 fire_openable_gate__07002910_ci8[];
+extern u8 fire_openable_gate__07002910_pal_rgba16[];
+extern Vtx fire_openable_gate_000_displaylist_mesh_layer_4_vtx_0[38];
+extern Gfx fire_openable_gate_000_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_fire_openable_gate_f3dlite_material_002[];
+extern Gfx mat_revert_fire_openable_gate_f3dlite_material_002[];
+extern Gfx fire_openable_gate_000_displaylist_mesh_layer_4[];

@@ -380,7 +380,7 @@ function bhv_fire_flower_fire_loop(o)
 
     local objStep = object_step()
 
-    if objStep & OBJ_COL_FLAG_GROUNDED  == 1 then
+    if objStep & OBJ_COL_FLAG_GROUNDED == 1 then
         o.oVelY = fireBouncyness
     end
 
@@ -628,21 +628,23 @@ function fire_powerup(m)
         network_player_set_override_palette_color(gNetworkPlayers[0], CAP, { r = 255, g = 255, b = 255 })
         network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
             network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
-        if m.action == ACT_PUNCHING or m.action == ACT_MOVE_PUNCHING then
-            if not flameThrown then
-                spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200),
-                    m.pos.y,
-                    m.pos.z + (coss(m.faceAngle.y) * 200),
+        if m.controller.buttonPressed & B_BUTTON ~= 0 then
+            if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK then
+                if not flameThrown then
+                    spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200),
+                        m.pos.y,
+                        m.pos.z + (coss(m.faceAngle.y) * 200),
 
-                    ---@param f Object
-                    function(f)
-                        f.oMoveAngleYaw = m.faceAngle.y
-                        f.oGraphYOffset = 64
-                        f.oVelY = fireBouncyness
-                        obj_scale(f, 5)
-                    end)
+                        ---@param f Object
+                        function(f)
+                            f.oMoveAngleYaw = m.faceAngle.y
+                            f.oGraphYOffset = 64
+                            f.oVelY = fireBouncyness
+                            obj_scale(f, 5)
+                        end)
 
-                flameThrown = true
+                    flameThrown = true
+                end
             end
         else
             flameThrown = false

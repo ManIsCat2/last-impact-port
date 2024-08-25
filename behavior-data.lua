@@ -3353,12 +3353,13 @@ end
 
 bhvFIBreather = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_fi_breather_init, bhv_fi_breather_loop)
 
+MODEL_PSS_CLOUDY_PLATFORM = smlua_model_util_get_id("pss_cloudy_platform_geo")
+
 ---@param o Object
 function bhv_pss_cloudy_platform(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("pss_cloudy_platform_collision")
     o.header.gfx.skipInViewCheck = true
-    obj_set_model_extended(o, smlua_model_util_get_id("pss_cloudy_platform_geo"))
     cur_obj_set_home_once()
 end
 
@@ -3396,3 +3397,104 @@ function bhv_tnt_and_boulder_loop(o)
 end
 
 bhvTNTAndBoulder = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_tnt_and_boulder_init, bhv_tnt_and_boulder_loop)
+
+function bhv_fire_opens_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.hitboxHeight = 140
+    o.hitboxRadius = 120
+
+    o.oIntangibleTimer = 0
+
+    network_init_object(o, true, { "oAction" })
+end
+
+function bhv_fire_opens_gate_loop(o)
+    o.oInteractStatus = 0
+
+    local nreastfirel = obj_get_nearest_object_with_behavior_id(o, bhvFireFlowerFire)
+
+    if o.oAction == 0 then
+        obj_set_model_extended(o, 0)
+        if nreastfirel then
+            if obj_check_hitbox_overlap(o, nreastfirel) then
+                obj_mark_for_deletion(nreastfirel)
+                o.oAction = 1
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oAnimState = o.oAnimState + 2
+
+        o.oInteractType = INTERACT_FLAME
+
+        obj_set_billboard(o)
+
+        obj_scale(o, 6.3)
+
+        obj_set_model_extended(o, E_MODEL_RED_FLAME)
+    end
+end
+
+bhvInvFireOpensGate1 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+bhvInvFireOpensGate2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+bhvInvFireOpensGate3 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+bhvInvFireOpensGate4 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+
+
+MODEL_FIRE_OPEN_GATE = smlua_model_util_get_id("fire_openable_gate_geo")
+
+function bhv_fire_openable_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("fire_openable_gate_collision")
+    o.oCollisionDistance = 1000
+    network_init_object(o, true, { "oAction", "oPosY" })
+end
+
+function bhv_fire_openable_gate_loop(o)
+    load_object_collision_model()
+
+    if o.oAction == 0 then
+        if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate1) and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate2) then
+            if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate1).oAction == 1 and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate2).oAction == 1 then
+                o.oAction = 1
+                play_puzzle_jingle()
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oPosY = o.oPosY - 5
+        if o.oPosY < -3300 then
+            obj_mark_for_deletion(o)
+        end
+    end
+end
+
+bhvFireOpenableGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_fire_openable_gate_init, bhv_fire_openable_gate_loop)
+
+MODEL_PSS_HIDEN_GEOMETRY = smlua_model_util_get_id("pss_secret_hidden_geometry_geo")
+
+function bhv_pss_hidden_geometry_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("pss_secret_hidden_geometry_collision")
+    o.oCollisionDistance = 5400
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oAction", "oPosY" })
+end
+
+function bhv_pss_hidden_geometry_loop(o)
+    load_object_collision_model()
+
+    if o.oAction == 0 then
+        if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate3) and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate4) then
+            if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate3).oAction == 1 and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate4).oAction == 1 then
+                o.oAction = 1
+                play_puzzle_jingle()
+            end
+        end
+    elseif o.oAction == 1 then
+        o.oPosY = approach_f32_symmetric(o.oPosY, o.oHomeY + 1400, 2)
+    end
+end
+
+bhvPSSHiddenGeometry = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_hidden_geometry_init, bhv_pss_hidden_geometry_loop)
