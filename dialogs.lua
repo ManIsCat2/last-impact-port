@@ -317,7 +317,7 @@ careful!"))
 smlua_text_utils_dialog_replace(DIALOG_035,1,4,30,200, ("When Mario transforms\
 into fire Mario, he\
 can shoot fireballs\
-with the [C] button.\
+with the [B] button.\
 He transforms back, if he\
 touches water or takes\
 any damage."))

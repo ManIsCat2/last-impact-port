@@ -56,12 +56,12 @@ const LevelScript local_objects_pss_1_[] = {
 OBJECT(0,117,938,9241,0,180,0,0xa0000, bhvSpinAirborneWarp),
 OBJECT(137,-6733,-1620,-5731,0,-154,0,0x10000, bhvExclamationBox),
 OBJECT(87,144,-3052,-67,0,-153,0,0x0, bhvBigBully),
-OBJECT(0,0,10625,0,0,107,0,0x0, Bhv_Custom_0x130022f0),
+//OBJECT(0,0,10625,0,0,107,0,0x0, Bhv_Custom_0x130022f0),
 OBJECT(192,480,0,43,0,-151,0,0x0, bhvGoomba),
-OBJECT(53,0,208,0,0,0,0,0x0, Bhv_Custom_0x13002324),
+/*OBJECT(53,0,208,0,0,0,0,0x0, Bhv_Custom_0x13002324),
 OBJECT(53,0,208,0,0,0,0,0x10000, Bhv_Custom_0x13002324),
 OBJECT(53,0,208,0,0,0,0,0x20000, Bhv_Custom_0x13002324),
-OBJECT(54,0,0,0,0,0,0,0x1010000, Bhv_Custom_0x13002324),
+OBJECT(54,0,0,0,0,0,0,0x1010000, Bhv_Custom_0x13002324),*/
 OBJECT(0,-4909,-1787,-6585,0,0,0,0x1000000, bhvInvFireOpensGate1),
 OBJECT(0,-5321,-1787,-7462,0,0,0,0x2000000, bhvInvFireOpensGate2),
 OBJECT(0,7783,-3204,-5849,0,0,0,0x4000000, bhvInvFireOpensGate3),
@@ -87,14 +87,14 @@ OBJECT(0,-708,-3059,-3513,0,0,0,0x20000, bhvCoinFormation),
 OBJECT(0,2363,-2920,-1289,0,38,0,0x0, bhvCoinFormation),
 OBJECT(192,2427,-3074,337,0,0,0,0x0, bhvGoomba),
 OBJECT(192,876,-2944,-2697,0,0,0,0x0, bhvGoomba),
-OBJECT(59,0,0,0,0,0,0,0x10000, Bhv_Custom_0x130023ac),
+/*OBJECT(59,0,0,0,0,0,0,0x10000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x20000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x30000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x40000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x50000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x60000, Bhv_Custom_0x130023ac),
 OBJECT(59,0,0,0,0,0,0,0x70000, Bhv_Custom_0x130023ac),
-OBJECT(59,0,0,0,0,0,0,0x80000, Bhv_Custom_0x130023ac),
+OBJECT(59,0,0,0,0,0,0,0x80000, Bhv_Custom_0x130023ac),*/
 RETURN()
 };
 const LevelScript local_warps_pss_1_[] = {
@@ -119,9 +119,9 @@ RETURN()
 };
 const LevelScript local_objects_pss_2_[] = {
 OBJECT(0,-654,-3587,13441,0,180,0,0xa0000, bhvSpinAirborneWarp),
-OBJECT(0,-531,-2968,8766,0,0,0,0x10000, Bhv_Custom_0x13003404),
+/*OBJECT(0,-531,-2968,8766,0,0,0,0x10000, Bhv_Custom_0x13003404),
 OBJECT(0,277,137,4088,0,0,0,0x0, Bhv_Custom_0x13003404),
-OBJECT(24,-562,-3723,8861,0,0,0,0x0, Bhv_Custom_0x13003438),
+OBJECT(24,-562,-3723,8861,0,0,0,0x0, Bhv_Custom_0x13003438),*/
 OBJECT(0,1297,-1865,5260,0,0,0,0x110000, bhvCoinFormation),
 OBJECT(0,-927,-759,7609,0,50,0,0x0, bhvCoinFormation),
 OBJECT(0,247,46,4504,0,0,0,0x20000, bhvCoinFormation),

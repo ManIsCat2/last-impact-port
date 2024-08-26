@@ -680,6 +680,8 @@ bhvFakeStar = hook_behavior(nil, OBJ_LIST_LEVEL, true,
 local NOTEBLOCK_ACT_IDLE = 0
 local NOTEBLOCK_ACT_BOUNCING = 1
 
+MODEL_NOTEBLOCKS = smlua_model_util_get_id("Noteblock_MOP")
+
 ---@param o Object
 local function bhv_noteblock_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -3432,6 +3434,10 @@ function bhv_fire_opens_gate_loop(o)
         obj_scale(o, 6.3)
 
         obj_set_model_extended(o, E_MODEL_RED_FLAME)
+
+        if obj_has_behavior_id(o, bhvInvFireOpensGate4) == 1 then
+            o.oGraphYOffset = 64
+        end
     end
 end
 
@@ -3477,7 +3483,7 @@ function bhv_pss_hidden_geometry_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("pss_secret_hidden_geometry_collision")
-    o.oCollisionDistance = 5400
+    o.oCollisionDistance = 5500
     cur_obj_set_home_once()
     network_init_object(o, true, { "oAction", "oPosY" })
 end
@@ -3493,8 +3499,22 @@ function bhv_pss_hidden_geometry_loop(o)
             end
         end
     elseif o.oAction == 1 then
-        o.oPosY = approach_f32_symmetric(o.oPosY, o.oHomeY + 1400, 2)
+        o.oPosY = approach_f32_symmetric(o.oPosY, o.oHomeY + 1400, 5.7)
     end
 end
 
 bhvPSSHiddenGeometry = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_hidden_geometry_init, bhv_pss_hidden_geometry_loop)
+
+function bhv_cloud2_aircruise_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("cloud2_aircruise_collision")
+    o.oCollisionDistance = 3000
+    smlua_anim_util_set_animation(o, "anim_cloud2_aircruise")
+end
+
+function bhv_cloud2_aircruise_loop(o)
+    load_object_collision_model()
+end
+
+bhvCloud2AirCruise = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cloud2_aircruise_init, bhv_cloud2_aircruise_loop)

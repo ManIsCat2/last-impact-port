@@ -616,8 +616,8 @@ function rainbow_powerup(m)
     end
 end
 
-local flameThrown = false
 local numFlamesThrown = 0
+local flameTimer = 0
 
 ---@param m MarioState
 function fire_powerup(m)
@@ -628,26 +628,30 @@ function fire_powerup(m)
         network_player_set_override_palette_color(gNetworkPlayers[0], CAP, { r = 255, g = 255, b = 255 })
         network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
             network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
-        if m.controller.buttonPressed & B_BUTTON ~= 0 then
-            if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK then
-                if not flameThrown then
-                    spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 200),
-                        m.pos.y,
-                        m.pos.z + (coss(m.faceAngle.y) * 200),
+        if m.controller.buttonPressed & B_BUTTON ~= 0 and numFlamesThrown ~= 3 then
+            if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK or m.action == ACT_MOVE_PUNCHING then
+                spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 170),
+                    m.pos.y,
+                    m.pos.z + (coss(m.faceAngle.y) * 170),
 
-                        ---@param f Object
-                        function(f)
-                            f.oMoveAngleYaw = m.faceAngle.y
-                            f.oGraphYOffset = 64
-                            f.oVelY = fireBouncyness
-                            obj_scale(f, 5)
-                        end)
+                    ---@param f Object
+                    function(f)
+                        f.oMoveAngleYaw = m.faceAngle.y
+                        f.oGraphYOffset = 64
+                        f.oVelY = fireBouncyness
+                        obj_scale(f, 5)
+                    end)
 
-                    flameThrown = true
-                end
+                numFlamesThrown = numFlamesThrown + 1
             end
-        else
-            flameThrown = false
+        end
+    end
+
+    if numFlamesThrown > 0 then
+        flameTimer = flameTimer + 1
+        if flameTimer >100 then
+            numFlamesThrown = 0
+            flameTimer = 0
         end
     end
 end
