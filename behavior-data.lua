@@ -3518,3 +3518,16 @@ function bhv_cloud2_aircruise_loop(o)
 end
 
 bhvCloud2AirCruise = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cloud2_aircruise_init, bhv_cloud2_aircruise_loop)
+
+function bhv_cloud3_aircruise_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("cloud3_aircruise_collision")
+    o.oCollisionDistance = 6500
+end
+
+function bhv_cloud3_aircruise_loop(o)
+    load_object_collision_model()
+end
+
+bhvCloud3AirCruise = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cloud3_aircruise_init, bhv_cloud3_aircruise_loop)

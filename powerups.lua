@@ -649,7 +649,7 @@ function fire_powerup(m)
 
     if numFlamesThrown > 0 then
         flameTimer = flameTimer + 1
-        if flameTimer >100 then
+        if flameTimer > 100 then
             numFlamesThrown = 0
             flameTimer = 0
         end

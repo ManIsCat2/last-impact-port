@@ -4,7 +4,7 @@ save_file_set_flags(SAVE_FLAG_HAVE_WING_CAP)
 
 gLevelValues.fixCollisionBugs = true
 gServerSettings.skipIntro = true
-gServerSettings.bubbleDeath = true
+--gServerSettings.bubbleDeath = true
 gLevelValues.exitCastleWarpNode = 10
 gLevelValues.exitCastleLevel = LEVEL_CASTLE_GROUNDS
 gLevelValues.metalCapDuration = 1

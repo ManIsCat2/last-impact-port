@@ -13,7 +13,7 @@ HMC - 100% done //ready for release
 LLL - 60% done 
 SSL - 70% done
 DDD - 90% done //ready for release
-SL - 82% done //ready for release (1 bhv left, pink and blue enemy)
+SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
 WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
 TTM - 65% done
 THI - 80% done //ready for release
@@ -24,6 +24,6 @@ BITFS - 100% done  //ready for release
 BITS - 50% - dead%
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
-TOTWC - 80% done //ready for release (2 bhv left, ships in cloud2 and 3)
+TOTWC - 100% done //ready for release
 VCUTM - 70% done //ready for release
 SA - 50% done
