@@ -789,7 +789,7 @@ again?\
 Bwahaha, some of us\
 Goombas are fierce!"))
 
-smlua_text_utils_dialog_replace(DIALOG_091,2,5,30,200, ("Hi there!\
+--[[smlua_text_utils_dialog_replace(DIALOG_091,2,5,30,200, ("Hi there!\
 I am the local\
 Blacksmith!\
 I have absolved a\
@@ -802,7 +802,10 @@ craft one for you,\
 just bring me one piece\
 of gold, one diamond\
 crystal and a blooming\
-Power - Flower."))
+Power - Flower."))]]
+
+smlua_text_utils_dialog_replace(DIALOG_091,2,5,30,200, ("Yo!\
+Have this star I found!"))
 
 smlua_text_utils_dialog_replace(DIALOG_092,1,3,30,200, ("You are in good\
 luck! The boring climb\

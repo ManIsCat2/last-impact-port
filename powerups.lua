@@ -20,6 +20,7 @@ BEE = 1
 CLOUD = 2
 RAINBOW = 3
 FIRE = 4
+ICE = 5
 
 -- Powerup Relatives
 local cloudcount = 0        -- for cloud flower
@@ -28,11 +29,11 @@ local savedBGM = 0          -- for rainbow star
 local rainbow_music = false -- for rainbow star
 
 characterPowerupModels = {
-    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
-    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
-    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
-    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
-    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil },
+    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil },
+    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil },
+    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil },
+    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil },
+    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil },
 }
 
 -- Powerups are a PlayerSyncTable by the way.
@@ -58,6 +59,7 @@ function get_character_model(m)
         [CLOUD] = { modelId = CPM.cloud and CPM.cloud or CPMM.cloud },
         [RAINBOW] = { modelId = CPM.rainbow and CPM.rainbow or CPMM.rainbow },
         [FIRE] = { modelId = CPM.fire and CPM.fire or CPMM.fire },
+        [ICE] = { modelId = CPM.ice and CPM.ice or CPMM.ice },
     }
 end
 
@@ -73,6 +75,7 @@ function cs_model_set(m)
                 [CLOUD] = { modelId = nil },
                 [RAINBOW] = { modelId = nil },
                 [FIRE] = { modelId = nil },
+                [ICE] = { modelId = nil },
             }
         end
     else
@@ -284,6 +287,7 @@ function bhv_rainbow_star_init(obj)
 end
 
 MODEL_FIRE_FLOWER = smlua_model_util_get_id("fire_flower_geo")
+MODEL_ICE_FLOWER = smlua_model_util_get_id("ice_flower_geo")
 
 ---@param obj Object
 function bhv_fire_flower_init(obj)
@@ -295,6 +299,19 @@ function bhv_fire_flower_init(obj)
     obj_scale(obj, 0.7)
     --obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
     obj_set_model_extended(obj, MODEL_FIRE_FLOWER)
+    network_init_object(obj, true, nil)
+end
+
+---@param obj Object
+function bhv_ice_flower_init(obj)
+    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    obj.hitboxRadius = 65
+    obj.hitboxHeight = 65
+    obj.oIntangibleTimer = 0
+    obj.oGravity = 3
+    obj_scale(obj, 0.7)
+    --obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
+    obj_set_model_extended(obj, MODEL_ICE_FLOWER)
     network_init_object(obj, true, nil)
 end
 
@@ -319,6 +336,12 @@ end
 function bhv_fire_flower_loop(obj)
     object_step()
     general_powerup_handler2(obj, FIRE)
+end
+
+---@param obj Object
+function bhv_ice_flower_loop(obj)
+    object_step()
+    general_powerup_handler2(obj, ICE)
 end
 
 ---only deletes for local player
@@ -459,6 +482,9 @@ bhvCloudFlower = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cloudflower_ini
 bhvRainbowStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rainbow_star_init, bhv_rainbow_star_loop)
 ---bhvFireFlower
 hook_behavior(id_bhvMetalCap, OBJ_LIST_GENACTOR, true, bhv_fire_flower_init, bhv_fire_flower_loop)
+---bhvIceFlower
+hook_behavior(id_bhvWingCap, OBJ_LIST_GENACTOR, true, bhv_ice_flower_init, bhv_ice_flower_loop)
+
 
 ---@param m MarioState
 function bee_update(m)
@@ -620,17 +646,17 @@ local numFlamesThrown = 0
 local flameTimer = 0
 
 ---@param m MarioState
-function fire_powerup(m)
+function ice_fire_flower_powerup(m)
     if m.playerIndex ~= 0 then return end
     local gMarioObject = m.marioObj
-    if gPlayerSyncTable[0].powerup == FIRE then
-        network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT, { r = 255, g = 255, b = 255 })
-        network_player_set_override_palette_color(gNetworkPlayers[0], CAP, { r = 255, g = 255, b = 255 })
+    if gPlayerSyncTable[0].powerup == FIRE or gPlayerSyncTable[0].powerup == ICE then
+        network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT, gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 } )
+        network_player_set_override_palette_color(gNetworkPlayers[0], CAP, gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
         network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
             network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
         if m.controller.buttonPressed & B_BUTTON ~= 0 and numFlamesThrown ~= 3 then
             if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK or m.action == ACT_MOVE_PUNCHING then
-                spawn_sync_object(bhvFireFlowerFire, E_MODEL_RED_FLAME, m.pos.x + (sins(m.faceAngle.y) * 170),
+                spawn_sync_object(bhvFireFlowerFire, gPlayerSyncTable[0].powerup == FIRE and E_MODEL_RED_FLAME or E_MODEL_BLUE_FLAME, m.pos.x + (sins(m.faceAngle.y) * 170),
                     m.pos.y,
                     m.pos.z + (coss(m.faceAngle.y) * 170),
 
@@ -660,5 +686,5 @@ hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
 hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
-hook_event(HOOK_MARIO_UPDATE, fire_powerup)
+hook_event(HOOK_MARIO_UPDATE, ice_fire_flower_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)

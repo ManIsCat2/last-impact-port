@@ -4,6 +4,8 @@ save_file_set_flags(SAVE_FLAG_HAVE_WING_CAP)
 
 gLevelValues.fixCollisionBugs = true
 gServerSettings.skipIntro = true
+gBehaviorValues.dialogs.ToadStar2Dialog = DIALOG_091
+gBehaviorValues.ToadStar2Requirement = 0
 --gServerSettings.bubbleDeath = true
 gLevelValues.exitCastleWarpNode = 10
 gLevelValues.exitCastleLevel = LEVEL_CASTLE_GROUNDS

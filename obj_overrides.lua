@@ -28,6 +28,10 @@ local function bhv_toad_custom_loop(o)
             obj_mark_for_deletion(o)
         end
     end
+
+    if oBehParams1stByte == gBehaviorValues.dialogs.ToadStar2AfterDialog then
+        o.oInteractType = INTERACT_IGLOO_BARRIER
+    end
 end
 
 hook_behavior(id_bhvToadMessage, OBJ_LIST_GENACTOR, false, nil, bhv_toad_custom_loop)
