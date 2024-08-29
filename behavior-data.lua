@@ -999,6 +999,7 @@ local function bhv_crocodile_init(o)
     o.oIntangibleTimer = 0
     o.hitboxHeight = 70
     o.hitboxRadius = 360
+    o.oNumLootCoins = 3
     o.oInteractType = INTERACT_DAMAGE
     network_init_object(o, true, { "oAction", "oTimer" })
 end

@@ -390,6 +390,8 @@ function bhv_fire_flower_fire_init(o)
     o.oBuoyancy = 2
 
     o.oFriction = 1
+
+    o.oHealth = 0
     obj_set_billboard(o)
 end
 
@@ -399,15 +401,16 @@ local fireBouncyness = 20
 function bhv_fire_flower_fire_loop(o)
     o.oAnimState = o.oAnimState + 2
 
-    o.oForwardVel = 53
+    o.oForwardVel = 27
 
     local objStep = object_step()
 
     if objStep & OBJ_COL_FLAG_GROUNDED == 1 then
         o.oVelY = fireBouncyness
+        o.oHealth = o.oHealth + 1
     end
 
-    if o.oTimer > 100 then
+    if o.oHealth >= 4 then
         obj_mark_for_deletion(o)
     end
 end
