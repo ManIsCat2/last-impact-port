@@ -1,16 +1,27 @@
 local streamed_collosal_circuits = audio_stream_load("ColossalCircuits.mp3")
+local streamed_mmm_fire = audio_stream_load("MeltyMoltenMountainsFireside.mp3")
+local streamed_mmm_ice = audio_stream_load("MeltyMoltenMountainsIceside.mp3")
+
+local debugsound = {
+    [streamed_mmm_ice] ="ice",
+    [streamed_mmm_fire] ="friee",
+}
 
 local default_volume = 0.6
+local currentAudio
 
 ---@param audio ModAudio
 local function play_seq_streamed(audio)
     audio_stream_set_looping(audio, true)
     audio_stream_play(audio, true, default_volume)
+    currentAudio = audio
 end
 
 local audios = {
     { course = COURSE_THI, audio = streamed_collosal_circuits, area = 1 },
     { course = COURSE_THI, audio = streamed_collosal_circuits, area = 2 },
+    { course = COURSE_SSL, audio = streamed_mmm_fire, area = 1 },
+    { course = 27, audio = streamed_mmm_ice, area = 1 },
 }
 
 local function audio_stop_all()
@@ -56,6 +67,38 @@ local function update_mario_stream(m)
         end
     end
 end
+
+---@param o Object
+local function bhv_ssl_changes_music_init(o)
+    o.hitboxHeight = 60000
+    o.hitboxRadius = 3700
+    o.hitboxDownOffset = 2000
+    o.oIntangibleTimer = 0
+end
+
+---@param o Object
+local function bhv_ssl_changes_music_loop(o)
+   -- djui_chat_message_create(tostring(debugsound[currentAudio]))
+    if obj_check_hitbox_overlap(gMarioStates[0].marioObj, obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvSSLChangesMusic)) then
+        audio_stream_stop(streamed_mmm_fire)
+        if currentAudio ~= streamed_mmm_ice then
+            play_seq_streamed(streamed_mmm_ice)
+        end
+    else
+        audio_stream_stop(streamed_mmm_ice)
+        if currentAudio ~= streamed_mmm_fire then
+            play_seq_streamed(streamed_mmm_fire)
+        end
+    end
+    if o.oBehParams == 1 then
+        o.hitboxRadius = 6000
+    end
+    if o.oBehParams == 2 then
+        o.hitboxRadius = 5600 * 2.3
+    end
+end
+
+bhvSSLChangesMusic = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_ssl_changes_music_init, bhv_ssl_changes_music_loop)
 
 hook_event(HOOK_UPDATE, streamed_loop)
 hook_event(HOOK_MARIO_UPDATE, update_mario_stream)

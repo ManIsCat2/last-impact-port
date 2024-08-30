@@ -56,6 +56,13 @@ END_AREA(),
 RETURN()
 };
 const LevelScript local_objects_ssl_1_[] = {
+//start
+OBJECT_WITH_ACTS(0,-5254,30,7350,0,0,0,0, bhvSSLChangesMusic,63),
+OBJECT_WITH_ACTS(0,-11409,30,11297,0,0,0,2, bhvSSLChangesMusic,63),
+OBJECT_WITH_ACTS(0,-16443,30,3379,0,0,0,1, bhvSSLChangesMusic,63),
+OBJECT_WITH_ACTS(0,-8991,30,18413,0,0,0,2, bhvSSLChangesMusic,63),
+OBJECT_WITH_ACTS(0,-5109,-80,12078,0,0,0,2, bhvSSLChangesMusic,63),
+//end
 OBJECT_WITH_ACTS(0,1896,-165,7062,0,-136,0,0xa0000, bhvSpinAirborneWarp,63),
 OBJECT_WITH_ACTS(122,12688,1957,-1661,0,-154,0,0x0, bhvStar,63),
 OBJECT_WITH_ACTS(53,6306,1948,3938,0,-153,0,0x0,bhvSSLRotatingPlatform,63),

@@ -393,6 +393,8 @@ function bhv_fire_flower_fire_init(o)
 
     o.oHealth = 0
     obj_set_billboard(o)
+
+    network_init_object(o, true, {"oVelY", "oHealth"})
 end
 
 local fireBouncyness = 20

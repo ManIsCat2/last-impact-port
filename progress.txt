@@ -11,12 +11,12 @@ CCM - 85% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release
 LLL - 65% done 
-SSL - 70% done
+SSL - 75% done
 DDD - 90% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
 WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
 TTM - 65% done
-THI - 80% done //ready for release
+THI - 80% done
 TTC - 65% done
 RR - 100% done //ready for release
 BITDW - 80% done
