@@ -200,6 +200,13 @@ function bhv_update()
                 o.header.gfx.skipInViewCheck = true
             end
         end)
+
+    for_each_object_with_behavior(id_bhvHiddenStarTrigger,
+        function(s)
+            if obj_has_model_extended(s, MODEL_SILVER_STAR) == 1 then
+                s.oFaceAngleYaw = s.oFaceAngleYaw + 0x880
+            end
+        end)
 end
 
 hook_event(HOOK_UPDATE, bhv_update)
@@ -742,6 +749,8 @@ local function scalebyparam2(o)
 end
 
 bhvCaveCrystal = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_crystal_init, scalebyparam2)
+
+MODEL_SILVER_STAR = smlua_model_util_get_id("silver_star_geo")
 
 local function bhv_silver_star_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
