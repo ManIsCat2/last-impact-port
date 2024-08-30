@@ -3,8 +3,8 @@ local streamed_mmm_fire = audio_stream_load("MeltyMoltenMountainsFireside.mp3")
 local streamed_mmm_ice = audio_stream_load("MeltyMoltenMountainsIceside.mp3")
 
 local debugsound = {
-    [streamed_mmm_ice] ="ice",
-    [streamed_mmm_fire] ="friee",
+    [streamed_mmm_ice] = "ice",
+    [streamed_mmm_fire] = "friee",
 }
 
 local default_volume = 0.6
@@ -20,8 +20,8 @@ end
 local audios = {
     { course = COURSE_THI, audio = streamed_collosal_circuits, area = 1 },
     { course = COURSE_THI, audio = streamed_collosal_circuits, area = 2 },
-    { course = COURSE_SSL, audio = streamed_mmm_fire, area = 1 },
-    { course = 27, audio = streamed_mmm_ice, area = 1 },
+    { course = COURSE_SSL, audio = streamed_mmm_fire,          area = 1 },
+    { course = 27,         audio = streamed_mmm_ice,           area = 1 },
 }
 
 local function audio_stop_all()
@@ -78,16 +78,18 @@ end
 
 ---@param o Object
 local function bhv_ssl_changes_music_loop(o)
-   -- djui_chat_message_create(tostring(debugsound[currentAudio]))
+    -- djui_chat_message_create(tostring(debugsound[currentAudio]))
     if obj_check_hitbox_overlap(gMarioStates[0].marioObj, obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvSSLChangesMusic)) then
-        audio_stream_stop(streamed_mmm_fire)
         if currentAudio ~= streamed_mmm_ice then
             play_seq_streamed(streamed_mmm_ice)
+            audio_stream_set_position(streamed_mmm_ice, audio_stream_get_position(streamed_mmm_fire))
+            audio_stream_stop(streamed_mmm_fire)
         end
     else
-        audio_stream_stop(streamed_mmm_ice)
         if currentAudio ~= streamed_mmm_fire then
             play_seq_streamed(streamed_mmm_fire)
+            audio_stream_set_position(streamed_mmm_fire, audio_stream_get_position(streamed_mmm_ice))
+            audio_stream_stop(streamed_mmm_ice)
         end
     end
     if o.oBehParams == 1 then
