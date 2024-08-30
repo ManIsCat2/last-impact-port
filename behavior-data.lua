@@ -3504,7 +3504,8 @@ function bhv_pss_hidden_geometry_loop(o)
     end
 end
 
-bhvPSSHiddenGeometry = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_hidden_geometry_init, bhv_pss_hidden_geometry_loop)
+bhvPSSHiddenGeometry = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pss_hidden_geometry_init,
+    bhv_pss_hidden_geometry_loop)
 
 function bhv_cloud2_aircruise_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -3532,3 +3533,27 @@ function bhv_cloud3_aircruise_loop(o)
 end
 
 bhvCloud3AirCruise = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cloud3_aircruise_init, bhv_cloud3_aircruise_loop)
+
+function bhv_stone_arch(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("stone_arch_collision")
+    o.oCollisionDistance = 3000
+end
+
+bhvStoneArch = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_stone_arch,
+    function(o) load_object_collision_model() end)
+
+
+function bhv_nep_enut_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oAnimState = o.oBehParams >> 24
+end
+
+function bhv_nep_enut_loop(o)
+    smlua_anim_util_set_animation(o, "anim_nepenut")
+end
+
+bhvNepEnut = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_nep_enut_init,
+    bhv_nep_enut_loop)
