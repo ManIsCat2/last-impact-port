@@ -1,0 +1,1 @@
+extern const Collision bitfs_platform_moving_up_and_down_collision[];

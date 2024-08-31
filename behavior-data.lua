@@ -3566,3 +3566,21 @@ end
 
 bhvNepEnut = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_nep_enut_init,
     bhv_nep_enut_loop)
+
+
+function bhv_bitfs_platform_moving_up_and_down_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bitfs_platform_moving_up_and_down_collision")
+    o.oCollisionDistance = 900
+end
+
+---only moves for local player
+function bhv_bitfs_platform_moving_up_and_down_loop(o)
+    load_object_collision_model()
+
+    o.oPosY = o.oPosY + math_sin(o.oTimer * 0.042) *19
+end
+
+bhvBITFSPlatformMovingUpAndDown = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_platform_moving_up_and_down_init,
+    bhv_bitfs_platform_moving_up_and_down_loop)
