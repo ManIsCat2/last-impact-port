@@ -3106,6 +3106,23 @@ bhvRedAndWhiteTarget = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_red_and_wh
 
 
 ---@param o Object
+function bhv_rw_spawn_star(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+function bhv_rw_spawn_star_loop(o)
+    if obj_count_objects_with_behavior_id(bhvRedAndWhiteTarget) == 0 then
+        obj_mark_for_deletion(o)
+        spawn_default_star(o.oPosX, o.oPosY + 230, o.oPosZ)
+    end
+end
+
+bhvRedAndWhiteTargetSpawnStar = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rw_spawn_star,
+    bhv_rw_spawn_star_loop)
+
+---@param o Object
 function bhv_swinging_ship_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
@@ -3579,7 +3596,7 @@ end
 function bhv_bitfs_platform_moving_up_and_down_loop(o)
     load_object_collision_model()
 
-    o.oPosY = o.oPosY + math_sin(o.oTimer * 0.042) *19
+    o.oPosY = o.oPosY + math_sin(o.oTimer * 0.042) * 19
 end
 
 bhvBITFSPlatformMovingUpAndDown = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_platform_moving_up_and_down_init,
