@@ -1403,7 +1403,7 @@ end
 local function bhv_thi_fan_loop(o)
     local param1 = (o.oBehParams >> 24) & 0xFF
     --load_object_collision_model()
-    if param1 ~= 4 and param1 ~= 22 and param1 ~= 1 then
+    if param1 ~= 4 and param1 ~= 22 and param1 ~= 1 and param1 ~= 43 then
         o.oFaceAngleYaw = o.oFaceAngleYaw + o.oBehParams2ndByte + (param1 * 120)
     elseif param1 == 4 then
         obj_scale(o, 0.65)
@@ -1413,6 +1413,17 @@ local function bhv_thi_fan_loop(o)
     elseif param1 == 1 then
         obj_scale(o, 0.8)
         rotate_fan2(o, 6.5)
+    end
+    if o.oBehParams == 43 then
+        obj_scale(o, 0.8)
+        rotate_fan2(o, 6.5)
+        o.hitboxRadius = 500 * 3
+        o.hitboxHeight = 745 * 3
+        o.oIntangibleTimer = 0
+        if obj_check_hitbox_overlap(o, gMarioStates[0].marioObj) then
+            gMarioStates[0].action = ACT_DOUBLE_JUMP
+            gMarioStates[0].vel.y = 15
+        end
     end
 end
 

@@ -748,7 +748,7 @@ function spring_powerup(m)
         if bigBonucer then
             m.vel.y = m.vel.y + 20
             bigBouncerTime = bigBouncerTime + 1
-            if bigBouncerTime> 30 then
+            if bigBouncerTime> 45 then
                 bigBonucer = false
                 bigBouncerTime =0
             end
