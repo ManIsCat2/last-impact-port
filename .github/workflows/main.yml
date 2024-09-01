@@ -34,6 +34,6 @@ jobs:
       with:
         webhook: ${{env.webhook}}
         content: |
-          New commit: ${{github.event.head_commit.message}} (sha: ${{github.event.after}})
+          New commit: shits pushed yo
         attachment: |
           file: last_impact_coop.zip
