@@ -3601,3 +3601,35 @@ end
 
 bhvBITFSPlatformMovingUpAndDown = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitfs_platform_moving_up_and_down_init,
     bhv_bitfs_platform_moving_up_and_down_loop)
+
+
+function bhv_breakable_sa_entry(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("breakable_sa_entry_collision")
+    o.oCollisionDistance = 900
+    network_init_object(o, true, nil)
+end
+
+function bhv_breakable_sa_entry_loop(o)
+    load_object_collision_model()
+
+    if is_any_mario_groundpounding_obj(o) then
+        spawn_triangle_break_particles(20, 138, 3.0, 4);
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvBreakableSAEntry = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_breakable_sa_entry,
+    bhv_breakable_sa_entry_loop)
+
+
+function bhv_sa_static_flower(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("sa_static_flower_collision")
+    o.oCollisionDistance = 1700
+end
+
+bhvStaticSAFlower = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sa_static_flower,
+    function(o) load_object_collision_model() end)
