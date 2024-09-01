@@ -34,6 +34,6 @@ jobs:
       with:
         webhook: ${{env.webhook}}
         content: |
-          New commit: shits pushed yo
+          shits pushed yo
         attachment: |
           file: last_impact_coop.zip
