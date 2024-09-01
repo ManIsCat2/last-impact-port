@@ -3644,3 +3644,13 @@ end
 
 bhvStaticSAFlower = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sa_static_flower,
     function(o) load_object_collision_model() end)
+
+function bhv_sa_static_plant(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("sa_static_plant_collision")
+    o.oCollisionDistance = 1800
+end
+
+bhvSAStaticPlant = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sa_static_plant,
+    function(o) load_object_collision_model() end)

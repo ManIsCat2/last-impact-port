@@ -1,0 +1,14 @@
+extern const GeoLayout sa_static_plant_geo[];
+extern Lights1 sa_static_plant_Material_0_f3d_lights;
+extern Lights1 sa_static_plant_Material_1_f3d_lights;
+extern u8 sa_static_plant__0_rgba16[];
+extern u8 sa_static_plant__1_rgba16[];
+extern Vtx sa_static_plant_000_displaylist_mesh_layer_4_vtx_0[145];
+extern Gfx sa_static_plant_000_displaylist_mesh_layer_4_tri_0[];
+extern Vtx sa_static_plant_000_displaylist_mesh_layer_4_vtx_1[30];
+extern Gfx sa_static_plant_000_displaylist_mesh_layer_4_tri_1[];
+extern Gfx mat_sa_static_plant_Material_0_f3d[];
+extern Gfx mat_revert_sa_static_plant_Material_0_f3d[];
+extern Gfx mat_sa_static_plant_Material_1_f3d[];
+extern Gfx mat_revert_sa_static_plant_Material_1_f3d[];
+extern Gfx sa_static_plant_000_displaylist_mesh_layer_4[];
