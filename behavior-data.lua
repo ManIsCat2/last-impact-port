@@ -3654,3 +3654,14 @@ end
 
 bhvSAStaticPlant = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_sa_static_plant,
     function(o) load_object_collision_model() end)
+
+--lll_haunted_static_tree
+function bhv_lll_static_haunted_tree(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("lll_haunted_static_tree_collision")
+    o.oCollisionDistance = 1000
+end
+
+bhvLLLHauntedStaticTree = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_lll_static_haunted_tree,
+    function(o) load_object_collision_model() end)

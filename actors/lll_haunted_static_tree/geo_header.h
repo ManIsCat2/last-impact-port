@@ -1,0 +1,7 @@
+extern const GeoLayout lll_haunted_static_tree_geo[];
+extern Lights1 lll_haunted_static_tree_Fast3D_Material_lights;
+extern u8 lll_haunted_static_tree__0_rgba16[];
+extern Vtx lll_haunted_static_tree_000_displaylist_mesh_layer_1_vtx_0[245];
+extern Gfx lll_haunted_static_tree_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_lll_haunted_static_tree_Fast3D_Material[];
+extern Gfx lll_haunted_static_tree_000_displaylist_mesh_layer_1[];

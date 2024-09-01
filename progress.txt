@@ -10,13 +10,13 @@ JRB  75% done
 CCM - 85% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release
-LLL - 65% done 
+LLL - 75% done 
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
 WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
 TTM - 65% done
-THI - 85% done
+THI - 100% done //ready for release
 TTC - 65% done
 RR - 100% done //ready for release
 BITDW - 80% done
@@ -27,3 +27,6 @@ COTMC - 100% done //ready for release
 TOTWC - 100% done //ready for release
 VCUTM - 70% done //ready for release
 SA - 100% done //ready for release
+
+/*Total Progress*/
+80.5% (september 1st. 5:15 PM (GMT))
