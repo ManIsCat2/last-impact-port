@@ -735,7 +735,7 @@ function spring_powerup(m)
                 m.action = ACT_DOUBLE_JUMP
                 m.faceAngle.y = approach_s32(m.faceAngle.y, m.intendedYaw, 0x700, 0x700)
 
-                m.vel.y = 40
+                m.vel.y = 80
             end
         end
         --[[if m.pos.y == m.floorHeight then
@@ -746,7 +746,7 @@ function spring_powerup(m)
         end]]
 
         if bigBonucer then
-            m.vel.y = m.vel.y + 36
+            m.vel.y = m.vel.y + 20
             bigBouncerTime = bigBouncerTime + 1
             if bigBouncerTime> 30 then
                 bigBonucer = false
