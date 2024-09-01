@@ -16,7 +16,7 @@ DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
 WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
 TTM - 65% done
-THI - 80% done
+THI - 85% done
 TTC - 65% done
 RR - 100% done //ready for release
 BITDW - 80% done
