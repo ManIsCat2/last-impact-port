@@ -14,6 +14,7 @@ smlua_audio_utils_replace_sequence(0x14, 0x1A, 75, "14_Seq_custom") --race fanfa
 smlua_audio_utils_replace_sequence(0x15, 0x0E, 75, "15_Seq_custom") --star spawn
 smlua_audio_utils_replace_sequence(0x16, 0x1A, 75, "16_Seq_custom") --boss theme B
 smlua_audio_utils_replace_sequence(0x17, 0x1A, 75, "17_Seq_custom") --collect key
+smlua_audio_utils_replace_sequence(0x1A, 0x1B, 75, "1A_Seq_custom")
 smlua_audio_utils_replace_sequence(0x1B, 0x0C, 75, "1B_Seq_custom") --solve puzzle
 --smlua_audio_utils_replace_sequence(0x1C, 0x25, 75, "1C_Seq_custom") --toad message ????
 smlua_audio_utils_replace_sequence(0x1D, 0x0C, 75, "1D_Seq_custom") --peach message

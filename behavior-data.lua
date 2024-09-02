@@ -15,6 +15,14 @@ local find_floor_height, spawn_mist_particles, obj_get_nearest_object_with_behav
 
 mark_obj_for_deletion = obj_mark_for_deletion
 
+--[[
+how 2 Dilaog sync game source code edition:
+if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, 1, CUTSCENE_DIALOG, gBehaviorValues.dialogs.KingBobombIntroDialog, king_bobomb_act_0_continue_dialog)) {
+        o->oAction = 2;
+        o->oFlags |= OBJ_FLAG_HOLDABLE;
+    }
+]]
+
 gGlobalSyncTable.goombabros1killed = false
 gGlobalSyncTable.goombabros1 = false
 
@@ -3505,6 +3513,9 @@ bhvInvFireOpensGate2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_open
 bhvInvFireOpensGate3 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
 bhvInvFireOpensGate4 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
 
+bhvInvFireOpensGate5 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+bhvInvFireOpensGate6 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
+bhvInvFireOpensGate7 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fire_opens_gate_init, bhv_fire_opens_gate_loop)
 
 MODEL_FIRE_OPEN_GATE = smlua_model_util_get_id("fire_openable_gate_geo")
 
@@ -3827,3 +3838,11 @@ function bhv_thigray_static_block(o)
 end
 
 bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thigray_static_block, function (o) load_object_collision_model() end)
+
+function bits_ship_wings(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    smlua_anim_util_set_animation(o, "anim_bits_ship_wings")
+end
+
+bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_LEVEL, true, bits_ship_wings, nil)
