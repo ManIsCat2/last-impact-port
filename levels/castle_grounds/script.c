@@ -124,7 +124,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(0, 1441, -485, -3944, 0, 0, 0, 0x0, bhvMrI),
 		OBJECT(0, 1367, -641, -3179, 0, 0, 0, 0x0, bhvMrI),
 		OBJECT(0, 160, -697, -3329, 0, 0, 0, 0x0, bhvMrI),
-		OBJECT(E_MODEL_PEACH, 4060, -373, 4537, 0, 0, 0, 0x0, bhvTalkingPeach),
+		OBJECT(E_MODEL_PEACH, 4060, -373, 4537, 0, 0, 0, (15 << 24), bhvTalkingPeach),
 		OBJECT(0, 3174, -376, 438, 0, 90, 0, (10 << 16), bhvSpinAirborneWarp),
 		OBJECT(0, 7012, -590, 5056, 0, -108, 0, 0x200000, bhvSpinAirborneWarp),
 		OBJECT(0, 6478, -633, 1063, 0, -119, 0, 0x780000, bhvSpinAirborneWarp),

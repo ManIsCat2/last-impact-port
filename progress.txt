@@ -14,7 +14,7 @@ LLL - 75% done
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
-WDW - 80% done //ready for release (2 bhv left, rabbit, shark)
+WDW - 90% done //ready for release (2 bhv left: shark. shell that throw u)
 TTM - 65% done
 THI - 100% done //ready for release
 TTC - 65% done
@@ -27,6 +27,9 @@ COTMC - 100% done //ready for release
 TOTWC - 100% done //ready for release
 VCUTM - 70% done //ready for release
 SA - 100% done //ready for release
+
+/*Total Custom Behaviors*/
+134 bhvs/??? bhvs
 
 /*Total Progress*/
 86.07% (september 2nd. 5:50 AM (GMT))

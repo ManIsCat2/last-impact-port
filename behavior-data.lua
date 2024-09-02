@@ -298,7 +298,7 @@ hook_behavior(id_bhvBitfsSinkingPlatforms, OBJ_LIST_SURFACE, true, bhv_bob_priso
 local function bhv_parent_rabbit_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE |OBJ_FLAG_MOVE_XZ_USING_FVEL
     o.oInteractionSubtype = INT_SUBTYPE_NPC
-    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
+    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 or o.oBehParams2ndByte == 148 then
         o.oInteractType = INTERACT_TEXT
         o.hitboxRadius = 256
         o.hitboxHeight = 256
@@ -325,6 +325,11 @@ local function bhv_parent_rabbit_loop(o)
             gMarioStates[0].action = ACT_READING_NPC_DIALOG
             if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, o.oBehParams2ndByte) ~= 0 then
                 o.oInteractStatus = 0
+                if o.oBehParams2ndByte == 148 then
+                    local ntpppp = nearest_mario_state_to_object(o)
+                    spawn_default_star(ntpppp.pos.x, ntpppp.pos.y + 230, ntpppp.pos.z)
+                    o.oInteractType = INTERACT_IGLOO_BARRIER
+                end
             end
         end
     elseif o.oAction == 1 then
@@ -347,7 +352,7 @@ local function bhv_parent_rabbit_loop(o)
         end
     end
 
-    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 then
+    if o.oBehParams2ndByte == 46 or o.oBehParams2ndByte == 43 or o.oBehParams2ndByte == 148 then
         obj_scale(o, 3)
     end
 
