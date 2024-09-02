@@ -126,6 +126,8 @@ function is_any_mario_groundpounding_obj(o)
         if mstate.marioObj.platform == o then
             if mstate.action == ACT_GROUND_POUND_LAND then
                 return true
+            else
+                return (_G.OmmEnabled and nearest_mario_state_to_object(o).action == _G.OmmApi["ACT_OMM_SPIN_POUND_LAND"] and nearest_mario_state_to_object(o).marioObj.platform == o)
             end
         end
     end
@@ -2678,7 +2680,7 @@ function bhv_bitfs_slime_loop(o)
             o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, slimesize_amount)
         end
 
-        if is_any_mario_groundpounding_obj(o) or (_G.OmmEnabled and nearest_mario_state_to_object(o).action == _G.OmmApi["ACT_OMM_SPIN_POUND_LAND"] and nearest_mario_state_to_object(o).marioObj.platform == o) then
+        if is_any_mario_groundpounding_obj(o) then
             o.oAction = 1
             o.oTimer = 0
         end
@@ -3692,3 +3694,44 @@ end
 
 bhvBITDWGateToStar = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitdw_gate_to_star,
     bhv_bitdw_gate_to_star_loop)
+
+function bhv_wdw_cage_opener_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("wdw_cage_opener_collision")
+    network_init_object(o, true, { "oAction" })
+end
+
+function bhv_wdw_cage_opener_loop(o)
+    if o.oAction == 0 then
+        load_object_collision_model()
+        if is_any_mario_groundpounding_obj(o) then
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        cur_obj_hide()
+    end
+end
+
+bhvWDWMouthCageOpener = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_cage_opener_init,
+    bhv_wdw_cage_opener_loop)
+
+function bhv_wdw_mouth_cage_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("wdw_mouth_cage_collision")
+    network_init_object(o, true, nil)
+end
+
+function bhv_wdw_mouth_cage_loop(o)
+    load_object_collision_model()
+
+    if obj_get_nearest_object_with_behavior_id(o, bhvWDWMouthCageOpener) and obj_get_nearest_object_with_behavior_id(o, bhvWDWMouthCageOpener).oAction == 1 then
+        obj_mark_for_deletion(o)
+        play_puzzle_jingle()
+    end
+end
+
+bhvWDWMouthCage = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_mouth_cage_init,
+    bhv_wdw_mouth_cage_loop)

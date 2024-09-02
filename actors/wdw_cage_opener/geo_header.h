@@ -1,0 +1,14 @@
+extern const GeoLayout wdw_cage_opener_geo[];
+extern Lights1 wdw_cage_opener_Material_0_f3d_lights;
+extern Lights1 wdw_cage_opener_Material_1_f3d_lights;
+extern u8 wdw_cage_opener__0_rgba16[];
+extern u8 wdw_cage_opener__1_rgba16[];
+extern Vtx wdw_cage_opener_000_displaylist_mesh_layer_4_vtx_0[4];
+extern Gfx wdw_cage_opener_000_displaylist_mesh_layer_4_tri_0[];
+extern Vtx wdw_cage_opener_000_displaylist_mesh_layer_1_vtx_0[20];
+extern Gfx wdw_cage_opener_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_wdw_cage_opener_Material_0_f3d[];
+extern Gfx mat_revert_wdw_cage_opener_Material_0_f3d[];
+extern Gfx mat_wdw_cage_opener_Material_1_f3d[];
+extern Gfx wdw_cage_opener_000_displaylist_mesh_layer_4[];
+extern Gfx wdw_cage_opener_000_displaylist_mesh_layer_1[];
