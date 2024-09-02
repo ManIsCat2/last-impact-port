@@ -3773,3 +3773,21 @@ end
 
 bhvVCUTMFish = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_vcutm_fish,
     bhv_vcutm_fish_loop)
+
+
+---@param o Object
+ function bhv_bits_entry_gate_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = smlua_collision_util_get("bits_entry_gate_collision")
+    o.header.gfx.skipInViewCheck = true
+end
+
+---@param o Object
+ function bhv_bits_entry_gate_loop(o)
+    load_object_collision_model()
+    if get_curr_star_count() >= 80 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvBITSEntryGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bits_entry_gate_init, bhv_bits_entry_gate_loop)

@@ -1,6 +1,6 @@
 CG (overworld 1) 98% done //ready for release (1 bhv left, coconuts)
-CI (overlworld 2) 85% done  //ready for release (2 bhv left, camera, cages for cannon and stuff)
-CC (overlworld 3) 80% done //ready for release (2 bhv left, second train part and cage)
+CI (overworld 2) 85% done  //ready for release (2 bhv left, camera, cages for cannon and stuff)
+CC (overworld 3) 100% done //ready for release
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
 
@@ -29,4 +29,4 @@ VCUTM - 100% done //ready for release
 SA - 100% done //ready for release
 
 /*Total Progress*/
-86.07% (september 2nd. 5:50 AM (GMT))
+87.61% (september 2nd. 8:00 AM (GMT))
