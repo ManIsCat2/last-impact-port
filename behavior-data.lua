@@ -1904,7 +1904,7 @@ end
 ---@param o Object
 local function bhv_bowser_door_key_loop(o)
     load_object_collision_model()
-    if is_star_colected(COURSE_BITDW, 1) then
+    if is_star_colected(COURSE_BITDW, 5) then
         if dist_between_objects(o, nearest_player_to_object(o)) < 1200 then
             o.oAction = 1
         end
@@ -3665,3 +3665,25 @@ end
 
 bhvLLLHauntedStaticTree = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_lll_static_haunted_tree,
     function(o) load_object_collision_model() end)
+
+
+function bhv_bitdw_gate_to_star(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bitdw_gate_to_star_collision")
+    network_init_object(o, true, nil)
+end
+
+function bhv_bitdw_gate_to_star_loop(o)
+    load_object_collision_model()
+
+    if (cur_obj_nearest_object_with_behavior(get_behavior_from_id(id_bhvExplosion))) then
+        if dist_between_objects((cur_obj_nearest_object_with_behavior(get_behavior_from_id(id_bhvExplosion))), o) < 420 then
+            obj_mark_for_deletion(o)
+            --network_send_object(o, true)
+        end
+    end
+end
+
+bhvBITDWGateToStar = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bitdw_gate_to_star,
+    bhv_bitdw_gate_to_star_loop)

@@ -1,0 +1,14 @@
+extern const GeoLayout bitdw_gate_to_star_geo[];
+extern Lights1 bitdw_gate_to_star_Material_0_f3d_lights;
+extern Lights1 bitdw_gate_to_star_Material_1_f3d_lights;
+extern u8 bitdw_gate_to_star__0_rgba16[];
+extern u8 bitdw_gate_to_star__1_rgba16[];
+extern Vtx bitdw_gate_to_star_000_displaylist_mesh_layer_1_vtx_0[162];
+extern Gfx bitdw_gate_to_star_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx bitdw_gate_to_star_000_displaylist_mesh_layer_4_vtx_0[8];
+extern Gfx bitdw_gate_to_star_000_displaylist_mesh_layer_4_tri_0[];
+extern Gfx mat_bitdw_gate_to_star_Material_0_f3d[];
+extern Gfx mat_bitdw_gate_to_star_Material_1_f3d[];
+extern Gfx mat_revert_bitdw_gate_to_star_Material_1_f3d[];
+extern Gfx bitdw_gate_to_star_000_displaylist_mesh_layer_1[];
+extern Gfx bitdw_gate_to_star_000_displaylist_mesh_layer_4[];
