@@ -40,3 +40,12 @@ const BehaviorScript bhvFlipswitch_Panel_MOP[] = {
     CALL_NATIVE(load_object_collision_model),
     END_LOOP(),
 };
+
+const BehaviorScript bhvAirrocks[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    ID(id_bhvNewId),
+    OR_INT(oFlags, (OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    BEGIN_LOOP(),
+    CALL_NATIVE(bhv_air_rocks),
+    END_LOOP(),
+};

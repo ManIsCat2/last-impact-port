@@ -177,6 +177,20 @@ local function move_obj_with_physics(clampFloor, o)
     cur_obj_resolve_wall_collisions()
 end
 
+function spawn_object_relative(behaviorParam, relativePosX, relativePosY,
+                               relativePosZ, parent, model,
+                               behavior)
+    obj = spawn_object(parent, model, behavior);
+
+    obj_copy_pos_and_angle(obj, parent);
+    obj_set_parent_relative_pos(obj, relativePosX, relativePosY, relativePosZ);
+    obj_build_relative_transform(obj);
+
+    obj.oBehParams2ndByte = behaviorParam;
+    obj.oBehParams = (behaviorParam & 0xFF) << 16;
+
+    return obj;
+end
 
 MODEL_MAGIKOOPA_WAND = smlua_model_util_get_id("magikoopa_wand_geo")
 MODEL_TOTWC_STATIC_CLOUD = smlua_model_util_get_id("totwc_static_cloud_geo")
@@ -3735,3 +3749,27 @@ end
 
 bhvWDWMouthCage = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_mouth_cage_init,
     bhv_wdw_mouth_cage_loop)
+
+
+function bhv_air_rocks(o)
+    local a
+    if (o.oTimer > 30 * 4.2) then
+        a = spawn_non_sync_object(
+            id_bhvWaterAirBubble, E_MODEL_BUBBLE, o.oPosX, o.oPosY + 400, o.oPosZ, nil);
+        a.oBehParams = o.oBehParams;
+        o.oTimer = 0;
+    end
+end
+
+function bhv_vcutm_fish(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    smlua_anim_util_set_animation(o, "anim_vcutm_fish")
+end
+
+function bhv_vcutm_fish_loop(o)
+
+end
+
+bhvVCUTMFish = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_vcutm_fish,
+    bhv_vcutm_fish_loop)

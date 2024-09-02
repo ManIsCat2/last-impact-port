@@ -25,11 +25,8 @@ BITS - 50% - dead%
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
 TOTWC - 100% done //ready for release
-VCUTM - 70% done //ready for release
+VCUTM - 100% done //ready for release
 SA - 100% done //ready for release
-
-/*Total Custom Behaviors*/
-134 bhvs/??? bhvs
 
 /*Total Progress*/
 86.07% (september 2nd. 5:50 AM (GMT))
