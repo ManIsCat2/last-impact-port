@@ -3776,14 +3776,14 @@ bhvVCUTMFish = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_vcutm_fish,
 
 
 ---@param o Object
- function bhv_bits_entry_gate_init(o)
+function bhv_bits_entry_gate_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.collisionData = smlua_collision_util_get("bits_entry_gate_collision")
     o.header.gfx.skipInViewCheck = true
 end
 
 ---@param o Object
- function bhv_bits_entry_gate_loop(o)
+function bhv_bits_entry_gate_loop(o)
     load_object_collision_model()
     if get_curr_star_count() >= 80 then
         obj_mark_for_deletion(o)
@@ -3791,3 +3791,39 @@ end
 end
 
 bhvBITSEntryGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bits_entry_gate_init, bhv_bits_entry_gate_loop)
+
+function lighthouse_mech_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 9000
+    o.collisionData = smlua_collision_util_get("lighthouse_mech_collision")
+    --o.oFaceAnglePitch = o.oFaceAnglePitch- 16384
+    obj_scale(o, 10)
+    o.oAngleVelYaw = 230
+end
+
+function lighthouse_mech_loop(o)
+    load_object_collision_model()
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 230
+end
+
+bhvLightHouseMech = hook_behavior(nil, OBJ_LIST_SURFACE, true, lighthouse_mech_init, lighthouse_mech_loop)
+
+
+function bhv_thi_circuit(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 900
+    o.collisionData = smlua_collision_util_get("thi_circuit_collision")
+end
+
+bhvTHICircuit = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thi_circuit, function (o) load_object_collision_model() end)
+
+function bhv_thigray_static_block(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1200
+    o.collisionData = smlua_collision_util_get("thi_static_gray_block_collision")
+end
+
+bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thigray_static_block, function (o) load_object_collision_model() end)

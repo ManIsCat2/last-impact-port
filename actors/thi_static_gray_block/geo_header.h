@@ -1,0 +1,7 @@
+extern const GeoLayout thi_static_gray_block_geo[];
+extern Lights1 thi_static_gray_block_Material_0_f3d_lights;
+extern u8 thi_static_gray_block__0_rgba16[];
+extern Vtx thi_static_gray_block_000_displaylist_mesh_layer_1_vtx_0[23];
+extern Gfx thi_static_gray_block_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_thi_static_gray_block_Material_0_f3d[];
+extern Gfx thi_static_gray_block_000_displaylist_mesh_layer_1[];

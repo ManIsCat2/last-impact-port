@@ -1,0 +1,12 @@
+extern const GeoLayout thi_circuit_geo[];
+extern Lights1 thi_circuit_Material_0_f3d_lights;
+extern Lights1 thi_circuit_Material_1_f3d_lights;
+extern u8 thi_circuit__0_rgba16[];
+extern u8 thi_circuit__1_rgba16[];
+extern Vtx thi_circuit_000_displaylist_mesh_layer_1_vtx_0[52];
+extern Gfx thi_circuit_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx thi_circuit_000_displaylist_mesh_layer_1_vtx_1[18];
+extern Gfx thi_circuit_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_thi_circuit_Material_0_f3d[];
+extern Gfx mat_thi_circuit_Material_1_f3d[];
+extern Gfx thi_circuit_000_displaylist_mesh_layer_1[];

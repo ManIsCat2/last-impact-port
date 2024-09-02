@@ -34,6 +34,7 @@ JUMP_LINK(script_func_global_1),
 JUMP_LINK(script_func_global_12),
 JUMP_LINK(script_func_global_14),
 LOAD_MODEL_FROM_GEO(24, star_2d_geo),
+LOAD_MODEL_FROM_GEO(27, lighthouse_mech_geo),
 LOAD_MODEL_FROM_GEO(57, tnt_and_boulder_geo),
 JUMP_LINK(local_area_jrb_1_),
 JUMP_LINK(local_area_jrb_2_),
@@ -182,7 +183,7 @@ const LevelScript local_objects_jrb_2_[] = {
 OBJECT_WITH_ACTS(0,862,23,19,0,-90,0,0xa0000, bhvSpinAirborneWarp,63),
 OBJECT_WITH_ACTS(0,1783,0,-1,0,0,0,0x400a0000, bhvWarp,63),
 OBJECT_WITH_ACTS(122,1058,2567,80,0,0,0,0x0, bhvStar,63),
-OBJECT_WITH_ACTS(27,33,0,-2,0,0,0,0x0,Bhv_Custom_0x13000ea4,63),
+OBJECT_WITH_ACTS(27,33,0,-2,0,0,0,0x0,bhvLightHouseMech,63),
 OBJECT_WITH_ACTS(0,33,127,-2,0,0,0,0x20000, bhvCoinFormation,63),
 RETURN()
 };
