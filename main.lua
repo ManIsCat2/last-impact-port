@@ -46,10 +46,15 @@ function wdw_water_behavior(m)
     end
 end
 
+function remove_fd(m)
+    m.peakHeight = m.pos.y
+end
+
 function mario_update_hooks(m)
     health_fix(m)
     fuzzy_dizziness(m)
     wdw_water_behavior(m)
+    remove_fd(m)
 end
 
 function remove_all_extra_states()

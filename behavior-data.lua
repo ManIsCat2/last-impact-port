@@ -3880,6 +3880,32 @@ bhvBITSSecretPlatforms = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bits_sec
     bhv_bits_secret_platforms_loop)
 
 ---@param o Object
+function bhv_rashay_button_spawn_star(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+function bhv_rashay_button_spawn_star_loop(o)
+    local near1 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton)
+    local near2 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton2)
+    local near3 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton3)
+    local near4 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton4)
+
+    local nearmariostatetg = nearest_mario_state_to_object(o)
+
+    if near1 and near2 and near3 and near4 then
+        if near1.oAction == 1 and near2.oAction == 1 and near3.oAction == 1 and near4.oAction == 1 then
+            obj_mark_for_deletion(o)
+            spawn_default_star(nearmariostatetg.pos.x, nearmariostatetg.pos.y + 200, nearmariostatetg.pos.z)
+        end
+    end
+end
+
+bhvRashayButtonStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rashay_button_spawn_star,
+    bhv_rashay_button_spawn_star_loop)
+
+---@param o Object
 function bhv_rashay_unlocker_button_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
@@ -3897,6 +3923,11 @@ function bhv_rashay_unlocker_button_loop(o)
 
     if o.oAction == 1 then
         o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, -0.1, 0.05)
+        o.oAnimState = o.oAnimState + 1
+
+        if o.oAnimState > 60 then
+            obj_scale(o, 0)
+        end
     end
 end
 
@@ -3940,3 +3971,65 @@ end
 
 bhvRashayElevator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_elevator_init,
     bhv_rashay_elevator_loop)
+
+
+function bhv_green_floating_bubble(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 800
+    o.collisionData = smlua_collision_util_get("green_floating_bubble_collision")
+    cur_obj_scale(0.5)
+    cur_obj_set_home_once()
+    if math.random(1, 10) > 3 then
+        o.oAction = 1
+    end
+end
+
+bhvGreenFloatingBubble = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_green_floating_bubble,
+    function(o)
+        load_object_collision_model()
+        if o.oPosY > 11755 then
+            o.oPosY = o.oHomeY
+            o.oSubAction = 0
+        end
+        if o.oAction == 0 then
+            o.oPosY = o.oPosY + 5.2
+        elseif o.oAction == 1 then
+            o.oSubAction = o.oSubAction + 1
+            if o.oSubAction > 15 * 30 then
+                o.oPosY = o.oPosY + 5.2
+            end
+        end
+
+        --o.header.gfx.scale.y = math_sin(o.oTimer * 0.02)
+        --o.header.gfx.scale.z = math_sin(o.oTimer * 0.02)
+    end)
+
+
+---@param o Object
+function bhv_rashay_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+
+    smlua_anim_util_set_animation(o, "anim_rashay_idle")
+    network_init_object(o, true, nil)
+end
+
+RASHAY_ACTION_IDLE_DIALOG = 0
+RASHAY_ACTION_THROW_BLOCK = 1
+RASHAY_ACTION_IDLE_DIALOG2 = 2 -- "Im going to hunt you"
+RASHAY_ACTION_HUNTING = 3
+RASHAY_ACTION_HIT_MARIO_AIR = 4
+
+---@param o Object
+function bhv_rashay_loop(o)
+    local marioState = nearest_mario_state_to_object(o)
+    if o.oAction == 0 then
+        if (marioState and should_start_or_continue_dialog(marioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_166) ~= 0) then
+            o.oAction = 1
+        end
+    end
+end
+
+bhvRashay = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rashay_init,
+bhv_rashay_loop)
