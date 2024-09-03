@@ -21,7 +21,7 @@ TTC - 75% done
 RR - 100% done //ready for release
 BITDW - 100% done //ready for release
 BITFS - 100% done  //ready for release
-BITS - 85% done
+BITS - 90% done
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
 TOTWC - 100% done //ready for release
@@ -29,4 +29,4 @@ VCUTM - 100% done //ready for release
 SA - 100% done //ready for release
 
 /*Total Progress*/
-88.69% (september 3rd. 8:06 AM (GMT))
+90.69% (september 3rd. 6:50 PM (GMT))

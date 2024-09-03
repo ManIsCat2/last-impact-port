@@ -30,7 +30,7 @@ ALLOC_LEVEL_POOL(),
 MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
 // LOAD_MODEL_FROM_GEO(22,0x190018c0),
 // LOAD_MODEL_FROM_GEO(23,0x19001c00),
-// LOAD_MODEL_FROM_GEO(24,0x19001c20),
+LOAD_MODEL_FROM_GEO(24,rashay_locked_gate_geo),
 // LOAD_MODEL_FROM_GEO(25,0x19001c40),
 // LOAD_MODEL_FROM_GEO(29,0x19001ae0),
 // LOAD_MODEL_FROM_DL(30,0x0703f070,4),
@@ -162,7 +162,7 @@ RETURN()
 const LevelScript local_area_bits_2_[] = {
 AREA(2,Geo_bits_2_0x2961600),
 TERRAIN(col_bits_2_0xe0d4498),
-SET_BACKGROUND_MUSIC(0,0),
+SET_BACKGROUND_MUSIC(0,0x46),
 TERRAIN_TYPE(0),
 JUMP_LINK(local_objects_bits_2_),
 JUMP_LINK(local_warps_bits_2_),
@@ -172,14 +172,14 @@ RETURN()
 const LevelScript local_objects_bits_2_[] = {
 OBJECT(0,0,270,0,0,180,0,0xa0000, bhvSpinAirborneWarp),
 OBJECT(57,38,-27,-5309,0,-3,0,0x0, Bhv_Custom_0x130043a8),
-OBJECT(34,-4545,-263,2438,0,94,0,0x0, Bhv_Custom_0x130043fc),
-OBJECT(35,-4605,-263,2680,0,118,0,0x0, Bhv_Custom_0x130043fc),
-OBJECT(36,-4409,-263,2797,0,140,0,0x0, Bhv_Custom_0x130043fc),
+OBJECT(MODEL_GOOMBA_BRO1,-4545,-263,2438,0,94,0,0x0, bhvGoombaBros),
+OBJECT(MODEL_GOOMBA_BRO2,-4605,-263,2680,0,118,0,0x0, bhvGoombaBros),
+OBJECT(MODEL_GOOMBA_BRO3,-4409,-263,2797,0,140,0,0x0, bhvGoombaBros),
 OBJECT(58,54,538,-2606,0,0,0,0x0, bhvRashay),
 OBJECT(0,-1535,368,-2092,0,0,0,0x20000, bhvCoinFormation),
 OBJECT(0,2915,238,2191,0,0,0,0x20000, bhvCoinFormation),
-OBJECT(24,-4424,-263,2556,0,113,0,0x80000, Bhv_Custom_0x13004430),
-OBJECT(24,91,-7,-5110,0,-2,0,0x280000, Bhv_Custom_0x13004430),
+OBJECT(24,-4424,-263,2556,0,113,0,0x80000, bhvRashayLockedGate),
+OBJECT(24,91,-7,-5110,0,-2,0,0x280000, bhvRashayLockedGate),
 RETURN()
 };
 const LevelScript local_warps_bits_2_[] = {

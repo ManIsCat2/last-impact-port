@@ -160,6 +160,14 @@ function spawn_object(parent, model, behaviorId)
     return obj
 end
 
+function spawn_object2(parent, model, behaviorId)
+    local obj = spawn_sync_object(behaviorId, model, 0, 0, 0, nil)
+    if not obj then return nil end
+
+    obj_copy_pos_and_angle(obj, parent)
+    return obj
+end
+
 ---function from SM64: Through the ages
 ---@param clampFloor boolean
 ---@param o Object
@@ -2924,7 +2932,7 @@ function bhv_goomba_bros_init(o)
 
     cur_obj_scale(1.3)
 
-    network_init_object(o, false, nil)
+    network_init_object(o, true, {"oAction"})
 end
 
 ---@param o Object
@@ -2932,12 +2940,12 @@ function bhv_goomba_bros_loop(o)
     local nearestPlayer = nearest_player_to_object(o)
     local nearestMario = nearest_mario_state_to_object(o)
 
-    obj_mark_for_deletion(o) -- not done
+    --obj_mark_for_deletion(o) -- not done
 
     ---@type MarioState
-    local gMarioState = gMarioStates[0]
+    local gMarioState = nearestMario
 
-    if get_curr_star_count() >= 30 then
+    --[[if get_curr_star_count() >= 30 then
         gGlobalSyncTable.goombabros1 = true
     end
 
@@ -2953,45 +2961,24 @@ function bhv_goomba_bros_loop(o)
         obj_mark_for_deletion(o)
     end
 
-    if not gGlobalSyncTable.goombabros1 then return end
+    if not gGlobalSyncTable.goombabros1 then return end]]
 
     if o.oAction == 0 then
         o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, nearestPlayer),
             0x300)
 
-        if dist_between_objects(o, gMarioState.marioObj) < 800 then
+        if dist_between_objects(o, gMarioState.marioObj) < 100 then
             if gMarioState.pos.y == gMarioState.floorHeight then
                 gMarioState.action = ACT_READING_NPC_DIALOG
-                if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 147) ~= 0 then
-                    for_each_object_with_behavior(bhvGoombaBros,
-                        function(o)
-                            o.oAction = 1
-                            o.oMoveAngleYaw = 0
-                            if (o.oBehParams >> 24) & 0xFF == 1 then
-                                o.oPosX = 5935
-                                o.oPosY = -670
-                                o.oPosZ = -630
-                            end
-
-                            if (o.oBehParams >> 24) & 0xFF == 0 then
-                                o.oPosX = 5665
-                                o.oPosY = -670
-                                o.oPosZ = -971
-                            end
-
-                            obj_get_nearest_object_with_behavior_id(o, bhvGoombaBrosTraingle).oAction = 1
-                            network_send_object(o, true)
-                        end)
+                if (gMarioState and should_start_or_continue_dialog(gMarioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_160) ~= 0) then
+                    for_each_object_with_behavior(bhvGoombaBros, function(ggg) ggg.oAction = 1 end)
                 end
             end
         end
     end
-
+    --spawn_non_sync_object(id_bhvSparkleSpawn, E_MODEL_NONE, o.oPosX, o.oPosY, o.oPosZ, nil)
     if o.oAction == 1 then
-        --cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearestPlayer), 0x230)
-        o.oMoveAngleYaw = o.oMoveAngleYaw + 0x220
-        o.oForwardVel = 12
-        network_send_object(o, true)
+
     end
 end
 
@@ -4005,31 +3992,170 @@ bhvGreenFloatingBubble = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_green_fl
         --o.header.gfx.scale.z = math_sin(o.oTimer * 0.02)
     end)
 
+function bhv_rashay_block(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("rashay_block_collision")
+    o.oCollisionDistance = 700
+    o.oForwardVel = 10
+end
+
+bhvRashayBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_block,
+    function(o)
+        load_object_collision_model()
+        o.oPosY = o.oPosY - 4
+        o.oFaceAngleYaw = o.oFaceAngleYaw + 0x400
+        o.oMoveAngleYaw = -20144
+        o.oMoveAnglePitch = 0
+        o.oMoveAngleRoll = 0
+        o.oFaceAnglePitch = 0
+        o.oFaceAngleRoll = 0
+
+        if o.oPosY < 160 then
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            obj_mark_for_deletion(o)
+        end
+    end)
+
 
 ---@param o Object
 function bhv_rashay_init(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     o.header.gfx.skipInViewCheck = true
 
+    o.oInteractType = INTERACT_DAMAGE
+    obj_set_hitbox_radius_and_height(o, 460, 600)
+    o.hitboxDownOffset = 200
+    o.oIntangibleTimer = 0
+    o.oHealth = 0
+    --o.oDamageOrCoinValue = 2
+
     smlua_anim_util_set_animation(o, "anim_rashay_idle")
-    network_init_object(o, true, nil)
+    network_init_object(o, true,
+        { "oPosX", "oPosY", "oPosZ", "oMoveAngleYaw", "oAction", "oBobombBuddyPosXCopy", "oAnimState", "oSubAction" })
 end
 
 RASHAY_ACTION_IDLE_DIALOG = 0
-RASHAY_ACTION_THROW_BLOCK = 1
-RASHAY_ACTION_IDLE_DIALOG2 = 2 -- "Im going to hunt you"
-RASHAY_ACTION_HUNTING = 3
-RASHAY_ACTION_HIT_MARIO_AIR = 4
+RASHAY_ACTION_THROW_BLOCK_GOING = 1
+RASHAY_ACTION_THROW_BLOCK = 2
+RASHAY_ACTION_IDLE_DIALOG2 = 3 -- "Im going to hunt you"
+RASHAY_ACTION_HUNTING = 4
+RASHAY_ACTION_HIT_MARIO_AIR = 5
+RASHAY_ACTION_DEAD = 6
+
+MODEL_RASHAY_BLOCK = smlua_model_util_get_id("rashay_block_geo")
 
 ---@param o Object
 function bhv_rashay_loop(o)
+    --djui_chat_message_create("xpos " .. o.oPosX .. " ypos " .. o.oPosY .. " zpos " .. o.oPosZ)
     local marioState = nearest_mario_state_to_object(o)
-    if o.oAction == 0 then
+    if o.oAction == RASHAY_ACTION_IDLE_DIALOG then
         if (marioState and should_start_or_continue_dialog(marioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_166) ~= 0) then
-            o.oAction = 1
+            o.oAction = RASHAY_ACTION_THROW_BLOCK_GOING
         end
+    elseif o.oAction == RASHAY_ACTION_THROW_BLOCK_GOING then
+        o.oPosX = approach_s16_symmetric(o.oPosX, 5150, 50)
+        o.oPosY = approach_s16_symmetric(o.oPosY, 1700, 20)
+        o.oPosZ = approach_s16_symmetric(o.oPosZ, 3090, 50)
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, -20144, 0x110)
+        if o.oPosX == 5150 and o.oPosY == 1700 and o.oPosZ == 3090 then
+            o.oAction = RASHAY_ACTION_THROW_BLOCK
+        end
+    elseif o.oAction == RASHAY_ACTION_THROW_BLOCK then
+        smlua_anim_util_set_animation(o, "anim_rashay_throw_block")
+
+        --handLeft after throw: 4775, 1591, 2725
+        --handRight afte tthow: 4700, 1591, 3070
+
+        if o.header.gfx.animInfo.animFrame == 27 then
+            spawn_sync_object(bhvRashayBlock, MODEL_RASHAY_BLOCK, 4775, 1591, 2725, nil)
+        elseif o.header.gfx.animInfo.animFrame == 56 then
+            spawn_sync_object(bhvRashayBlock, MODEL_RASHAY_BLOCK, 4700, 1591, 3070, nil)
+        end
+
+        if o.oInteractStatus ~= 0 then
+            o.oInteractStatus = 0
+            marioState.vel.y = 65
+            marioState.actionArg = 60
+            marioState.action = ACT_BACKWARD_AIR_KB_MODIFIED
+            o.oAnimState = 1
+        end
+
+        if o.oAnimState == 1 then
+            o.oBobombBuddyPosXCopy = o.oBobombBuddyPosXCopy + 1
+            if o.oBobombBuddyPosXCopy > 45 then
+                o.oBobombBuddyPosXCopy = 0
+                o.oAnimState = 0
+                o.oAction = RASHAY_ACTION_IDLE_DIALOG2
+            end
+        end
+    elseif o.oAction == RASHAY_ACTION_IDLE_DIALOG2 then
+        if (marioState and should_start_or_continue_dialog(marioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_167) ~= 0) then
+            o.oAction = RASHAY_ACTION_HUNTING
+        end
+    elseif o.oAction == RASHAY_ACTION_HUNTING then
+        smlua_anim_util_set_animation(o, "anim_rashay_hurt_mario")
+        o.oFriction = 1
+        o.oForwardVel = 25
+        object_step()
+        o.oPosY = find_floor_height(o.oPosX, o.oPosY, o.oPosZ) + 250
+        o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, marioState.marioObj), 0x260)
+        o.oInteractStatus = 0
+        o.oDamageOrCoinValue = 2
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 230 then
+            o.oAction = RASHAY_ACTION_HIT_MARIO_AIR
+            o.oSubAction = 0
+        end
+    elseif o.oAction == RASHAY_ACTION_HIT_MARIO_AIR then
+        o.oPosX          = -128
+        o.oPosY          = 300 + 180
+        o.oPosZ          = 1173
+        marioState.pos.x = o.oPosX
+        marioState.pos.y = o.oPosY
+        marioState.pos.z = o.oPosZ
+        if o.header.gfx.animInfo.animFrame == 27 then
+            --obj_mark_for_deletion(o)
+            marioState.faceAngle.y = 19737
+            marioState.vel.y = 60 * 2
+            marioState.actionArg = 70
+            marioState.action = ACT_BACKWARD_AIR_KB_MODIFIED
+            o.oAction = RASHAY_ACTION_DEAD
+        end
+    elseif o.oAction == RASHAY_ACTION_DEAD then
+
     end
 end
 
 bhvRashay = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rashay_init,
-bhv_rashay_loop)
+    bhv_rashay_loop)
+
+function bhv_rashay_locked_gate(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("rashay_locked_gate_collision")
+    o.oCollisionDistance = 1000
+    network_init_object(o, true, {"activeFlags"})
+end
+
+---only moves for local player
+function bhv_rashay_locked_gate_loop(o)
+    load_object_collision_model()
+
+    if o.oBehParams2ndByte == 8 then
+        if obj_get_nearest_object_with_behavior_id(o, bhvRashay) then
+            if obj_get_nearest_object_with_behavior_id(o, bhvRashay).oAction == RASHAY_ACTION_DEAD then
+                if nearest_mario_state_to_object(o).wall then
+                    if nearest_mario_state_to_object(o).wall.object == o then
+                        obj_mark_for_deletion(o)
+                        spawn_triangle_break_particles(20, 138, 3.0, 4);
+                        obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvRashay))
+                    end
+                end
+            end
+        end
+    end
+end
+
+bhvRashayLockedGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_locked_gate,
+    bhv_rashay_locked_gate_loop)

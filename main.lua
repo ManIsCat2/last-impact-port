@@ -50,11 +50,20 @@ function remove_fd(m)
     m.peakHeight = m.pos.y
 end
 
+function particles_sparkles_bossfight(m)
+    if m.playerIndex == 0 then
+        if obj_get_nearest_object_with_behavior_id(m.marioObj, bhvGoombaBros) and obj_get_nearest_object_with_behavior_id(m.marioObj, bhvGoombaBros).oAction == 1 then
+            m.particleFlags = PARTICLE_SPARKLES
+        end
+    end
+end
+
 function mario_update_hooks(m)
     health_fix(m)
     fuzzy_dizziness(m)
     wdw_water_behavior(m)
     remove_fd(m)
+    particles_sparkles_bossfight(m)
 end
 
 function remove_all_extra_states()

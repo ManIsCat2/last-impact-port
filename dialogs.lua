@@ -1501,7 +1501,8 @@ the d-pad and hold\
 [B],[A] and [Z] for two\
 seconds."))
 
-smlua_text_utils_dialog_replace(DIALOG_160,1,5,30,200, ("Hey Mario, welcome to\
+--unsued in romhack port
+--[[smlua_text_utils_dialog_replace(DIALOG_160,1,5,30,200, ("Hey Mario, welcome to\
 another adventure!\
 Before you head out,\
 I want to explain\
@@ -1521,7 +1522,12 @@ right, you can switch\
 the camera between\
 a smooth one and an\
 8 - directional one.\
-Have fun!"))
+Have fun!"))]]
+
+smlua_text_utils_dialog_replace(DIALOG_160,1,5,30,200, ("We'll power you up\
+with all these stars\
+you've collected."))
+
 
 smlua_text_utils_dialog_replace(DIALOG_161,1,4,30,200, ("Mario!!!\
 It that really you???\
