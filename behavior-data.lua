@@ -2932,7 +2932,7 @@ function bhv_goomba_bros_init(o)
 
     cur_obj_scale(1.3)
 
-    network_init_object(o, true, {"oAction"})
+    network_init_object(o, true, { "oAction" })
 end
 
 ---@param o Object
@@ -4108,15 +4108,15 @@ function bhv_rashay_loop(o)
             o.oSubAction = 0
         end
     elseif o.oAction == RASHAY_ACTION_HIT_MARIO_AIR then
-        o.oPosX          = -128
-        o.oPosY          = 300 + 180
-        o.oPosZ          = 1173
+        o.oPosX          = 270
+        o.oPosY          = 67 + 180
+        o.oPosZ          = -1970
         marioState.pos.x = o.oPosX
         marioState.pos.y = o.oPosY
         marioState.pos.z = o.oPosZ
         if o.header.gfx.animInfo.animFrame == 27 then
             --obj_mark_for_deletion(o)
-            marioState.faceAngle.y = 19737
+            marioState.faceAngle.y = 784
             marioState.vel.y = 60 * 2
             marioState.actionArg = 70
             marioState.action = ACT_BACKWARD_AIR_KB_MODIFIED
@@ -4135,14 +4135,28 @@ function bhv_rashay_locked_gate(o)
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("rashay_locked_gate_collision")
     o.oCollisionDistance = 1000
-    network_init_object(o, true, {"activeFlags"})
+    network_init_object(o, true, { "activeFlags" })
 end
 
 ---only moves for local player
 function bhv_rashay_locked_gate_loop(o)
     load_object_collision_model()
 
-    if o.oBehParams2ndByte == 8 then
+    --[[    if o.oBehParams2ndByte == 8 then
+        if obj_get_nearest_object_with_behavior_id(o, bhvRashay) then
+            if obj_get_nearest_object_with_behavior_id(o, bhvRashay).oAction == RASHAY_ACTION_DEAD then
+                if nearest_mario_state_to_object(o).wall then
+                    if nearest_mario_state_to_object(o).wall.object == o then
+                        obj_mark_for_deletion(o)
+                        spawn_triangle_break_particles(20, 138, 3.0, 4);
+                        obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvRashay))
+                    end
+                end
+            end
+        end
+    end]]
+
+    if o.oBehParams2ndByte == 40 then
         if obj_get_nearest_object_with_behavior_id(o, bhvRashay) then
             if obj_get_nearest_object_with_behavior_id(o, bhvRashay).oAction == RASHAY_ACTION_DEAD then
                 if nearest_mario_state_to_object(o).wall then
@@ -4159,3 +4173,29 @@ end
 
 bhvRashayLockedGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_locked_gate,
     bhv_rashay_locked_gate_loop)
+
+
+function bhv_talking_peach2(o)
+    o.oFlags = (OBJ_FLAG_PERSISTENT_RESPAWN | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)
+    o.oInteractType = INTERACT_TEXT
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oAnimations = gObjectAnimations.peach_seg5_anims_0501C41C
+    cur_obj_init_animation(6)
+    o.hitboxRadius = 110
+    o.hitboxHeight = 70
+    o.oIntangibleTimer = 0
+    o.oOpacity = 255
+    --bhv_toad_message_init()
+end
+
+bhvTalkingPeach2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach2,
+    function(o)
+        if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+            gMarioStates[0].action = ACT_READING_NPC_DIALOG
+            if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 146) ~= 0 then
+                o.oInteractStatus = 0
+                warp_special(SPECIAL_WARP_CAKE)
+                set_background_music(0,0,0)
+            end
+        end
+    end)
