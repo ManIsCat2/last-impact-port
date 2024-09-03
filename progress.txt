@@ -21,7 +21,7 @@ TTC - 65% done
 RR - 100% done //ready for release
 BITDW - 100% done //ready for release
 BITFS - 100% done  //ready for release
-BITS - 60% done
+BITS - 75% done
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
 TOTWC - 100% done //ready for release

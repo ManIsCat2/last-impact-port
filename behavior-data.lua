@@ -3828,7 +3828,8 @@ function bhv_thi_circuit(o)
     o.collisionData = smlua_collision_util_get("thi_circuit_collision")
 end
 
-bhvTHICircuit = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thi_circuit, function (o) load_object_collision_model() end)
+bhvTHICircuit = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thi_circuit,
+    function(o) load_object_collision_model() end)
 
 function bhv_thigray_static_block(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -3837,7 +3838,8 @@ function bhv_thigray_static_block(o)
     o.collisionData = smlua_collision_util_get("thi_static_gray_block_collision")
 end
 
-bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thigray_static_block, function (o) load_object_collision_model() end)
+bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_thigray_static_block,
+    function(o) load_object_collision_model() end)
 
 function bits_ship_wings(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -3846,3 +3848,95 @@ function bits_ship_wings(o)
 end
 
 bhvTHIStaticGrayBlock = hook_behavior(nil, OBJ_LIST_LEVEL, true, bits_ship_wings, nil)
+
+function bhv_bits_secret_platforms_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("bits_secret_platforms_collision")
+    o.oCollisionDistance = 1000
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oAction", "oPosY", "oPosX", "oPosZ" })
+end
+
+function bhv_bits_secret_platforms_loop(o)
+    load_object_collision_model()
+
+    if o.oBehParams2ndByte ~= 8 then
+        if o.oAction == 0 then
+            if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate5) and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate6) and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate7) then
+                if obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate5).oAction == 1 and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate6).oAction == 1 and obj_get_nearest_object_with_behavior_id(o, bhvInvFireOpensGate7).oAction == 1 then
+                    o.oAction = 1
+                    play_puzzle_jingle()
+                end
+            end
+        elseif o.oAction == 1 then
+            o.oPosX = approach_f32_symmetric(o.oPosX, o.oHomeX + 320, 5.7)
+            o.oPosZ = approach_f32_symmetric(o.oPosZ, o.oHomeZ + 510, 5.7)
+        end
+    end
+end
+
+bhvBITSSecretPlatforms = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_bits_secret_platforms_init,
+    bhv_bits_secret_platforms_loop)
+
+---@param o Object
+function bhv_rashay_unlocker_button_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("rashay_unlocker_button_collision")
+    network_init_object(o, true, { "oSubAction", "oAction", "oAnimState" })
+end
+
+---@param o Object
+function bhv_rashay_unlocker_button_loop(o)
+    load_object_collision_model()
+    local currMs = nearest_mario_state_to_object(o)
+    if currMs.marioObj.platform == o then
+        o.oAction = 1
+    end
+
+    if o.oAction == 1 then
+        o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, -0.1, 0.05)
+    end
+end
+
+bhvRashayUnlockerButton = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_unlocker_button_init,
+    bhv_rashay_unlocker_button_loop)
+bhvRashayUnlockerButton2 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_unlocker_button_init,
+    bhv_rashay_unlocker_button_loop)
+bhvRashayUnlockerButton3 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_unlocker_button_init,
+    bhv_rashay_unlocker_button_loop)
+bhvRashayUnlockerButton4 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_unlocker_button_init,
+    bhv_rashay_unlocker_button_loop)
+
+
+function bhv_rashay_elevator_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1200
+    o.collisionData = smlua_collision_util_get("rashay_elevator_collision")
+    network_init_object(o, true, nil)
+end
+
+function bhv_rashay_elevator_loop(o)
+    load_object_collision_model()
+
+    local near1 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton)
+    local near2 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton2)
+    local near3 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton3)
+    local near4 = obj_get_nearest_object_with_behavior_id(o, bhvRashayUnlockerButton4)
+
+    if near1 and near2 and near3 and near4 then
+        if near1.oAction == 1 and near2.oAction == 1 and near3.oAction == 1 and near4.oAction == 1 then
+            o.oInteractType = INTERACT_WARP
+            o.hitboxRadius = 470
+            o.hitboxHeight = 470
+            o.oIntangibleTimer = 0
+            o.oBehParams = 11 << 16
+            o.oBehParams2ndByte = 11
+        end
+    end
+end
+
+bhvRashayElevator = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rashay_elevator_init,
+    bhv_rashay_elevator_loop)

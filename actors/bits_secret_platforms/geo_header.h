@@ -1,0 +1,7 @@
+extern const GeoLayout bits_secret_platforms_geo[];
+extern Lights1 bits_secret_platforms_Material_0_f3d_lights;
+extern u8 bits_secret_platforms__0_rgba16[];
+extern Vtx bits_secret_platforms_000_displaylist_mesh_layer_1_vtx_0[12];
+extern Gfx bits_secret_platforms_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_bits_secret_platforms_Material_0_f3d[];
+extern Gfx bits_secret_platforms_000_displaylist_mesh_layer_1[];

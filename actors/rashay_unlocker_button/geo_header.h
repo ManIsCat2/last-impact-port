@@ -1,0 +1,7 @@
+extern const GeoLayout rashay_unlocker_button_geo[];
+extern Lights1 rashay_unlocker_button_Fast3D_Material_lights;
+extern u8 rashay_unlocker_button__0_i8[];
+extern Vtx rashay_unlocker_button_000_displaylist_mesh_layer_1_vtx_0[12];
+extern Gfx rashay_unlocker_button_000_displaylist_mesh_layer_1_tri_0[];
+extern Gfx mat_rashay_unlocker_button_Fast3D_Material[];
+extern Gfx rashay_unlocker_button_000_displaylist_mesh_layer_1[];
