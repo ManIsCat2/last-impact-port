@@ -12,6 +12,7 @@ if _G.OmmEnabled then
             _G.OmmApi.omm_register_star_behavior(bhvWhompNPC, "Whomp NPC", "WHOMP NPC", function(bhvParams) return true end)
             _G.OmmApi.omm_register_star_behavior(id_bhvParentAndChildRabbit, "Mips Parent and Child", "MIPS PARENT AND CHILD", function(bhvParams) return true end)
             _G.OmmApi.omm_register_star_behavior(bhvUnderCoverMagikoopa, "Undercover Witch", "UNDERCOVER WITCH", function(bhvParams) return true end)
+            _G.OmmApi.omm_register_star_behavior(bhvRashayButtonStarSpawn, "Buttons", "BUTTONS", function(bhvParams) return true end)
         end
 
         --------------------
