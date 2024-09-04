@@ -11,7 +11,7 @@ JRB  85% done //ready for release
 CCM - 85% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release
-LLL - 80% done 
+LLL - 85% done 
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
@@ -22,7 +22,7 @@ TTC - 85% done
 RR - 100% done //ready for release
 BITDW - 100% done //ready for release
 BITFS - 100% done  //ready for release
-BITS - 90% done //ready for release
+BITS - 100% done //ready for release
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
 TOTWC - 100% done //ready for release

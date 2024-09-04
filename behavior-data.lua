@@ -1731,7 +1731,11 @@ local function bhv_talking_peach(o)
     bhv_toad_message_init()
 end
 
-bhvTalkingPeach = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach, function(o) bhv_toad_message_loop() end)
+bhvTalkingPeach = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach,
+    function(o)
+        bhv_toad_message_loop()
+        if get_curr_star_count() >= 45 then obj_mark_for_deletion(o) end
+    end)
 
 local function bhv_ssl_rotating_platform(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
@@ -4398,7 +4402,8 @@ function bhv_wdw_seashell_loop(o)
     if cur_obj_is_mario_on_platform() == 1 then
         o.oAction = o.oAction + 1
         if o.oAction > 35 then
-            gMarioStates[0].vel.y = ((o.oBehParams >> 24) & 0XFF) * (o.oBehParams2ndByte == 1 and 1.8 or o.oBehParams2ndByte)
+            gMarioStates[0].vel.y = ((o.oBehParams >> 24) & 0XFF) *
+                (o.oBehParams2ndByte == 1 and 1.8 or o.oBehParams2ndByte)
             gMarioStates[0].faceAngle.y = o.oFaceAngleYaw
             gMarioStates[0].actionArg = 15
             gMarioStates[0].action = ACT_BACKWARD_AIR_KB_MODIFIED
@@ -4409,3 +4414,51 @@ end
 
 bhvWDWSeaShell = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_seashell_init,
     bhv_wdw_seashell_loop)
+
+---@param o Object
+function bobomb_gaurd_stopper(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.hitboxRadius = 75
+    o.hitboxHeight = 4000
+    o.oIntangibleTimer = 0
+    o.hitboxDownOffset = 200
+
+    o.oFaceAngleYaw = 225
+end
+
+bhvBobombGaurdStopper = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bobomb_gaurd_stopper,
+    nil)
+
+
+---@param o Object
+function bobomb_buddy_gaurd_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+
+    o.oAnimations = gObjectAnimations.bobomb_seg8_anims_0802396C
+    cur_obj_init_animation(0)
+
+    o.oFriction = 1
+    o.oForwardVel = 10
+    o.oGravity = -3
+    obj_set_model_extended(o, E_MODEL_BOBOMB_BUDDY)
+end
+
+function bobomb_buddy_gaurd_loop(o)
+    ---SET_OBJ_PHYSICS(/*Wall hitbox radius*/ 0, /*Gravity*/ -400, /*Bounciness*/ -70, /*Drag strength*/ 1000, /*Friction*/ 1000, /*Buoyancy*/ 200, /*Unused*/ 0, 0),
+
+    cur_obj_move_standard(-78)
+    cur_obj_update_floor_and_walls()
+    cur_obj_if_hit_wall_bounce_away()
+
+    if (o.oMoveFlags & OBJ_MOVE_HIT_EDGE) ~= 0 then
+        o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
+    end
+
+    if obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper) and obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper).oBehParams == o.oBehParams and obj_check_hitbox_overlap(obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper), o) then
+        o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
+    end
+end
+
+bhvBobombBuddyGaurd = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bobomb_buddy_gaurd_init,
+    bobomb_buddy_gaurd_loop)
