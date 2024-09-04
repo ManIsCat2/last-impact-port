@@ -4219,7 +4219,7 @@ function bhv_brown_hand_enemy_init(o)
     o.oIntangibleTimer = 0
     o.oInteractType = INTERACT_BOUNCE_TOP
     o.oDamageOrCoinValue = 2
-    o.oNumLootCoins = 1
+    o.oNumLootCoins = -1
     smlua_anim_util_set_animation(o, "anim_brown_hand_enemy_idle")
     cur_obj_set_home_once()
     network_init_object(o, true, { "oAction", "oInteractStatus", "oForwardVel", "oFriction", "oMoveAngleYaw" })
@@ -4269,3 +4269,70 @@ function bhv_brown_hand_enemy_loop(o)
 end
 
 bhvBrownHandEnemy = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_brown_hand_enemy_init, bhv_brown_hand_enemy_loop)
+
+function really_big_pole(o)
+    o.oInteractType = INTERACT_POLE
+    o.hitboxHeight = o.oBehParams2ndByte * 64.0
+    o.hitboxRadius = 60
+    o.oIntangibleTimer = 0
+end
+
+bhvReallyBigPole = hook_behavior(nil, OBJ_LIST_POLELIKE, true, really_big_pole, function(o) bhv_pole_base_loop() end)
+
+---star_hexagon
+function bhv_starhexagon_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 1200
+    o.collisionData = smlua_collision_util_get("star_hexagon_collision")
+    network_init_object(o, true, { "oAnimState", "oAction" })
+end
+
+function bhv_starhexagon_loop(o)
+    load_object_collision_model()
+
+    ---@type MarioState
+    local marioS = gMarioStates[0]
+
+    if --[[marioS.wall.object == o or marioS.floor.object == o]] cur_obj_is_any_player_on_platform() == 1 then
+        o.oAnimState = 1
+        o.oAction = 1
+        --network_send_object(o, true)
+    end
+end
+
+bhvStarHexagon = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_starhexagon_init,
+    bhv_starhexagon_loop)
+bhvStarHexagon2 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_starhexagon_init,
+    bhv_starhexagon_loop)
+bhvStarHexagon3 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_starhexagon_init,
+    bhv_starhexagon_loop)
+bhvStarHexagon4 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_starhexagon_init,
+    bhv_starhexagon_loop)
+bhvStarHexagon5 = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_starhexagon_init,
+    bhv_starhexagon_loop)
+
+---@param o Object
+function bhv_star_hexagon_spawn_star(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+function bhv_star_hexagon_spawn_star_loop(o)
+    local near1 = obj_get_nearest_object_with_behavior_id(o, bhvStarHexagon)
+    local near2 = obj_get_nearest_object_with_behavior_id(o, bhvStarHexagon2)
+    local near3 = obj_get_nearest_object_with_behavior_id(o, bhvStarHexagon3)
+    local near4 = obj_get_nearest_object_with_behavior_id(o, bhvStarHexagon4)
+    local near5 = obj_get_nearest_object_with_behavior_id(o, bhvStarHexagon5)
+
+    if near1 and near2 and near3 and near4 and near5 then
+        if near1.oAction == 1 and near2.oAction == 1 and near3.oAction == 1 and near4.oAction == 1 and near5.oAction == 1 then
+            obj_mark_for_deletion(o)
+            spawn_red_coin_cutscene_star(o.oPosX, o.oPosY, o.oPosZ)
+        end
+    end
+end
+
+bhvStarHexagonStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_star_hexagon_spawn_star,
+    bhv_star_hexagon_spawn_star_loop)
