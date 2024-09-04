@@ -3994,8 +3994,8 @@ bhvGreenFloatingBubble = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_green_fl
             cur_obj_hide()
         end
 
-        --o.header.gfx.scale.y = math_sin(o.oTimer * 0.02)
-        --o.header.gfx.scale.z = math_sin(o.oTimer * 0.02)
+        o.header.gfx.scale.y = math_sin(o.oTimer * 0.002)
+        o.header.gfx.scale.z = math_sin(o.oTimer * 0.002)
     end)
 
 function bhv_rashay_block(o)
@@ -4372,3 +4372,11 @@ function bhv_blue_nabbit_loop(o)
 end
 
 hook_behavior(id_bhvWfSlidingPlatform, OBJ_LIST_GENACTOR, true, bhv_blue_nabbit_init, bhv_blue_nabbit_loop)
+
+function custom_metal_box(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.collisionData = gGlobalObjectCollisionData.breakable_box_seg8_collision_08012D70
+    o.oCollisionDistance = 1000
+end
+
+bhvCustomMetalBox = hook_behavior(nil, OBJ_LIST_SURFACE, true, custom_metal_box, function (o) load_object_collision_model() end)

@@ -3,7 +3,7 @@ CI (overworld 2) 85% done  //ready for release (2 bhv left, camera, cages for ca
 CC (overworld 3) 100% done //ready for release
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
-// "//ready for release" means its PLAYABLE and not impossible.
+// "//ready for release" means its PLAYABLE
 
 BOB - 100% done //ready for release
 WF - 50% done
@@ -11,7 +11,7 @@ JRB  85% done //ready for release
 CCM - 85% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release
-LLL - 75% done 
+LLL - 80% done 
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
