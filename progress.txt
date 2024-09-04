@@ -17,11 +17,11 @@ SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behavio
 WDW - 90% done //ready for release (2 bhv left: shark. shell that throw u)
 TTM - 65% done
 THI - 100% done //ready for release
-TTC - 75% done
+TTC - 80% done
 RR - 100% done //ready for release
 BITDW - 100% done //ready for release
 BITFS - 100% done  //ready for release
-BITS - 90% done
+BITS - 90% done //ready for release
 PSS - 100% done //ready for release
 COTMC - 100% done //ready for release 
 TOTWC - 100% done //ready for release

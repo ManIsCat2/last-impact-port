@@ -1,7 +1,3 @@
-Lights1 green_floating_bubble_Fast3D_Material_lights = gdSPDefLights1(
-	0x7F, 0x7F, 0x7F,
-	0xFF, 0xFF, 0xFF, 0x49, 0x49, 0x49);
-
 Gfx green_floating_bubble__0_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 green_floating_bubble__0_rgba16[] = {
 	0x7f, 0x95, 0x7f, 0x95, 0x7f, 0x95, 0x7f, 0x95, 
@@ -263,40 +259,40 @@ u8 green_floating_bubble__0_rgba16[] = {
 	
 };
 
-Vtx green_floating_bubble_000_displaylist_mesh_layer_1_vtx_0[29] = {
-	{{ {0, 282, 282}, 0, {154, 683}, {0, 84, 95, 255} }},
-	{{ {0, 0, 400}, 0, {-35, 226}, {0, 0, 127, 255} }},
-	{{ {282, 0, 282}, 0, {154, 226}, {90, 0, 90, 255} }},
-	{{ {200, -282, 200}, 0, {397, 116}, {67, 172, 67, 255} }},
-	{{ {0, -282, 282}, 0, {307, 116}, {0, 172, 95, 255} }},
-	{{ {-200, -282, 200}, 0, {397, 116}, {189, 172, 67, 255} }},
-	{{ {-282, 0, 282}, 0, {154, 226}, {166, 0, 90, 255} }},
-	{{ {0, 282, 282}, 0, {307, 114}, {0, 84, 95, 255} }},
-	{{ {-200, 282, 200}, 0, {397, 114}, {189, 84, 67, 255} }},
-	{{ {0, 400, 0}, 0, {614, 32}, {0, 127, 0, 255} }},
-	{{ {-282, 282, 0}, 0, {614, 114}, {161, 84, 0, 255} }},
-	{{ {-200, 282, -200}, 0, {831, 114}, {189, 84, 189, 255} }},
-	{{ {0, 282, -282}, 0, {921, 114}, {0, 84, 161, 255} }},
-	{{ {0, 0, -400}, 0, {1257, 226}, {0, 0, 129, 255} }},
-	{{ {-282, 0, -282}, 0, {1068, 226}, {166, 0, 166, 255} }},
-	{{ {0, -282, -282}, 0, {921, 116}, {0, 172, 161, 255} }},
-	{{ {200, -282, -200}, 0, {831, 116}, {67, 172, 189, 255} }},
-	{{ {282, 0, -282}, 0, {1068, 226}, {90, 0, 166, 255} }},
-	{{ {0, 282, -282}, 0, {1068, 683}, {0, 84, 161, 255} }},
-	{{ {200, 282, -200}, 0, {934, 683}, {67, 84, 189, 255} }},
-	{{ {0, 400, 0}, 0, {611, 872}, {0, 127, 0, 255} }},
-	{{ {282, 282, 0}, 0, {611, 683}, {95, 84, 0, 255} }},
-	{{ {200, 282, 200}, 0, {288, 683}, {67, 84, 67, 255} }},
-	{{ {400, 0, 0}, 0, {611, 226}, {127, 0, 0, 255} }},
-	{{ {282, -282, 0}, 0, {614, 116}, {95, 172, 0, 255} }},
-	{{ {0, -400, 0}, 0, {614, 37}, {0, 129, 0, 255} }},
-	{{ {-282, -282, 0}, 0, {614, 116}, {161, 172, 0, 255} }},
-	{{ {-400, 0, 0}, 0, {611, 226}, {129, 0, 0, 255} }},
-	{{ {-200, -282, -200}, 0, {831, 116}, {189, 172, 189, 255} }},
+Vtx green_floating_bubble_000_displaylist_mesh_layer_5_vtx_0[29] = {
+	{{ {0, 282, 282}, 0, {154, 683}, {255, 255, 255, 255} }},
+	{{ {0, 0, 400}, 0, {-35, 226}, {255, 255, 255, 255} }},
+	{{ {282, 0, 282}, 0, {154, 226}, {255, 255, 255, 255} }},
+	{{ {200, -282, 200}, 0, {397, 116}, {255, 255, 255, 255} }},
+	{{ {0, -282, 282}, 0, {307, 116}, {255, 255, 255, 255} }},
+	{{ {-200, -282, 200}, 0, {397, 116}, {255, 255, 255, 255} }},
+	{{ {-282, 0, 282}, 0, {154, 226}, {255, 255, 255, 255} }},
+	{{ {0, 282, 282}, 0, {307, 114}, {255, 255, 255, 255} }},
+	{{ {-200, 282, 200}, 0, {397, 114}, {255, 255, 255, 255} }},
+	{{ {0, 400, 0}, 0, {614, 32}, {255, 255, 255, 255} }},
+	{{ {-282, 282, 0}, 0, {614, 114}, {255, 255, 255, 255} }},
+	{{ {-200, 282, -200}, 0, {831, 114}, {255, 255, 255, 255} }},
+	{{ {0, 282, -282}, 0, {921, 114}, {255, 255, 255, 255} }},
+	{{ {0, 0, -400}, 0, {1257, 226}, {255, 255, 255, 255} }},
+	{{ {-282, 0, -282}, 0, {1068, 226}, {255, 255, 255, 255} }},
+	{{ {0, -282, -282}, 0, {921, 116}, {255, 255, 255, 255} }},
+	{{ {200, -282, -200}, 0, {831, 116}, {255, 255, 255, 255} }},
+	{{ {282, 0, -282}, 0, {1068, 226}, {255, 255, 255, 255} }},
+	{{ {0, 282, -282}, 0, {1068, 683}, {255, 255, 255, 255} }},
+	{{ {200, 282, -200}, 0, {934, 683}, {255, 255, 255, 255} }},
+	{{ {0, 400, 0}, 0, {611, 872}, {255, 255, 255, 255} }},
+	{{ {282, 282, 0}, 0, {611, 683}, {255, 255, 255, 255} }},
+	{{ {200, 282, 200}, 0, {288, 683}, {255, 255, 255, 255} }},
+	{{ {400, 0, 0}, 0, {611, 226}, {255, 255, 255, 255} }},
+	{{ {282, -282, 0}, 0, {614, 116}, {255, 255, 255, 255} }},
+	{{ {0, -400, 0}, 0, {614, 37}, {255, 255, 255, 255} }},
+	{{ {-282, -282, 0}, 0, {614, 116}, {255, 255, 255, 255} }},
+	{{ {-400, 0, 0}, 0, {611, 226}, {255, 255, 255, 255} }},
+	{{ {-200, -282, -200}, 0, {831, 116}, {255, 255, 255, 255} }},
 };
 
-Gfx green_floating_bubble_000_displaylist_mesh_layer_1_tri_0[] = {
-	gsSPVertex(green_floating_bubble_000_displaylist_mesh_layer_1_vtx_0 + 0, 29, 0),
+Gfx green_floating_bubble_000_displaylist_mesh_layer_5_tri_0[] = {
+	gsSPVertex(green_floating_bubble_000_displaylist_mesh_layer_5_vtx_0 + 0, 29, 0),
 	gsSP2Triangles(0, 1, 2, 0, 1, 3, 2, 0),
 	gsSP2Triangles(1, 4, 3, 0, 1, 5, 4, 0),
 	gsSP2Triangles(6, 5, 1, 0, 7, 6, 1, 0),
@@ -326,10 +322,11 @@ Gfx green_floating_bubble_000_displaylist_mesh_layer_1_tri_0[] = {
 
 
 Gfx mat_green_floating_bubble_Fast3D_Material[] = {
-	gsSPSetLights1(green_floating_bubble_Fast3D_Material_lights),
+	gsSPGeometryMode(G_LIGHTING, 0),
 	gsDPPipeSync(),
-	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, 0, 0, 0, ENVIRONMENT),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0, TEXEL0, 0, SHADE, 0, TEXEL0, 0, PRIMITIVE, 0),
 	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsDPSetPrimColor(0, 0, 255, 255, 255, 93),
 	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 1, green_floating_bubble__0_rgba16),
 	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b_LOAD_BLOCK, 0, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 0, 0),
 	gsDPLoadBlock(7, 0, 0, 1023, 256),
@@ -338,9 +335,16 @@ Gfx mat_green_floating_bubble_Fast3D_Material[] = {
 	gsSPEndDisplayList(),
 };
 
-Gfx green_floating_bubble_000_displaylist_mesh_layer_1[] = {
+Gfx mat_revert_green_floating_bubble_Fast3D_Material[] = {
+	gsSPGeometryMode(0, G_LIGHTING),
+	gsDPPipeSync(),
+	gsSPEndDisplayList(),
+};
+
+Gfx green_floating_bubble_000_displaylist_mesh_layer_5[] = {
 	gsSPDisplayList(mat_green_floating_bubble_Fast3D_Material),
-	gsSPDisplayList(green_floating_bubble_000_displaylist_mesh_layer_1_tri_0),
+	gsSPDisplayList(green_floating_bubble_000_displaylist_mesh_layer_5_tri_0),
+	gsSPDisplayList(mat_revert_green_floating_bubble_Fast3D_Material),
 	gsDPPipeSync(),
 	gsSPSetGeometryMode(G_LIGHTING),
 	gsSPClearGeometryMode(G_TEXTURE_GEN),

@@ -1,7 +1,4 @@
-# last-impact-port
-Last impact port to Coop.
-
-# Information
+# SM64 Last Impact Port
 
 # File Structure
 

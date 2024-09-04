@@ -3988,6 +3988,12 @@ bhvGreenFloatingBubble = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_green_fl
             end
         end
 
+        if o.oPosY > 6896 then
+            cur_obj_unhide()
+        else
+            cur_obj_hide()
+        end
+
         --o.header.gfx.scale.y = math_sin(o.oTimer * 0.02)
         --o.header.gfx.scale.z = math_sin(o.oTimer * 0.02)
     end)
@@ -4195,7 +4201,71 @@ bhvTalkingPeach2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_talking_peach
             if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, 146) ~= 0 then
                 o.oInteractStatus = 0
                 warp_special(SPECIAL_WARP_CAKE)
-                set_background_music(0,0,0)
+                set_background_music(0, 0, 0)
             end
         end
     end)
+
+
+---@param o Object
+function bhv_brown_hand_enemy_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+
+    o.oFriction = 1
+
+    o.hitboxHeight = 200
+    o.hitboxDownOffset = 50
+    o.hitboxRadius = 110
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_BOUNCE_TOP
+    o.oDamageOrCoinValue = 2
+    o.oNumLootCoins = 1
+    smlua_anim_util_set_animation(o, "anim_brown_hand_enemy_idle")
+    cur_obj_set_home_once()
+    network_init_object(o, true, { "oAction", "oInteractStatus", "oForwardVel", "oFriction", "oMoveAngleYaw" })
+end
+
+---@param o Object
+function bhv_brown_hand_enemy_loop(o)
+    object_step()
+
+    local mnearest = nearest_mario_state_to_object(o)
+
+    if o.oAction == 0 then
+        o.oForwardVel = 15
+        o.oFriction = 1
+        smlua_anim_util_set_animation(o, "anim_brown_hand_enemy_idle")
+        if dist_between_objects(o, mnearest.marioObj) < 1850 then
+            o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, obj_angle_to_object(o, mnearest.marioObj), 0x255)
+            o.oPosY = approach_s16_symmetric(o.oPosY, mnearest.pos.y + 65, 3)
+        else
+            o.oMoveAngleYaw = approach_s16_symmetric(o.oMoveAngleYaw, cur_obj_angle_to_home(), 0x255)
+            o.oPosY = approach_s16_symmetric(o.oPosY, o.oHomeY, 3)
+        end
+    elseif o.oAction == 1 then
+        o.oForwardVel = 0
+        o.oFriction = 0
+        smlua_anim_util_set_animation(o, "anim_brown_hand_enemy_attack")
+        if o.header.gfx.animInfo.animFrame > 42 then
+            o.oAction = 0
+        end
+    elseif o.oAction == 2 then
+        o.oForwardVel = 0
+        o.oFriction = 0
+        smlua_anim_util_set_animation(o, "anim_brown_hand_enemy_dead")
+        if o.header.gfx.animInfo.animFrame > 50 then
+            obj_die_if_health_non_positive()
+            spawn_mist_particles()
+        end
+    end
+
+    if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+        o.oHealth = 0
+        o.oAction = 2
+    elseif o.oInteractStatus & INT_STATUS_ATTACKED_MARIO ~= 0 then
+        o.oInteractStatus = 0
+        o.oAction         = 1
+    end
+end
+
+bhvBrownHandEnemy = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_brown_hand_enemy_init, bhv_brown_hand_enemy_loop)

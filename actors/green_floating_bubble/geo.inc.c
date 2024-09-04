@@ -7,7 +7,7 @@ const GeoLayout green_floating_bubble_geo[] = {
 		GEO_OPEN_NODE(),
 			GEO_CULLING_RADIUS(4000),
 			GEO_OPEN_NODE(),
-				GEO_DISPLAY_LIST(LAYER_OPAQUE, green_floating_bubble_000_displaylist_mesh_layer_1),
+				GEO_DISPLAY_LIST(LAYER_TRANSPARENT, green_floating_bubble_000_displaylist_mesh_layer_5),
 			GEO_CLOSE_NODE(),
 		GEO_CLOSE_NODE(),
 	GEO_CLOSE_NODE(),
