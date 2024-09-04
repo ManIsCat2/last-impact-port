@@ -15,7 +15,7 @@ LLL - 80% done
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
-WDW - 90% done //ready for release (2 bhv left: shark. shell that throw u)
+WDW - 95% done //ready for release (1 bhv left: shark)
 TTM - 80% done
 THI - 100% done //ready for release
 TTC - 85% done

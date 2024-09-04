@@ -1,0 +1,12 @@
+extern const GeoLayout wdw_seashell_geo[];
+extern Lights1 wdw_seashell_Material_0_f3d_lights;
+extern Lights1 wdw_seashell_Material_1_f3d_lights;
+extern u8 wdw_seashell__0_rgba16[];
+extern u8 wdw_seashell__1_rgba16[];
+extern Vtx wdw_seashell_000_displaylist_mesh_layer_1_vtx_0[35];
+extern Gfx wdw_seashell_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx wdw_seashell_000_displaylist_mesh_layer_1_vtx_1[24];
+extern Gfx wdw_seashell_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_wdw_seashell_Material_0_f3d[];
+extern Gfx mat_wdw_seashell_Material_1_f3d[];
+extern Gfx wdw_seashell_000_displaylist_mesh_layer_1[];

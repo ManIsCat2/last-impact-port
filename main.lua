@@ -40,9 +40,9 @@ local wdwmodf3 = 3100
 function wdw_water_behavior(m)
     ---o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     if gNetworkPlayers[0].currLevelNum == LEVEL_WDW and gNetworkPlayers[0].currAreaIndex == 1 and obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvMouthWaterThing).oAction ~= 1 then
-        set_water_level(0, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
+        --[[set_water_level(0, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
         set_water_level(1, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
-        set_water_level(2, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
+        set_water_level(2, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)]]
     end
 end
 

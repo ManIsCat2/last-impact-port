@@ -4351,7 +4351,7 @@ function bhv_blue_nabbit_init(o)
 
     smlua_anim_util_set_animation(o, "anim_blue_nabbit_idle")
 
-    network_init_object(o, true, {"oAction", "oInteractStatus"})
+    network_init_object(o, true, { "oAction", "oInteractStatus" })
 end
 
 ---@param o Object
@@ -4363,10 +4363,10 @@ function bhv_blue_nabbit_loop(o)
     elseif o.oAction == 1 then
         --smlua_anim_util_set_animation(o, "anim_blue_nabbit_dead")
 
-       -- if cur_obj_check_if_near_animation_end() == 1 then
-            spawn_mist_particles()
-            obj_mark_for_deletion(o)
-            spawn_red_coin_cutscene_star(o.oPosX, o.oPosY + 230, o.oPosZ)
+        -- if cur_obj_check_if_near_animation_end() == 1 then
+        spawn_mist_particles()
+        obj_mark_for_deletion(o)
+        spawn_red_coin_cutscene_star(o.oPosX, o.oPosY + 230, o.oPosZ)
         --end
     end
 end
@@ -4379,4 +4379,33 @@ function custom_metal_box(o)
     o.oCollisionDistance = 1000
 end
 
-bhvCustomMetalBox = hook_behavior(nil, OBJ_LIST_SURFACE, true, custom_metal_box, function (o) load_object_collision_model() end)
+bhvCustomMetalBox = hook_behavior(nil, OBJ_LIST_SURFACE, true, custom_metal_box,
+    function(o) load_object_collision_model() end)
+
+--wdw_seashell
+---@param o Object
+function bhv_wdw_seashell_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("wdw_seashell_collision")
+    o.oCollisionDistance = 900
+end
+
+---only works for local player
+---@param o Object
+function bhv_wdw_seashell_loop(o)
+    load_object_collision_model()
+    if cur_obj_is_mario_on_platform() == 1 then
+        o.oAction = o.oAction + 1
+        if o.oAction > 35 then
+            gMarioStates[0].vel.y = ((o.oBehParams >> 24) & 0XFF) * (o.oBehParams2ndByte == 1 and 1.8 or o.oBehParams2ndByte)
+            gMarioStates[0].faceAngle.y = o.oFaceAngleYaw
+            gMarioStates[0].actionArg = 15
+            gMarioStates[0].action = ACT_BACKWARD_AIR_KB_MODIFIED
+            o.oAction = 0
+        end
+    end
+end
+
+bhvWDWSeaShell = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_seashell_init,
+    bhv_wdw_seashell_loop)
