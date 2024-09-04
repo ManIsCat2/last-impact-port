@@ -4336,3 +4336,39 @@ end
 
 bhvStarHexagonStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_star_hexagon_spawn_star,
     bhv_star_hexagon_spawn_star_loop)
+
+
+---@param o Object
+function bhv_blue_nabbit_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_MOVE_XZ_USING_FVEL
+
+    o.hitboxRadius = 90
+    o.hitboxHeight = 100
+
+    o.oInteractType = INTERACT_BOUNCE_TOP
+
+    o.oIntangibleTimer = 0
+
+    smlua_anim_util_set_animation(o, "anim_blue_nabbit_idle")
+
+    network_init_object(o, true, {"oAction", "oInteractStatus"})
+end
+
+---@param o Object
+function bhv_blue_nabbit_loop(o)
+    if o.oAction == 0 then
+        if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        --smlua_anim_util_set_animation(o, "anim_blue_nabbit_dead")
+
+       -- if cur_obj_check_if_near_animation_end() == 1 then
+            spawn_mist_particles()
+            obj_mark_for_deletion(o)
+            spawn_red_coin_cutscene_star(o.oPosX, o.oPosY + 230, o.oPosZ)
+        --end
+    end
+end
+
+hook_behavior(id_bhvWfSlidingPlatform, OBJ_LIST_GENACTOR, true, bhv_blue_nabbit_init, bhv_blue_nabbit_loop)
