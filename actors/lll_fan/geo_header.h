@@ -1,0 +1,13 @@
+extern const GeoLayout lll_fan_geo[];
+extern Lights1 lll_fan_Material_0_f3d_lights;
+extern Lights1 lll_fan_Material_1_f3d_lights;
+extern u8 lll_fan__0_rgba16[];
+extern u8 lll_fan__1_rgba16[];
+extern Vtx lll_fan_node_mesh_layer_1_vtx_cull[8];
+extern Vtx lll_fan_node_mesh_layer_1_vtx_0[44];
+extern Gfx lll_fan_node_mesh_layer_1_tri_0[];
+extern Vtx lll_fan_node_mesh_layer_1_vtx_1[304];
+extern Gfx lll_fan_node_mesh_layer_1_tri_1[];
+extern Gfx mat_lll_fan_Material_0_f3d[];
+extern Gfx mat_lll_fan_Material_1_f3d[];
+extern Gfx lll_fan_node_mesh_layer_1[];

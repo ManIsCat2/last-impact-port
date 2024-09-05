@@ -11,7 +11,7 @@ JRB  85% done //ready for release
 CCM - 85% done //ready for release
 BBH - 100% done //ready for release 
 HMC - 100% done //ready for release
-LLL - 85% done 
+LLL - 88% done 
 SSL - 80% done
 DDD - 95% done //ready for release
 SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
@@ -30,4 +30,4 @@ VCUTM - 100% done //ready for release
 SA - 100% done //ready for release
 
 /*Total Progress*/
-91.07% (september 4th. 9:30 AM (GMT)) (IS EXCLUDING MINIGAMES.)
+92.737% (september 5th. 5:56 AM (GMT)) (IS EXCLUDING MINIGAMES.)

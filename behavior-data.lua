@@ -4419,7 +4419,7 @@ bhvWDWSeaShell = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_wdw_seashell_ini
 function bobomb_gaurd_stopper(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
 
-    o.hitboxRadius = 75
+    o.hitboxRadius = 110
     o.hitboxHeight = 4000
     o.oIntangibleTimer = 0
     o.hitboxDownOffset = 200
@@ -4442,6 +4442,8 @@ function bobomb_buddy_gaurd_init(o)
     o.oForwardVel = 10
     o.oGravity = -3
     obj_set_model_extended(o, E_MODEL_BOBOMB_BUDDY)
+
+    network_init_object(o, true, {"oPosX", "oPosY", "oPosZ", "oMoveFlags", "oMoveAngleYaw"})
 end
 
 function bobomb_buddy_gaurd_loop(o)
@@ -4462,3 +4464,14 @@ end
 
 bhvBobombBuddyGaurd = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bobomb_buddy_gaurd_init,
     bobomb_buddy_gaurd_loop)
+
+function bhv_lll_fan_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+end
+
+function bhv_lll_fan_loop(o)
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 256
+end
+
+bhvLLLFan = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_lll_fan_init,
+    bhv_lll_fan_loop)
