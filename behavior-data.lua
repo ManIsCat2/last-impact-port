@@ -3448,7 +3448,7 @@ function bhv_tnt_and_boulder_loop(o)
         end
     elseif o.oAction == 1 then
         o.oAnimState = o.oAnimState + 1
-        if o.oAnimState > 70 then
+        if o.oAnimState > 20 then
             spawn_triangle_break_particles(20, 138, 3.0, 4);
             play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
             obj_mark_for_deletion(o)
@@ -3998,8 +3998,8 @@ bhvGreenFloatingBubble = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_green_fl
             cur_obj_hide()
         end
 
-        o.header.gfx.scale.y = math_sin(o.oTimer * 0.002)
-        o.header.gfx.scale.z = math_sin(o.oTimer * 0.002)
+        --o.header.gfx.scale.y = math_sin(o.oTimer * 0.002) + 0.2
+        --o.header.gfx.scale.z = math_sin(o.oTimer * 0.002)+ 0.2
     end)
 
 function bhv_rashay_block(o)
@@ -4060,7 +4060,7 @@ function bhv_rashay_loop(o)
     --djui_chat_message_create("xpos " .. o.oPosX .. " ypos " .. o.oPosY .. " zpos " .. o.oPosZ)
     local marioState = nearest_mario_state_to_object(o)
     if o.oAction == RASHAY_ACTION_IDLE_DIALOG then
-        if (marioState and should_start_or_continue_dialog(marioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_166) ~= 0) then
+        if (marioState and should_start_or_continue_dialog(marioState, o) ~= 0 and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_166) ~= 0) then
             o.oAction = RASHAY_ACTION_THROW_BLOCK_GOING
         end
     elseif o.oAction == RASHAY_ACTION_THROW_BLOCK_GOING then
@@ -4100,7 +4100,7 @@ function bhv_rashay_loop(o)
             end
         end
     elseif o.oAction == RASHAY_ACTION_IDLE_DIALOG2 then
-        if (marioState and should_start_or_continue_dialog(marioState, o) and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_167) ~= 0) then
+        if (marioState and should_start_or_continue_dialog(marioState, o) ~= 0 and cutscene_object_with_dialog(CUTSCENE_DIALOG, o, DIALOG_167) ~= 0) then
             o.oAction = RASHAY_ACTION_HUNTING
         end
     elseif o.oAction == RASHAY_ACTION_HUNTING then
@@ -4443,7 +4443,7 @@ function bobomb_buddy_gaurd_init(o)
     o.oGravity = -3
     obj_set_model_extended(o, E_MODEL_BOBOMB_BUDDY)
 
-    network_init_object(o, true, {"oPosX", "oPosY", "oPosZ", "oMoveFlags", "oMoveAngleYaw"})
+    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ", "oMoveFlags", "oMoveAngleYaw" })
 end
 
 function bobomb_buddy_gaurd_loop(o)
@@ -4475,3 +4475,126 @@ end
 
 bhvLLLFan = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_lll_fan_init,
     bhv_lll_fan_loop)
+
+---@param o Object
+function bhv_pink_ballon_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.oCollisionDistance = 2000
+    o.collisionData = smlua_collision_util_get("pink_ballon_collision")
+    o.oHealth = 0
+    cur_obj_set_home_once()
+    obj_scale(o, 4)
+end
+
+---@param o Object
+function bhv_pink_ballon_loop(o)
+    load_object_collision_model()
+    --djui_chat_message_create("" .. o.oAnimState)
+    obj_scale(o, 4 + o.oAnimState)
+
+    if o.oAnimState > 4 then
+        o.oAnimState = 4
+    end
+
+    if o.oAnimState == 4 then
+        o.oFaceAngleRoll = -15384
+        if o.oAction == 0 then
+            o.oPosY = o.oPosY + 230
+            o.oAction = 1
+        end
+
+        if o.oHealth == 0 then
+            if cur_obj_is_mario_on_platform() == 1 then
+                o.oHealth = 1
+            end
+        end
+    end
+    if o.oHealth == 1 then
+        if cur_obj_is_mario_on_platform() == 1 then
+            o.oMoveAngleYaw = gMarioStates[0].faceAngle.y
+        end
+
+
+        o.oForwardVel = 7
+        o.oFriction = 1
+        obj_move_xyz_using_fvel_and_yaw(o)
+        o.oPosY = approach_f32_symmetric(o.oPosY, 5933, 4)
+
+        o.oBehParams2ndByte = o.oBehParams2ndByte + 1
+
+        if o.oBehParams2ndByte > (35 * 30) then -- 35 seconds
+            o.oBehParams2ndByte = 0
+            o.oHealth = 0
+            cur_obj_set_pos_to_home()
+            o.oForwardVel = 0
+            o.oFriction = 0
+            o.oAnimState = 0
+            o.oFaceAngleRoll = 0
+            o.oAction = 0
+        end
+    end
+end
+
+bhvPinkBallon = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_pink_ballon_init,
+    bhv_pink_ballon_loop)
+
+
+---@param o Object
+function bhv_custom_ballon_trampoline_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = gGlobalObjectCollisionData.springboard_collision_05001A28
+    o.oCollisionDistance = 500
+    o.oHiddenBlueCoinSwitch = spawn_non_sync_object(id_bhvStaticObject, E_MODEL_TRAMPOLINE_CENTER, -553, 2784 + 30,
+        -11602,
+        nil)
+end
+
+tramp_hardcodedposy = 2784
+
+---@param o Object
+function bhv_custom_ballon_trampoline_loop(o)
+    load_object_collision_model()
+
+    if o.oAction == 0 then
+        o.oHiddenBlueCoinSwitch.oPosY = approach_f32_symmetric(o.oHiddenBlueCoinSwitch.oPosY, tramp_hardcodedposy + 30, 5)
+        o.oPosY = approach_f32_symmetric(o.oPosY, tramp_hardcodedposy + 100, 5)
+        if cur_obj_is_mario_ground_pounding_platform() == 1 then
+            obj_get_nearest_object_with_behavior_id(o, bhvPinkBallon).oAnimState =
+                obj_get_nearest_object_with_behavior_id(o, bhvPinkBallon).oAnimState + 1
+            o.oAction = 1
+        end
+    elseif o.oAction == 1 then
+        o.oPosY = approach_f32_symmetric(o.oPosY, tramp_hardcodedposy + 30, 5)
+        o.oHiddenBlueCoinSwitch.oPosY = approach_f32_symmetric(o.oHiddenBlueCoinSwitch.oPosY, tramp_hardcodedposy - 40, 5)
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 20 then
+            o.oAction = 0
+            o.oSubAction = 0
+        end
+    end
+end
+
+bhvCustomBallonTrampoline = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_custom_ballon_trampoline_init,
+    bhv_custom_ballon_trampoline_loop)
+
+MODEL_PINK_BALLON = smlua_model_util_get_id("pink_ballon_geo")
+
+---@param o Object
+function bhv_airballon_jrb_stand(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("jrb_airballon_stand_collision")
+    o.oCollisionDistance = 1560
+    o.oHiddenBlueCoinSwitch = spawn_non_sync_object(bhvCustomBallonTrampoline, E_MODEL_TRAMPOLINE, -553, 2784 + 100,
+        -11602,
+        nil)
+    o.oHiddenBlueCoinSwitch.oHiddenObjectUnkF4 = o
+    o.oHiddenObjectUnkF4 = spawn_non_sync_object(bhvPinkBallon, MODEL_PINK_BALLON, -14, 2768,
+        -11172,
+        nil)
+end
+
+bhvJRBAirballonStand = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_airballon_jrb_stand,
+    function(o) load_object_collision_model() end)
