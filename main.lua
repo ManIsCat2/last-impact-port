@@ -1,4 +1,4 @@
--- name: [WIP] \\#FF4500\\SM64 Last Impact
+-- name: \\#FF4500\\SM64 Last Impact
 -- incompatible: romhack
 -- description: Romhack from the legendary Kaze, written with over 100,000\nlines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#FFC0CB\\OneCalledRPG (Programmer)\n\\#FFFFFF\\Fe\\#ffcdab\\arl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\n\\#8B8000\\CaptainT (Tester)\n\\#ADD8E6\\Saniky (Tester)\n\\#AA336A\\Occam (Emotional Support)\n\\#FFC0CB\\Sunk (MOPS)\n\\#FF0000\\Fenius (Emotional Support)\n\\#00FFFF\\Steven (Rideable Yoshi)
 
@@ -40,9 +40,9 @@ local wdwmodf3 = 3100
 function wdw_water_behavior(m)
     ---o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     if gNetworkPlayers[0].currLevelNum == LEVEL_WDW and gNetworkPlayers[0].currAreaIndex == 1 and obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvMouthWaterThing).oAction ~= 1 then
-        --[[set_water_level(0, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
+        set_water_level(0, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
         set_water_level(1, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
-        set_water_level(2, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)]]
+        set_water_level(2, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
     end
 end
 
