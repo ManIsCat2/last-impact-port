@@ -1,6 +1,6 @@
 -- name: \\#FF4500\\SM64 Last Impact\\#FF0000\\ Unfinished
 -- incompatible: romhack
--- description: Romhack from the legendary Kaze, written with over 100,000\nlines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#FFC0CB\\OneCalledRPG (Programmer)\n\\#FFFFFF\\Fe\\#ffcdab\\arl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\n\\#8B8000\\CaptainT (Tester)\n\\#ADD8E6\\Saniky (Tester)\n\\#AA336A\\Occam (Emotional Support)\n\\#FFC0CB\\Sunk (MOPS)\n\\#FF0000\\Fenius (Emotional Support)\n\\#00FFFF\\Steven (Rideable Yoshi)
+-- description: Romhack from the legendary Kaze, written with over 100,000\nlines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#FFC0CB\\OneCalledRPG (Programmer)\n\\#FFFFFF\\Fe\\#ffcdab\\arl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\n\\#8B8000\\CaptainT (Tester)\n\\#ADD8E6\\Saniky (Tester)\n\\#FFC0CB\\Sunk (MOPS)\n\\#00FFFF\\Steven (Rideable Yoshi)
 
 gMarioStateExtras = {}
 for i = 0, (MAX_PLAYERS - 1) do
