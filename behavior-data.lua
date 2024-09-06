@@ -4381,6 +4381,8 @@ function bhv_blue_nabbit_loop(o)
     if o.oAction == 0 then
         if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
             o.oAction = 1
+        else
+            o.oInteractStatus = 0
         end
     elseif o.oAction == 1 then
         --smlua_anim_util_set_animation(o, "anim_blue_nabbit_dead")
