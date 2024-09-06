@@ -1,0 +1,12 @@
+extern const GeoLayout musical_fruit_geo[];
+extern Lights1 musical_fruit_Material_0_f3d_lights;
+extern Lights1 musical_fruit_Material_1_f3d_lights;
+extern u8 musical_fruit__0_rgba16[];
+extern u8 musical_fruit__1_rgba16[];
+extern Vtx musical_fruit_000_displaylist_mesh_layer_1_vtx_0[18];
+extern Gfx musical_fruit_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx musical_fruit_000_displaylist_mesh_layer_1_vtx_1[39];
+extern Gfx musical_fruit_000_displaylist_mesh_layer_1_tri_1[];
+extern Gfx mat_musical_fruit_Material_0_f3d[];
+extern Gfx mat_musical_fruit_Material_1_f3d[];
+extern Gfx musical_fruit_000_displaylist_mesh_layer_1[];

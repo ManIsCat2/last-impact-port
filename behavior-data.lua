@@ -138,7 +138,7 @@ end
 ---@return boolean
 function is_any_mario_groundpounding_obj(o)
     for i = 0, 15 do
-        local mstate = gMarioStates[i]
+        local mstate = gMarioStates[network_local_index_from_global(i)]
         if mstate.marioObj.platform == o then
             if mstate.action == ACT_GROUND_POUND_LAND then
                 return true
@@ -997,7 +997,7 @@ local function bhv_octooomba_loop(o)
         end
 
         if o.oSubAction > 120 then
-            o.oHiddenBlueCoinSwitch = spawn_object(o, MODEL_OCTOOMBA_ROCK, bhvOctoombaRock)
+            o.oHiddenBlueCoinSwitch = spawn_object2(o, MODEL_OCTOOMBA_ROCK, bhvOctoombaRock)
             o.oHiddenBlueCoinSwitch.oAction = 1
             o.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch = o
             o.oSubAction = 0
@@ -2083,7 +2083,7 @@ local function bhv_2d_star_loop(o)
 
     if thestar.oBehParams ~= (5 << 24) then
         thestar = obj_get_next_with_same_behavior_id(thestar)
-    else 
+    else
         if thestar.oInteractStatus ~= 0 then
             obj_mark_for_deletion(o)
         end
@@ -3164,7 +3164,7 @@ end
 function bhv_rw_spawn_star_loop(o)
     if obj_count_objects_with_behavior_id(bhvRedAndWhiteTarget) == 0 then
         obj_mark_for_deletion(o)
-        spawn_default_star(o.oPosX, o.oPosY + 230, o.oPosZ)
+        spawn_red_coin_cutscene_star(o.oPosX, o.oPosY + 230, o.oPosZ)
     end
 end
 
@@ -4698,14 +4698,14 @@ function bhv_cork_drain_water_loop(o)
     end
 
     if o.oBehParams == (4 << 24) then
-        o.oFlags = o.oFlags &~  OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+        o.oFlags                               = o.oFlags & ~OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
         o.header.gfx.disableAutomaticShadowPos = true
-        o.header.gfx.pos.x = 0
-        o.header.gfx.pos.y  = -1000
-        o.header.gfx.pos.z  = 0
+        o.header.gfx.pos.x                     = 0
+        o.header.gfx.pos.y                     = -1000
+        o.header.gfx.pos.z                     = 0
 
-        o.hitboxRadius = 110
-        o.hitboxHeight = 40
+        o.hitboxRadius                         = 110
+        o.hitboxHeight                         = 40
 
         if obj_check_hitbox_overlap(o, obj_get_nearest_object_with_behavior_id(o, bhvCorkDrainWaterREAL)) then
             obj_mark_for_deletion(o)
@@ -4720,3 +4720,51 @@ end
 
 bhvCorkDrainWater = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cork_drain_water_init, bhv_cork_drain_water_loop)
 bhvCorkDrainWaterREAL = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cork_drain_water_init, bhv_cork_drain_water_loop)
+
+---@param o Object
+function bhv_musical_fruit_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.hitboxHeight = 80
+    o.hitboxRadius = 60
+    o.oIntangibleTimer = 0
+    network_init_object(o, true, { "oAction" })
+end
+
+---@param o Object
+function bhv_musical_fruit_loop(o)
+    if o.oAction == 0 then
+        if obj_check_hitbox_overlap(o, nearest_player_to_object(o)) then
+            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource)
+            o.oAction = 1
+        end
+    end
+end
+
+bhvMusicalFruit = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_musical_fruit_init, bhv_musical_fruit_loop)
+bhvMusicalFruit2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_musical_fruit_init, bhv_musical_fruit_loop)
+bhvMusicalFruit3 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_musical_fruit_init, bhv_musical_fruit_loop)
+
+---@param o Object
+function bhv_musical_fruit_star_spawn(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    network_init_object(o, true, nil)
+end
+
+---@param o Object
+function bhv_musical_fruit_star_spawn_loop(o)
+    local near1 = obj_get_nearest_object_with_behavior_id(o, bhvMusicalFruit)
+    local near2 = obj_get_nearest_object_with_behavior_id(o, bhvMusicalFruit2)
+    local near3 = obj_get_nearest_object_with_behavior_id(o, bhvMusicalFruit3)
+
+    local nearmariostatetg = nearest_mario_state_to_object(o)
+
+    if near1 and near2 and near3 then
+        if near1.oAction == 1 and near2.oAction == 1 and near3.oAction == 1 then
+            obj_mark_for_deletion(o)
+            spawn_red_coin_cutscene_star(445, 7488, -3152)
+        end
+    end
+end
+
+bhvMusicalFruitStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_musical_fruit_star_spawn,
+    bhv_musical_fruit_star_spawn_loop)
