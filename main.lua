@@ -58,12 +58,43 @@ function particles_sparkles_bossfight(m)
     end
 end
 
+function tp_lll_2()
+    if gNetworkPlayers[0].currActNum == 5 then
+        if gNetworkPlayers[0].currLevelNum == LEVEL_LLL then
+            if gNetworkPlayers[0].currAreaIndex == 1 then
+                warp_to_warpnode(LEVEL_LLL, 2, 5, 11)
+            end
+        end
+    end
+end
+
+local jrbwath = 1
+
+function remove_water_act5_jrb(m)
+    if m.playerIndex == 0 then
+        if gNetworkPlayers[0].currActNum == 5 then
+            if gNetworkPlayers[0].currLevelNum == LEVEL_JRB then
+                if gNetworkPlayers[0].currAreaIndex == 1 then
+                    set_water_level(0, jrbwath, false)
+                    set_water_level(1, jrbwath, false)
+                    set_water_level(2, jrbwath, false)
+                end
+            end
+        end
+    end
+end
+
+function hook_level_inits()
+    tp_lll_2()
+end
+
 function mario_update_hooks(m)
     health_fix(m)
     fuzzy_dizziness(m)
     wdw_water_behavior(m)
     remove_fd(m)
     particles_sparkles_bossfight(m)
+    remove_water_act5_jrb(m)
 end
 
 function remove_all_extra_states()
@@ -78,3 +109,4 @@ end
 hook_event(HOOK_MARIO_UPDATE, mario_update_hooks)
 hook_event(HOOK_ON_DEATH, remove_all_extra_states)
 hook_event(HOOK_ON_WARP, remove_all_extra_states)
+hook_event(HOOK_ON_LEVEL_INIT, hook_level_inits)

@@ -16,6 +16,7 @@ s32 act_backward_air_kb(struct MarioState *m) {
 }]]
 
 ACT_BACKWARD_AIR_KB_MODIFIED = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_INVULNERABLE | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
+ACT_BOBOMB_GAURD_DEATH = allocate_mario_action(ACT_GROUP_CUTSCENE | ACT_FLAG_STATIONARY)
 
 
 function act_backward_air_kb_modified(m)
@@ -32,4 +33,12 @@ function act_backward_air_kb_modified(m)
     return 0;
 end
 
+function act_bobomb_gaurd_death(m)
+
+    --cant use char anim here? idk
+    common_death_handler(m, MARIO_ANIM_FIRST_PERSON, 10)
+    return 0;
+end
+
 hook_mario_action(ACT_BACKWARD_AIR_KB_MODIFIED, {every_frame = act_backward_air_kb_modified})
+hook_mario_action(ACT_BOBOMB_GAURD_DEATH, {every_frame = act_bobomb_gaurd_death})

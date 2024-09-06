@@ -71,6 +71,14 @@ function set_mario_npc_dialog(actionArg, object)
     return dialogState
 end
 
+--- @param num integer
+--- Limits an integer in the s16 range
+function s16(num)
+    num = math.floor(num) & 0xFFFF
+    if num >= 32768 then return num - 65536 end
+    return num
+end
+
 ---@param param any
 ---@param case_table table<any, function>
 ---@return function | nil
@@ -2070,6 +2078,16 @@ end
 
 local function bhv_2d_star_loop(o)
     o.oAnimState = o.oAnimState + 1
+
+    local thestar = obj_get_first_with_behavior_id(id_bhvStar)
+
+    if thestar.oBehParams ~= (5 << 24) then
+        thestar = obj_get_next_with_same_behavior_id(thestar)
+    else 
+        if thestar.oInteractStatus ~= 0 then
+            obj_mark_for_deletion(o)
+        end
+    end
 end
 
 bhv2DStar = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_2d_star_init, bhv_2d_star_loop)
@@ -4460,6 +4478,16 @@ function bobomb_buddy_gaurd_loop(o)
     if obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper) and obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper).oBehParams == o.oBehParams and obj_check_hitbox_overlap(obj_get_nearest_object_with_behavior_id(o, bhvBobombGaurdStopper), o) then
         o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
     end
+
+    if dist_between_objects(o, nearest_player_to_object(o)) < 600 then
+        nearest_mario_state_to_object(o).forwardVel = 0
+        o.oPosX = approach_f32_symmetric(o.oPosX, nearest_mario_state_to_object(o).pos.x, 50)
+        o.oPosZ = approach_f32_symmetric(o.oPosZ, nearest_mario_state_to_object(o).pos.z, 50)
+        local ggm = nearest_mario_state_to_object(o)
+        if o.oPosX == ggm.pos.x and o.oPosZ == ggm.pos.z then
+            ggm.action = ACT_BOBOMB_GAURD_DEATH
+        end
+    end
 end
 
 bhvBobombBuddyGaurd = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bobomb_buddy_gaurd_init,
@@ -4498,7 +4526,7 @@ function bhv_pink_ballon_loop(o)
     end
 
     if o.oAnimState == 4 then
-        o.oFaceAngleRoll = -15384
+        o.oFaceAngleRoll = -14384
         if o.oAction == 0 then
             o.oPosY = o.oPosY + 230
             o.oAction = 1
@@ -4523,7 +4551,7 @@ function bhv_pink_ballon_loop(o)
 
         o.oBehParams2ndByte = o.oBehParams2ndByte + 1
 
-        if o.oBehParams2ndByte > (35 * 30) then -- 35 seconds
+        if o.oBehParams2ndByte > (35 * 30) or cur_obj_is_mario_ground_pounding_platform() == 1 then -- 35 seconds
             o.oBehParams2ndByte = 0
             o.oHealth = 0
             cur_obj_set_pos_to_home()
@@ -4598,3 +4626,97 @@ end
 
 bhvJRBAirballonStand = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_airballon_jrb_stand,
     function(o) load_object_collision_model() end)
+
+
+---@param o Object
+function bhv_koopa_npc_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oInteractionSubtype = INT_SUBTYPE_NPC
+    o.oInteractType = INTERACT_TEXT
+    o.hitboxHeight = 340
+    o.hitboxRadius = 210
+    o.oIntangibleTimer = 0
+    o.oAnimations = gObjectAnimations.koopa_seg6_anims_06011364
+    cur_obj_init_animation(7)
+    obj_scale(o, 3)
+    obj_set_model_extended(o, E_MODEL_KOOPA_WITH_SHELL)
+end
+
+---@param o Object
+function bhv_koopa_npc_loop(o)
+    if o.oInteractStatus & INT_STATUS_INTERACTED ~= 0 then
+        gMarioStates[0].action = ACT_READING_NPC_DIALOG
+        if cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gNetworkPlayers[0].currActNum == 5 and DIALOG_007 or DIALOG_006) ~= 0 then
+            o.oInteractStatus = 0
+        end
+    end
+end
+
+bhvKoopaNPC = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_koopa_npc_init, bhv_koopa_npc_loop)
+
+
+---@param o Object
+function bhv_cork_drain_water_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oHealth = 1
+    o.hitboxRadius = 220
+    o.hitboxHeight = 300
+    o.hurtboxHeight = 300
+    o.oIntangibleTimer = 0
+    o.hurtboxRadius = 220
+    o.oCollisionDistance = 2000
+    o.collisionData = smlua_collision_util_get("cork_drain_water_collision")
+    cur_obj_set_home_once()
+    o.header.gfx.skipInViewCheck = true
+    network_init_object(o, true, { "oMoveAngleYaw", "oPosX", "oPosY", "oPosZ" })
+end
+
+---@param o Object
+function bhv_cork_drain_water_loop(o)
+    local marioState = nearest_mario_state_to_object(o);
+    local player = marioState.marioObj;
+    o.oPosY = find_floor_height(o.oPosX, o.oPosY, o.oPosZ)
+
+    local sp1C;
+    o.oForwardVel = 0.0;
+
+    if o.oBehParams == 0 then
+        load_object_collision_model()
+        if (player) then
+            if (obj_check_if_collided_with_object(o, player) ~= 0 and marioState and marioState.flags & MARIO_UNKNOWN_31 ~= 0) then
+                sp1C = obj_angle_to_object(o, player);
+                if (abs_angle_diff(sp1C, player.oMoveAngleYaw) > 0x4000) then
+                    o.oMoveAngleYaw = s16((player.oMoveAngleYaw));
+                    if (check_if_moving_over_floor(8.0, 150.0)) then
+                        o.oForwardVel = 5.0;
+                        cur_obj_play_sound_1(SOUND_ENV_METAL_BOX_PUSH);
+                    end
+                end
+            end
+        end
+        cur_obj_move_using_fvel_and_gravity();
+    end
+
+    if o.oBehParams == (4 << 24) then
+        o.oFlags = o.oFlags &~  OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+        o.header.gfx.disableAutomaticShadowPos = true
+        o.header.gfx.pos.x = 0
+        o.header.gfx.pos.y  = -1000
+        o.header.gfx.pos.z  = 0
+
+        o.hitboxRadius = 110
+        o.hitboxHeight = 40
+
+        if obj_check_hitbox_overlap(o, obj_get_nearest_object_with_behavior_id(o, bhvCorkDrainWaterREAL)) then
+            obj_mark_for_deletion(o)
+            spawn_red_coin_cutscene_star(-3200, 1390, 6540)
+        end
+    end
+
+    if o.oBehParams == 2 then
+        load_object_collision_model()
+    end
+end
+
+bhvCorkDrainWater = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cork_drain_water_init, bhv_cork_drain_water_loop)
+bhvCorkDrainWaterREAL = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cork_drain_water_init, bhv_cork_drain_water_loop)
