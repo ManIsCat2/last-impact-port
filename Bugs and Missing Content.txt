@@ -1,0 +1,37 @@
+SM64 Last Impact Port Known Bugs/Missing Content:
+
+This is a list of known bugs and missing content in the Last Impact Port. Will be updated as time progresses with fixes/updates
+
+Castle Grounds: Coconuts for Yoshi for CG Star 1, certain mods break compatibility after some use (ignore for now), main
+cutscene not in, goomba bros. jank, moon getting closer to CG for every star you collect
+Course 1: Wigglers are broken, Monkey is not in, weird collisions at the dandelion, dandelion needs 2 more flower spawns
+when interacted with
+Course 2: Everything lmao
+Course 3: No crabs, Weird delay with the explosives when using fireflower
+Course 4: One end of the bridge has a gap where you can clip out of bounds, Mermaids due to dialog limit, no boss
+Course 5: Flying bots don't shoot, octogoombas aren't finished yet, energy lines aren't implemented, robot mooks aren't in
+BITDW: Missing Bowser boss, Star needs to be active as Key 1, certain fire traps not active (?)
+Desolate Village: No music, orb to Gloomy2 isn't in yet, Paper Mario powerup isn't in, pipe with weird collisions, grate in
+pipe not there due to no Paper powerup
+Course 6: Chain chomp can be released when it shouldn't be able to, choco mountain doesn't erupt, yoshi mechanics aren't in
+Course 7: Mirror Boo not in, Church reds not finished (?), Prison warps being borked with other mods, guards are drunk,
+Star 4 scene isn't done properly (ignore for now), Kamek fight not in
+Course 8: Weird collisions in some places, Star 3 not there yet, both large bosses aren't finished
+Course 9: Dialog limits for Stars 1 and 3, no spider boss, bee mario doesn't deactivate when hitting water
+Shadow Factory: Certain shadow spots need fixing (ones at top), star needs to be active as Key 2
+Course 10: Boss isn't done, collision nonsense in both caves, certain mooks not implemented, some platforms/bridges are 
+missing
+Cloud2: Ship doesn't move, bullet bill turret doesn't work
+Cloud3: Ship doesn't move
+Desert: All grates gone due to no Paper powerup
+Course 11: Shark broken for almost anything, no bot mooks, weird collision with ship in acid, acid isn't ice water yet,
+The throat area has the poison DoT too large, no toad for star, frogs aren't in yet
+Course 12: Battle gauntlet isn't in yet, Roulette has too much slippery collision, Numbers 18, 26 and 34 need their triggers,
+Dumb music glitch
+Course 13: No virus boss yet, Spring Mario borked somewhat due to sm64 shiz, final red coin isn't in yet
+Course 14: Star 3 mechanic isn't in yet, Star 2 isn't fully workable, Some box platforms aren't there, no rain from clouds yet,
+woodman isn't in yet, snake lines for star 1 not implemented yet
+Course 15: Star 6 missing rolling chomps inside disco ball, cart needs more proper trajectory work, Star 4's snake isn't
+implemented
+Luna Park: Yoshi isn't done so Star 2 isn't finished
+Rashay Moon Cellar: Elevator ride scene modified, Imperfect Rashay borked without animation address point
