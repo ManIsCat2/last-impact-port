@@ -1180,6 +1180,10 @@ local function bhv_rocket_door_loop(o)
     if get_curr_star_count() >= 15 then
         obj_mark_for_deletion(o)
     end
+
+    if gFloodIsOn then
+        obj_mark_for_deletion(o)
+    end
 end
 
 bhvRocketDoor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rocket_door_init, bhv_rocket_door_loop)
@@ -1219,6 +1223,10 @@ local function bhv_rocket_loop(o)
         if o.oTimer == 50 then
             o.oAction = 0
         end
+    end
+
+    if gFloodIsOn then
+        obj_mark_for_deletion(o)
     end
 end
 
@@ -2079,7 +2087,7 @@ end
 local function bhv_2d_star_loop(o)
     o.oAnimState = o.oAnimState + 1
 
-    local thestar = obj_get_first_with_behavior_id(id_bhvStar)
+    --[[local thestar = obj_get_first_with_behavior_id(id_bhvStar)
 
     if thestar.oBehParams ~= (5 << 24) then
         thestar = obj_get_next_with_same_behavior_id(thestar)
@@ -2087,7 +2095,7 @@ local function bhv_2d_star_loop(o)
         if thestar.oInteractStatus ~= 0 then
             obj_mark_for_deletion(o)
         end
-    end
+    end]]
 end
 
 bhv2DStar = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_2d_star_init, bhv_2d_star_loop)
@@ -2110,6 +2118,10 @@ end
 ---@param o Object
 local function bhv_boat_loop(o)
     load_object_collision_model()
+
+    if gFloodIsOn then
+        obj_mark_for_deletion(o)
+    end
 
     if o.oAction == 0 then
         o.oForwardVel = 0

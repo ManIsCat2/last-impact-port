@@ -409,6 +409,13 @@ bhvAddCloudCount = hook_behavior(nil, OBJ_LIST_GENACTOR, true,
 function bhv_fire_flower_fire_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
 
+    o.oInteractType = INTERACT_FLAME
+
+    o.hurtboxRadius = 210
+    o.hurtboxHeight = 210
+
+    o.oIntangibleTimer = 0
+
     o.oGravity = 2.16
 
     o.oBounciness = 30
@@ -428,6 +435,8 @@ local fireBouncyness = 20
 ---@param o Object
 function bhv_fire_flower_fire_loop(o)
     o.oAnimState = o.oAnimState + 2
+
+    o.oInteractStatus = 0
 
     o.oForwardVel = 27
 
@@ -679,42 +688,54 @@ local flameTimer = 0
 
 ---@param m MarioState
 function ice_fire_flower_powerup(m)
-    if m.playerIndex ~= 0 then return end
-    local gMarioObject = m.marioObj
-    if gPlayerSyncTable[0].powerup == FIRE or gPlayerSyncTable[0].powerup == ICE then
-        network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT,
-            gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
-        network_player_set_override_palette_color(gNetworkPlayers[0], CAP,
-            gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
-        network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
-            network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
-        if m.controller.buttonPressed & B_BUTTON ~= 0 and numFlamesThrown ~= 3 then
-            if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK or m.action == ACT_MOVE_PUNCHING then
-                spawn_sync_object(bhvFireFlowerFire,
-                    gPlayerSyncTable[0].powerup == FIRE and E_MODEL_RED_FLAME or E_MODEL_BLUE_FLAME,
-                    m.pos.x + (sins(m.faceAngle.y) * 170),
-                    m.pos.y,
-                    m.pos.z + (coss(m.faceAngle.y) * 170),
+    if m.playerIndex == 0 then
+        local gMarioObject = m.marioObj
+        if gPlayerSyncTable[0].powerup == FIRE or gPlayerSyncTable[0].powerup == ICE then
+            network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT,
+                gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
+            network_player_set_override_palette_color(gNetworkPlayers[0], CAP,
+                gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
+            network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
+                network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
+            if m.controller.buttonPressed & B_BUTTON ~= 0 and numFlamesThrown ~= 3 then
+                if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK or m.action == ACT_MOVE_PUNCHING then
+                    spawn_sync_object(bhvFireFlowerFire,
+                        gPlayerSyncTable[0].powerup == FIRE and E_MODEL_RED_FLAME or E_MODEL_BLUE_FLAME,
+                        m.pos.x + (sins(m.faceAngle.y) * 170),
+                        m.pos.y,
+                        m.pos.z + (coss(m.faceAngle.y) * 170),
 
-                    ---@param f Object
-                    function(f)
-                        f.oMoveAngleYaw = m.faceAngle.y
-                        f.oGraphYOffset = 64
-                        f.oVelY = fireBouncyness
-                        obj_scale(f, 5)
-                    end)
+                        ---@param f Object
+                        function(f)
+                            f.oMoveAngleYaw = m.faceAngle.y
+                            f.oGraphYOffset = 64
+                            f.oVelY = fireBouncyness
+                            obj_scale(f, 5)
+                        end)
 
-                numFlamesThrown = numFlamesThrown + 1
+                    numFlamesThrown = numFlamesThrown + 1
+                end
+            end
+        end
+
+        if numFlamesThrown > 0 then
+            flameTimer = flameTimer + 1
+            if flameTimer > 100 then
+                numFlamesThrown = 0
+                flameTimer = 0
             end
         end
     end
 
-    if numFlamesThrown > 0 then
-        flameTimer = flameTimer + 1
-        if flameTimer > 100 then
-            numFlamesThrown = 0
-            flameTimer = 0
-        end
+    if gPlayerSyncTable[m.playerIndex].powerup == FIRE or gPlayerSyncTable[m.playerIndex].powerup == ICE then
+        network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], SHIRT,
+            gPlayerSyncTable[m.playerIndex].powerup == FIRE and { r = 255, g = 255, b = 255 } or
+            { r = 0, g = 255, b = 255 })
+        network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], CAP,
+        gPlayerSyncTable[m.playerIndex].powerup == FIRE and { r = 255, g = 255, b = 255 } or
+            { r = 0, g = 255, b = 255 })
+        network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], PANTS,
+            network_player_get_palette_color(gNetworkPlayers[m.playerIndex], SHIRT))
     end
 end
 
@@ -748,9 +769,9 @@ function spring_powerup(m)
         if bigBonucer then
             m.vel.y = m.vel.y + 20
             bigBouncerTime = bigBouncerTime + 1
-            if bigBouncerTime> 45 then
+            if bigBouncerTime > 45 then
                 bigBonucer = false
-                bigBouncerTime =0
+                bigBouncerTime = 0
             end
         end
         if m.action == ACT_STAR_DANCE_EXIT or m.action == ACT_STAR_DANCE_NO_EXIT or m.action == ACT_STAR_DANCE_WATER or m.action == ACT_FALL_AFTER_STAR_GRAB then
