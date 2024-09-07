@@ -11,8 +11,7 @@ Course 3: No crabs, Weird delay with the explosives when using fireflower
 Course 4: One end of the bridge has a gap where you can clip out of bounds, Mermaids due to dialog limit, no boss
 Course 5: Flying bots don't shoot, octogoombas aren't finished yet, energy lines aren't implemented, robot mooks aren't in
 BITDW: Missing Bowser boss, Star needs to be active as Key 1, certain fire traps not active (?)
-Desolate Village: No music, orb to Gloomy2 isn't in yet, Paper Mario powerup isn't in, pipe with weird collisions, grate in
-pipe not there due to no Paper powerup
+Desolate Village: Paper Mario powerup isn't in, pipe with weird collisions, grate in pipe not there due to no Paper powerup
 Course 6: Chain chomp can be released when it shouldn't be able to, choco mountain doesn't erupt, yoshi mechanics aren't in
 Course 7: Mirror Boo not in, Church reds not finished (?), Prison warps being borked with other mods, guards are drunk,
 Star 4 scene isn't done properly (ignore for now), Kamek fight not in

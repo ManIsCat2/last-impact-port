@@ -1,5 +1,5 @@
 CG (overworld 1) 100% done //ready for release
-CI (overworld 2) 85% done  //ready for release (2 bhv left, camera, cages for cannon and stuff)
+CI (overworld 2) 90% done  //ready for release (2 bhv left, camera, cages for cannon and stuff)
 CC (overworld 3) 100% done //ready for release
 
 //some levels have not been exported but exporting the level counts as progress, those are labled as: 50% - dead%.
@@ -14,7 +14,7 @@ HMC - 100% done //ready for release
 LLL - 90% done 
 SSL - 80% done
 DDD - 95% done //ready for release
-SL - 85% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
+SL - 90% done //ready for release ( some bhvs left: pink and blue enemy, behaviors in area 3)
 WDW - 95% done //ready for release (1 bhv left: shark)
 TTM - 80% done
 THI - 100% done //ready for release
@@ -28,6 +28,3 @@ COTMC - 100% done //ready for release
 TOTWC - 100% done //ready for release
 VCUTM - 100% done //ready for release
 SA - 100% done //ready for release
-
-/*Total Progress*/
-93.46% (september 6th. 11:00 AM (GMT)) (IS EXCLUDING MINIGAMES.)

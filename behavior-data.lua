@@ -71,12 +71,38 @@ function set_mario_npc_dialog(actionArg, object)
     return dialogState
 end
 
+---@param m MarioState
+---@param button number
+function is_button_down(m, button)
+    return m.controller.buttonDown & button ~= 0
+end
+
 --- @param num integer
 --- Limits an integer in the s16 range
 function s16(num)
     num = math.floor(num) & 0xFFFF
     if num >= 32768 then return num - 65536 end
     return num
+end
+
+function obj_pitch_angle_to_object(obj1, obj2)
+    --if not (obj1 and obj2) then return 0 end
+
+    local z1, x1, y1, z2, x2, y2, h, v
+    local angle
+
+    z1 = obj1.oPosZ
+    z2 = obj2.oPosZ
+    x1 = obj1.oPosX
+    x2 = obj2.oPosX
+    y1 = obj1.oPosY
+    y2 = obj2.oPosY
+
+    h = math.sqrt((z2 - z1) ^ 2 + (x2 - x1) ^ 2)
+    v = y2 - y1
+
+    angle = -atan2s(h, v)
+    return angle
 end
 
 ---@param param any
@@ -1134,6 +1160,16 @@ local function bhv_spinning_star_custom_loop(o)
     end
 end
 
+function obj_rotate_pitch_toward(o, target, increment)
+    local startPitch = o.oMoveAnglePitch
+    o.oMoveAnglePitch = approach_s16_symmetric(o.oMoveAnglePitch, target, increment)
+    o.oFaceAnglePitch = approach_s16_symmetric(o.oFaceAnglePitch, target, increment)
+
+    o.oAngleVelPitch = o.oMoveAnglePitch - startPitch
+
+    return o.oAngleVelPitch == 0
+end
+
 --bhvSpinningStar (BBH)
 hook_behavior(id_bhvStar, OBJ_LIST_LEVEL, false, nil, bhv_spinning_star_custom_loop)
 
@@ -1146,19 +1182,57 @@ local function bhv_rockshooter_init(o)
     o.hitboxRadius = 400
     o.oInteractType = INTERACT_DAMAGE
     smlua_anim_util_set_animation(o, "anim_rockshooter_idle")
-    --network_init_object(o, true, { "oAction", "oTimer" })
+    network_init_object(o, true, { "oAction", "oTimer" })
 end
+
+function red_rock_shooter_rock(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.oDamageOrCoinValue = 2
+    o.oIntangibleTimer = 0
+    o.hitboxHeight = 110
+    o.hitboxRadius = 110
+    o.oGraphYOffset = 40
+    o.oForwardVel = 10
+    o.oFriction = 1
+    spawn_mist_particles()
+    cur_obj_set_home_once()
+    o.oInteractType = INTERACT_DAMAGE
+    network_init_object(o, true, { "oPosX", "oPosY", "oPosZ" })
+end
+
+function red_rock_shooter_rock_loop(o)
+    object_step()
+    local player = nearest_player_to_object(o)
+    local distanceToPlayer = player and dist_between_objects(o, player) or 10000
+    local angleToPlayer = obj_pitch_angle_to_object(o, player)
+    obj_rotate_pitch_toward(o, angleToPlayer, 0x300)
+    --o.oVelY = -o.oForwardVel
+    o.oPosY = approach_f32_symmetric(o.oPosY, player.oPosY, 0x100)
+    if o.oInteractStatus ~= 0 then
+        spawn_mist_particles()
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvRedRockShooterRock = hook_behavior(nil, OBJ_LIST_GENACTOR, true, red_rock_shooter_rock, red_rock_shooter_rock_loop)
 
 ---@param o Object
 local function bhv_rockshooter_loop(o)
     o.oInteractStatus = 0
+    local m = nearest_mario_state_to_object(o)
     if dist_between_objects(o, nearest_player_to_object(o)) < 5400 then
         o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
             0x130)
+        local player = nearest_player_to_object(o)
+        local distanceToPlayer = player and dist_between_objects(o, player) or 10000
+        local angleToPlayer = obj_pitch_angle_to_object(o, player)
+        obj_rotate_pitch_toward(o, angleToPlayer, 0x100)
+        o.oVelY = -o.oForwardVel
+        o.oPosY = o.oPosY + o.oVelY * sins(o.oFaceAnglePitch)
         o.oSubAction = o.oSubAction + 1
         if o.oSubAction > (6 * 30) then -- 6 seconds
             o.oSubAction = 0
-            --spawn_object(o, MODEL_OCTOOMBA_ROCK, id_bhvBulletBill)
+            --spawn_object2(o, MODEL_OCTOOMBA_ROCK, bhvRedRockShooterRock)
         end
     end
 end
@@ -2427,15 +2501,39 @@ end
 hook_behavior(id_bhvLllRotatingHexagonalPlatform, OBJ_LIST_SURFACE, true, bhv_sl_explodeable_object_init,
     bhv_sl_explodeable_object_loop)
 
+---@param o Object
+---@param action integer
+function obj_set_action(o, action)
+    o.oAction = action
+end
+
 local function bhv_konami_code_gate(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
     o.oCollisionDistance = 2000
     o.collisionData = smlua_collision_util_get("konami_code_gate_collision")
+    network_init_object(o, true, { "oPosY", "oAction" })
 end
 
+KONAMI_CODE_GATE_ACT_CLOSED = 0
+KONAMI_CODE_GATE_ACT_OPENED = 1
+
+-- code is [A] [B] [Z]
 local function bhv_konami_code_gate_loop(o)
-    load_object_collision_model() --not done yet
+    load_object_collision_model()
+
+    local m = nearest_mario_state_to_object(o)
+    if o.oAction == KONAMI_CODE_GATE_ACT_CLOSED then
+        if is_button_down(m, Z_TRIG) and is_button_down(m, B_BUTTON) and is_button_down(m, A_BUTTON) then
+            obj_set_action(o, KONAMI_CODE_GATE_ACT_OPENED)
+            play_puzzle_jingle()
+        end
+    elseif o.oAction == KONAMI_CODE_GATE_ACT_OPENED then
+        o.oPosY = o.oPosY - 5
+        if o.oPosY < -300 then
+            obj_mark_for_deletion(o)
+        end
+    end
 end
 
 bhvKonamiCodeGate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_konami_code_gate, bhv_konami_code_gate_loop)
