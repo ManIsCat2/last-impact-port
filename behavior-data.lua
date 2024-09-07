@@ -4782,3 +4782,21 @@ end
 
 bhvMusicalFruitStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_musical_fruit_star_spawn,
     bhv_musical_fruit_star_spawn_loop)
+
+
+---@param o Object
+function bhv_weird_floating_orb_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+end
+
+---@param o Object
+function bhv_weird_floating_orb_loop(o)
+    o.oFaceAnglePitch = o.oFaceAnglePitch + 100
+    o.oFaceAngleRoll = o.oFaceAngleRoll + 313
+    o.header.gfx.scale.x = absf_2(math_sin(o.oTimer / 100) * 2)
+    o.header.gfx.scale.y = absf_2(math_sin(o.oTimer / 120) * 2)
+    o.oPosY = o.oPosY + math_sin(o.oTimer / 130)
+end
+
+bhvWeirdFloatingOrb = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_weird_floating_orb_init,
+    bhv_weird_floating_orb_loop)

@@ -1,20 +1,3 @@
---[[
-#define ACT_BACKWARD_AIR_KB            0x010208B0 // (0x0B0 | ACT_FLAG_AIR | ACT_FLAG_INVULNERABLE | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
-
-s32 act_backward_air_kb(struct MarioState *m) {
-    if (check_wall_kick(m)) {
-        return TRUE;
-    }
-
-#ifndef VERSION_JP
-    play_knockback_sound(m);
-#else
-    play_character_sound_if_no_flag(m, CHAR_SOUND_UH, MARIO_MARIO_SOUND_PLAYED);
-#endif
-    common_air_knockback_step(m, ACT_BACKWARD_GROUND_KB, ACT_HARD_BACKWARD_GROUND_KB, 0x0002, -16.0f);
-    return FALSE;
-}]]
-
 ACT_BACKWARD_AIR_KB_MODIFIED = allocate_mario_action(ACT_FLAG_AIR | ACT_FLAG_INVULNERABLE | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
 ACT_BOBOMB_GAURD_DEATH = allocate_mario_action(ACT_GROUP_CUTSCENE | ACT_FLAG_STATIONARY)
 
