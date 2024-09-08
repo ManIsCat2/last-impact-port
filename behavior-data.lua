@@ -4937,6 +4937,8 @@ function bhv_virus_boss_init(o)
     cur_obj_set_home_once()
 
     smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
+
+    network_init_object(o, true, {"oAction", "oAnimState", "oSubAction", "oInteractStatus", "oHealth"})
 end
 
 VIRUS_IDLE = 0
@@ -4955,8 +4957,8 @@ function bhv_virus_boss_loop(o)
 
     if o.oAction == VIRUS_IDLE then
         smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
-        if dist_between_objects(o, nearplayer) < 1900 then
-            if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 and o.oBehParams == 0 then
+        if dist_between_objects(o, nearplayer) < 2100 then
+            if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
                 o.oAction = VIRUS_JUMP_TO_MARIO
             end
         end
@@ -5006,7 +5008,6 @@ function bhv_virus_boss_loop(o)
             o.oForwardVel = 0
             o.oAction = 0
             o.oAnimState = 0
-            o.oBehParams = 1
             if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
                 obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oAction = VIRUS_JUMP_TO_MARIO
                 obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oPosX = o.oHomeX

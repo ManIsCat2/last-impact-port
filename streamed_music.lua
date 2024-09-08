@@ -7,7 +7,7 @@ local debugsound = {
     [streamed_mmm_fire] = "friee",
 }
 
-local default_volume = 0.6
+local default_volume = 0.9
 local currentAudio
 
 ---@param audio ModAudio
