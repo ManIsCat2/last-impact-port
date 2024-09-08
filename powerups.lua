@@ -428,6 +428,9 @@ function bhv_fire_flower_fire_init(o)
     o.oFriction = 1
 
     o.oHealth = 0
+
+    o.oGraphYOffset = 64
+    obj_scale(o, 5)
     obj_set_billboard(o)
 
     network_init_object(o, true, { "oVelY", "oHealth" })
@@ -559,6 +562,10 @@ function bee_update(m)
     end
     if m.action & ACT_FLAG_AIR == 0 then
         gPlayerSyncTable[0].energyBar = 72
+    end
+
+    if m.action & ACT_FLAG_SWIMMING ~= 0 then
+        gPlayerSyncTable[0].powerup = NORMAL
     end
 end
 
@@ -723,9 +730,7 @@ function ice_fire_flower_powerup(m)
                         ---@param f Object
                         function(f)
                             f.oMoveAngleYaw = m.faceAngle.y
-                            f.oGraphYOffset = 64
                             f.oVelY = fireBouncyness
-                            obj_scale(f, 5)
                         end)
 
                     numFlamesThrown = numFlamesThrown + 1

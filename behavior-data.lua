@@ -4938,7 +4938,7 @@ function bhv_virus_boss_init(o)
 
     smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
 
-    network_init_object(o, true, {"oAction", "oAnimState", "oSubAction", "oInteractStatus", "oHealth"})
+    network_init_object(o, true, { "oAction", "oAnimState", "oSubAction", "oInteractStatus", "oHealth", "oCapUnkF4" })
 end
 
 VIRUS_IDLE = 0
@@ -4972,27 +4972,79 @@ function bhv_virus_boss_loop(o)
         o.oFriction = 1
         local stepObjResult = object_step()
         if stepObjResult & OBJ_COL_FLAG_GROUNDED == 1 then
+            o.oVelY = 0
             o.oForwardVel = 0
             o.oAction = VIRUS_WALK
+            o.oSubAction = 0
         end
     elseif o.oAction == VIRUS_WALK then
         smlua_anim_util_set_animation(o, "anim_virus_boss_walk")
         cur_obj_move_standard(-78)
         cur_obj_update_floor_and_walls()
 
+        o.oSubAction = o.oSubAction + 1
+
         o.oGravity = -2
+
+        if o.oSubAction > 45 then
+            o.oSubAction = 0
+            if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
+                o.oAction = VIRUS_WIND_BEND
+            end
+
+            if obj_has_behavior_id(o, bhvVirusBossRed) ~= 0 then
+                o.oAction = VIRUS_THROW_FIRE
+                spawn_object2(o, E_MODEL_RED_FLAME, bhvFireFlowerFire)
+            end
+
+            if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
+                o.oAction = VIRUS_SCALE_BIG
+            end
+        end
 
         if (o.oMoveFlags & OBJ_MOVE_HIT_EDGE) ~= 0 then
             o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
         end
         o.oForwardVel = 12
         cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearplayer), 0x230)
+    elseif o.oAction == VIRUS_WIND_BEND then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_wind_bend")
+        spawn_object(o, E_MODEL_WHITE_PARTICLE, id_bhvStrongWindParticle)
+        cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearplayer), 0x230)
 
-        if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
-            o.oInteractStatus = 0
-            o.oAction = VIRUS_ATTACKED
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 15 then
+            o.oSubAction = 0
+            o.oAction = VIRUS_WALK
+        end
+    elseif o.oAction == VIRUS_THROW_FIRE then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_throw_fire")
+
+
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 5 then
+            o.oSubAction = 0
+            o.oAction = VIRUS_WALK
+        end
+    elseif o.oAction == VIRUS_SCALE_BIG then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
+        o.oSubAction = o.oSubAction + 1
+        if o.oSubAction > 70 then
+            o.oSubAction = 0
+            o.oAction = VIRUS_WALK
+            obj_scale(o, 1)
+            o.oCapUnkF4 = 0
         else
-            o.oInteractStatus = 0
+            o.oCapUnkF4 = o.oCapUnkF4 + 1
+            if o.oCapUnkF4 < 40 then
+                o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 6, 0.1)
+                o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 6, 0.1)
+                o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 6, 0.1)
+            else
+                o.header.gfx.scale.y = approach_f32_symmetric(o.header.gfx.scale.y, 1, 0.1)
+                o.header.gfx.scale.x = approach_f32_symmetric(o.header.gfx.scale.x, 1, 0.1)
+                o.header.gfx.scale.z = approach_f32_symmetric(o.header.gfx.scale.z, 1, 0.1)
+            end
         end
     elseif o.oAction == VIRUS_ATTACKED then
         smlua_anim_util_set_animation(o, "anim_virus_boss_die")
@@ -5034,6 +5086,17 @@ function bhv_virus_boss_loop(o)
                 spawn_red_coin_cutscene_star(11440, 176, -5130)
             end
         end
+    end
+
+    if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+        o.oInteractStatus = 0
+        o.oAction = VIRUS_ATTACKED
+        if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
+            obj_scale(o, 1)
+            o.oCapUnkF4 = 0
+        end
+    else
+        o.oInteractStatus = 0
     end
 end
 
