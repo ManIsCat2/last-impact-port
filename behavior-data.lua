@@ -4960,6 +4960,8 @@ function bhv_virus_boss_loop(o)
         if dist_between_objects(o, nearplayer) < 2100 then
             if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
                 o.oAction = VIRUS_JUMP_TO_MARIO
+                set_background_music(0, 0x3d, 0)
+                audio_stop_all()
             end
         end
     elseif o.oAction == VIRUS_JUMP_TO_MARIO then
@@ -5004,6 +5006,12 @@ function bhv_virus_boss_loop(o)
 
         if (o.oMoveFlags & OBJ_MOVE_HIT_EDGE) ~= 0 then
             o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
+        end
+        if dist_between_objects(o, gMarioStates[0].marioObj) < 2300 then
+            --[[if currentAudio == streamed_collosal_circuits then
+                set_background_music(0, 0x3d, 0)
+                audio_stop_all()
+            end]]
         end
         o.oForwardVel = 12
         cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearplayer), 0x230)
@@ -5081,9 +5089,12 @@ function bhv_virus_boss_loop(o)
 
             if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
                 obj_mark_for_deletion(o)
+                set_background_music(0, 0, 0)
+                play_seq_streamed(streamed_collosal_circuits)
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue))
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed))
                 spawn_red_coin_cutscene_star(11440, 176, -5130)
+                network_send_object(o, true)
             end
         end
     end

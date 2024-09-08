@@ -40,6 +40,7 @@ smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried ho
 smlua_audio_utils_replace_sequence(0x38, 0x17, 75, "38_Seq_custom")
 smlua_audio_utils_replace_sequence(0x3A, 0xC, 80, "3A_Seq_custom")
 smlua_audio_utils_replace_sequence(0x3C, 0x14, 80, "3C_Seq_custom") --broken song //uses streamed music
+smlua_audio_utils_replace_sequence(0x3D, 25, 80, "3D_Seq_custom") -- virus boss
 smlua_audio_utils_replace_sequence(0x3F, 0x25, 75, "3F_Seq_custom")
 smlua_audio_utils_replace_sequence(0x3E, 0x0C, 75, "3E_Seq_custom") --starlight zone
 smlua_audio_utils_replace_sequence(0x40, 0x11, 75, "40_Seq_custom") --gamble game gallery

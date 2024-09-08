@@ -1,4 +1,4 @@
-local streamed_collosal_circuits = audio_stream_load("ColossalCircuits.mp3")
+streamed_collosal_circuits = audio_stream_load("ColossalCircuits.mp3")
 local streamed_mmm_fire = audio_stream_load("MeltyMoltenMountainsFireside.mp3")
 local streamed_mmm_ice = audio_stream_load("MeltyMoltenMountainsIceside.mp3")
 
@@ -8,10 +8,10 @@ local debugsound = {
 }
 
 local default_volume = 0.9
-local currentAudio
+currentAudio = nil
 
 ---@param audio ModAudio
-local function play_seq_streamed(audio)
+function play_seq_streamed(audio)
     audio_stream_set_looping(audio, true)
     audio_stream_play(audio, true, default_volume)
     currentAudio = audio
@@ -24,9 +24,10 @@ local audios = {
     { course = 27,         audio = streamed_mmm_ice,           area = 1 },
 }
 
-local function audio_stop_all()
+function audio_stop_all()
     for i = 1, #audios do
         audio_stream_stop(audios[i].audio)
+        currentAudio = nil
     end
 end
 
