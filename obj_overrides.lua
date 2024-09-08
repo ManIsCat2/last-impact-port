@@ -44,3 +44,11 @@ local function act_selector_init(o)
 end
 
 hook_behavior(id_bhvActSelector, OBJ_LIST_DEFAULT, false, act_selector_init, nil)
+
+-- Unpoundable Wooden Post
+
+local function unpoundable_wooden_post_loop(o)
+    o.oWoodenPostSpeedY = 0
+end
+
+hook_behavior(id_bhvWoodenPost, OBJ_LIST_SURFACE, false, nil, unpoundable_wooden_post_loop)

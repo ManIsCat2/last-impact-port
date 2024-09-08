@@ -10,6 +10,10 @@ if _G.OmmEnabled then
         -- Level stars --
         -----------------
         
+        --------------------
+        -- Star behaviors --
+        --------------------
+        
         _G.OmmApi.omm_register_star_behavior(bhvWhompNPC, "Whomp NPC", "WHOMP NPC", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(id_bhvParentAndChildRabbit, "Mips Parent and Child", "MIPS PARENT AND CHILD", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvUnderCoverMagikoopa, "Undercover Witch", "UNDERCOVER WITCH", function(bhvParams) return true end)
@@ -22,9 +26,6 @@ if _G.OmmEnabled then
         _G.OmmApi.omm_register_star_behavior(bhvCorkDrainWater, "Cork", "CORK", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvMusicalFruitStarSpawn, "Musical Fruits", "MUSICAL FRUITS", function(bhvParams) return true end)
 
-        --------------------
-        -- Star behaviors --
-        --------------------
 
         --------------------
         -- Camera presets --

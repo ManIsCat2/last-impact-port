@@ -36,7 +36,6 @@ Course 4 - Crystal Caves:
 
 Course 5 - Abandoned Outpost:
 --Flying bots don't shoot
---Octogoombas aren't finished yet, need proper behaviors to shoot and to not fall off of any ledge/platform they're on
 --Energy lines aren't implemented
 --Robot mooks in blue zone aren't in
 
@@ -52,7 +51,6 @@ OW2 - Desolate Village:
 --Music is in but needs fixing to properly be sequences with instruments
 
 Course 6 - Super Sweet Sugarland:
---Chain chomp can be released when it shouldn't be able to
 --Choco mountain doesn't erupt
 --Yoshi mechanics aren't in, edible candies can't be added without yoshi's mechanics being finished
 
@@ -63,7 +61,6 @@ Course 7 - Dusky Doomed Dale:
 --Guards are drunk, can break through walls and behaviors are messed up with detections out the butt
 --Star 4 scene isn't done properly (ignore for now),
 --Kamek fight not in
---Kamek's rod can be picked up in any star act, it should be only active in Star 4
 
 Course 8 - Melty Molten Mountains:
 --Weird collisions in some places

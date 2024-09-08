@@ -585,6 +585,7 @@ local function bhv_flower_generator_init(o)
     o.oIntangibleTimer = 0
     o.collisionData = smlua_collision_util_get("bob_flower_generator_collision")
     smlua_anim_util_set_animation(o, "anim_flower_generator")
+    network_init_object(o, true, { "oAction", "oTimer", "oDoorUnk100" })
 end
 
 MODEL_WHITE_FLOWER = smlua_model_util_get_id("bob_white_flower_geo")
@@ -1006,7 +1007,7 @@ local function bhv_octooomba_init(o)
     o.hitboxRadius = 100
     o.oIntangibleTimer = 0
     o.oDamageOrCoinValue = 2
-    o.oGravity = 3
+    o.oGravity = -3
     o.oFriction = 1
     o.oBuoyancy = 1
     o.oNumLootCoins = 1
@@ -1018,7 +1019,9 @@ end
 local function bhv_octooomba_loop(o)
     smlua_anim_util_set_animation(o, "anim_octoomba")
     --djui_chat_message_create(tostring(o.oDistanceToMario))
-    object_step()
+    cur_obj_move_standard(-78)
+    cur_obj_update_floor_and_walls()
+    cur_obj_if_hit_wall_bounce_away()
 
     if o.oAction == 0 then
         o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
@@ -1040,21 +1043,21 @@ local function bhv_octooomba_loop(o)
             o.oForwardVel = 0
         end
 
-        if o.oSubAction > 120 then
+        if o.oSubAction > 70 then
             o.oHiddenBlueCoinSwitch = spawn_object2(o, MODEL_OCTOOMBA_ROCK, bhvOctoombaRock)
             o.oHiddenBlueCoinSwitch.oAction = 1
             o.oHiddenBlueCoinSwitch.oHiddenBlueCoinSwitch = o
             o.oSubAction = 0
         end
     elseif o.oAction == 1 then
+        spawn_mist_particles()
+        obj_mark_for_deletion(o)
+        cur_obj_play_sound_1(SOUND_OBJ_DEFAULT_DEATH)
+        obj_spawn_yellow_coins(o, o.oNumLootCoins)
+    end
+
+    if (o.oMoveFlags & OBJ_MOVE_HIT_EDGE) ~= 0 then
         o.oForwardVel = 0
-        obj_scale_xyz(o, 1, 0.1, 1)
-        if o.oTimer > 25 then
-            spawn_mist_particles()
-            obj_mark_for_deletion(o)
-            cur_obj_play_sound_1(SOUND_OBJ_DEFAULT_DEATH)
-            obj_spawn_yellow_coins(o, o.oNumLootCoins)
-        end
     end
 end
 

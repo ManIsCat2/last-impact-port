@@ -51,7 +51,7 @@ EXIT(),
 const LevelScript local_area_ssl_1_[] = {
 AREA(1,Geo_ssl_1_0x1781700),
 TERRAIN(col_ssl_1_0xe0bfd80),
-SET_BACKGROUND_MUSIC(0,0),
+SET_BACKGROUND_MUSIC(0,47),
 TERRAIN_TYPE(0),
 JUMP_LINK(local_objects_ssl_1_),
 JUMP_LINK(local_warps_ssl_1_),
