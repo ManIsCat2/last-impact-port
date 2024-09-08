@@ -2,35 +2,149 @@ SM64 Last Impact Port Known Bugs/Missing Content:
 
 This is a list of known bugs and missing content in the Last Impact Port. Will be updated as time progresses with fixes/updates
 
-Castle Grounds: Coconuts for Yoshi for CG Star 1, certain mods break compatibility after some use (ignore for now), main
-cutscene not in, goomba bros. jank, moon getting closer to CG for every star you collect
-Course 1: Wigglers are broken, Monkey is not in, weird collisions at the dandelion, dandelion needs 2 more flower spawns
-when interacted with
-Course 2: Everything lmao
-Course 3: No crabs, Weird delay with the explosives when using fireflower
-Course 4: One end of the bridge has a gap where you can clip out of bounds, Mermaids due to dialog limit, no boss
-Course 5: Flying bots don't shoot, octogoombas aren't finished yet, energy lines aren't implemented, robot mooks aren't in
-BITDW: Missing Bowser boss, Star needs to be active as Key 1, certain fire traps not active (?)
-Desolate Village: Paper Mario powerup isn't in, pipe with weird collisions, grate in pipe not there due to no Paper powerup
-Course 6: Chain chomp can be released when it shouldn't be able to, choco mountain doesn't erupt, yoshi mechanics aren't in
-Course 7: Mirror Boo not in, Church reds not finished (?), Prison warps being borked with other mods, guards are drunk,
-Star 4 scene isn't done properly (ignore for now), Kamek fight not in
-Course 8: Weird collisions in some places, Star 3 not there yet, both large bosses aren't finished
-Course 9: Dialog limits for Stars 1 and 3, no spider boss, bee mario doesn't deactivate when hitting water
-Shadow Factory: Certain shadow spots need fixing (ones at top), star needs to be active as Key 2
-Course 10: Boss isn't done, collision nonsense in both caves, certain mooks not implemented, some platforms/bridges are 
-missing
-Cloud2: Ship doesn't move, bullet bill turret doesn't work
-Cloud3: Ship doesn't move
-Desert: All grates gone due to no Paper powerup
-Course 11: Shark broken for almost anything, no bot mooks, weird collision with ship in acid, acid isn't ice water yet,
-The throat area has the poison DoT too large, no toad for star, frogs aren't in yet
-Course 12: Battle gauntlet isn't in yet, Roulette has too much slippery collision, Numbers 18, 26 and 34 need their triggers,
-Dumb music glitch
-Course 13: No virus boss yet, Spring Mario borked somewhat due to sm64 shiz, final red coin isn't in yet
-Course 14: Star 3 mechanic isn't in yet, Star 2 isn't fully workable, Some box platforms aren't there, no rain from clouds yet,
-woodman isn't in yet, snake lines for star 1 not implemented yet
-Course 15: Star 6 missing rolling chomps inside disco ball, cart needs more proper trajectory work, Star 4's snake isn't
-implemented
-Luna Park: Yoshi isn't done so Star 2 isn't finished
-Rashay Moon Cellar: Elevator ride scene modified, Imperfect Rashay borked without animation address point
+Please take note: Anything missing that includes dialog and/or cutscenes cannot make it into this port due to Coop's dialog
+limitations. Until coop is updated with higher dialog/cutscene trig limits, any content related to those that cannot be
+modified properly cannot be added to this port.
+
+OW1 - Castle Grounds: 
+--Coconuts for Yoshi for CG Star 1
+--Certain mods break compatibility after some use (ignore for now)
+--Opening cutscene not in
+--Both goomba bros. encounters are broken due to dialog limit
+--Moon getting closer to CG for every star you collect
+--Cutscene for Moon in the distance after a certain star count in beginning
+--Cutscene of Peach getting kidnapped by Rashay when Key 1 and 45 stars are collected
+
+Course 1 - Wildlife Valley:
+--Wigglers are broken
+--Monkey is not in due to import failure of model and armature
+--Weird collisions at the dandelion
+--Dandelion needs 2 more flower spawns to make 3 total when interacted with
+
+Course 2 - Stonesnake Shatters:
+--Everything lmao
+
+Course 3 - Sunset Islet:
+--No crabs due to export failure
+--Weird delay with the explosives when using fireflower
+
+Course 4 - Crystal Caves:
+--One end of the bridge has a gap where you can clip out of bounds
+--Mermaids due to dialog limit, including any stars related to them
+--Giant whale boss
+--Music change trigger to mermaid cove isn't in
+
+Course 5 - Abandoned Outpost:
+--Flying bots don't shoot
+--Octogoombas aren't finished yet, need proper behaviors to shoot and to not fall off of any ledge/platform they're on
+--Energy lines aren't implemented
+--Robot mooks in blue zone aren't in
+
+Bowser's Fiery Castle:
+--Missing Bowser boss
+--Star needs to be active as Key 1
+--Certain fire traps not active (?)
+
+OW2 - Desolate Village:
+--Paper Mario powerup isn't in
+--Pipe to Drybone Desert has weird collisions
+--Grate in pipe not there due to no Paper powerup
+--Music is in but needs fixing to properly be sequences with instruments
+
+Course 6 - Super Sweet Sugarland:
+--Chain chomp can be released when it shouldn't be able to
+--Choco mountain doesn't erupt
+--Yoshi mechanics aren't in, edible candies can't be added without yoshi's mechanics being finished
+
+Course 7 - Dusky Doomed Dale:
+--Mirror Boo not in
+--Church reds not finished (?)
+--Prison warps being borked with other mods
+--Guards are drunk, can break through walls and behaviors are messed up with detections out the butt
+--Star 4 scene isn't done properly (ignore for now),
+--Kamek fight not in
+--Kamek's rod can be picked up in any star act, it should be only active in Star 4
+
+Course 8 - Melty Molten Mountains:
+--Weird collisions in some places
+--Star 3 not there yet due to puzzle and boulder mechanics not implemented in
+--Both large bosses aren't finished
+--Music transition triggers need more work
+
+Course 9 - Harried Honey Hive:
+--Dialog limits for Stars 1, 2 and 3 (Guards, bee racer and queen can't progress dialog)
+--No spider boss
+--Bee Mario doesn't deactivate when hitting water
+
+Shadow Factory:
+--Certain shadow spots need fixing (ones at top with rotations)
+--Star needs to be active as Key 2
+--Dark Mario boss music trigger isn't in
+
+Course 10 - Sky-High Islands:
+--Epic Kurma Koopa boss not in yet
+--Collision nonsense in both caves
+--Certain mooks not implemented
+--Some platforms/bridges are missing
+--Important NPCs and Triggers aren't implemented yet for certain stars
+
+Above theClouds 2:
+--Ship doesn't move
+--Bullet bill turret doesn't work, needs behaviors
+
+Above the Clouds 3:
+--Ship doesn't move
+
+Drybone Desert:
+--All grates gone due to no Paper powerup
+
+Gloomy Ambience 1:
+--Calculator isn't implemented
+
+Gloomy Ambience 2:
+--Shadow mechanic isn't implemented yet
+
+Course 11 - Big Beast's Belly:
+--Shark broken for almost anything (Has its own unique custom behavior to be an object to interact,tied to acid level behaviors)
+--Wall robots not in yet
+--Weird collision with ship in acid
+--Acid isn't ice water yet
+--Inner throat area has the poison DoT too large
+--No aged toad for star
+--Frog Concert not in yet
+--Wall for Star 1 to block MIPS rabbit failed to export, button is useless
+
+Course 12 - Gamble Game Gallery:
+--Battle gauntlet isn't in yet
+--Roulette has too much slippery collision
+--Within the roulette area, Numbers 18, 26 and 34 need their triggers (18 and 34 are coins, 26 is the star)
+--Dumb music glitch, needs to be louder
+--Pinata NPCs have dialog limits
+--Pinball machine isn't finished yet (missing bumpers, some reds and the flippers)
+
+Course 13 - Colossal Circuits:
+--No virus boss yet
+--Spring Mario borked somewhat due to sm64 shiz
+--Final red coin isn't in yet (rolling battery custom behavior and object)
+
+Course 14 - Livid Surreal Dream:
+--Star 2 mechanic isn't active
+--Star 3 mechanic isn't in yet
+--Some box platforms aren't there
+--No rain from all clouds yet
+--Woodman isn't in yet
+--Giant snake lines for star 1 not implemented yet
+
+Course 15 - Rainbow Road:
+--Star 6 missing rolling chomps inside disco ball
+--Cart needs more proper trajectory work,
+--Star 4's rainbow snake isn't implemented
+
+Luna Park:
+--Yoshi isn't done so Star 2 isn't finished (Breaking targets with yoshi eggs)
+
+Rashay's Moon Cellar:
+--Elevator ride scene modified (Shields don't break and disappear)
+--Towers colors don't deactivate
+--Both stars need to be reprogramed to be "stay in level"
+--Imperfect Rashay borked without animation address point
