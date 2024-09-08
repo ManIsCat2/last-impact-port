@@ -14,6 +14,11 @@ OW1 - Castle Grounds:
 --Moon getting closer to CG for every star you collect
 --Cutscene for Moon in the distance after a certain star count in beginning
 --Cutscene of Peach getting kidnapped by Rashay when Key 1 and 45 stars are collected
+--Inner cave texture to tunnel isn't there
+
+Underground Tunnel:
+--Lava bubble sound effects not in
+--Texture for entryway to cave not there
 
 Course 1 - Wildlife Valley:
 --Wigglers are broken
@@ -84,7 +89,7 @@ Course 10 - Sky-High Islands:
 --Some platforms/bridges are missing
 --Important NPCs and Triggers aren't implemented yet for certain stars
 
-Above theClouds 2:
+Above the Clouds 2:
 --Ship doesn't move
 --Bullet bill turret doesn't work, needs behaviors
 
@@ -101,7 +106,7 @@ Gloomy Ambience 2:
 --Shadow mechanic isn't implemented yet
 
 Course 11 - Big Beast's Belly:
---Shark broken for almost anything (Has its own unique custom behavior to be an object to interact,tied to acid level behaviors)
+--Shark broken for almost anything (Has its own unique custom behavior to be an object to interact, tied to acid level behaviors)
 --Wall robots not in yet
 --Weird collision with ship in acid
 --Acid isn't ice water yet
@@ -142,3 +147,10 @@ Rashay's Moon Cellar:
 --Towers colors don't deactivate
 --Both stars need to be reprogramed to be "stay in level"
 --Imperfect Rashay borked without animation address point
+
+Global Bugs/Missing Content Not Tied to Levels:
+--Oxygen meter not implemented
+--Both Fireflower and Iceflower powerups can be rapid-spammed midair
+--Bee powerup fly meter not implemented
+--HUD only appearing for specific interactions (1 ups/life lost, coin collections, star get, damage/recovery)
+--Bridges in Course 4 and Underground Tunnel has weight interactions not implemented yet
