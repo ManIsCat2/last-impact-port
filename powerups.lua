@@ -411,8 +411,11 @@ function bhv_fire_flower_fire_init(o)
 
     o.oInteractType = INTERACT_FLAME
 
-    o.hurtboxRadius = 210
-    o.hurtboxHeight = 210
+    --o.hurtboxRadius = 210
+    --o.hurtboxHeight = 210
+
+    o.hitboxRadius = 80
+    o.hitboxHeight = 80
 
     o.oIntangibleTimer = 0
 
@@ -449,6 +452,18 @@ function bhv_fire_flower_fire_loop(o)
 
     if o.oHealth >= 4 then
         obj_mark_for_deletion(o)
+    end
+
+    local sFireFlowerFireKills = {
+        id_bhvGoomba,
+        id_bhvScuttlebug,
+        id_bhvSpindrift,
+    }
+
+    for i = 1, #sFireFlowerFireKills do
+        if obj_check_hitbox_overlap(o, obj_get_nearest_object_with_behavior_id(o, sFireFlowerFireKills[i])) then
+            obj_get_nearest_object_with_behavior_id(o, sFireFlowerFireKills[i]).oInteractStatus = (INT_STATUS_INTERACTED | ATTACK_KICK_OR_TRIP  | INT_STATUS_WAS_ATTACKED)
+        end
     end
 end
 
@@ -732,7 +747,7 @@ function ice_fire_flower_powerup(m)
             gPlayerSyncTable[m.playerIndex].powerup == FIRE and { r = 255, g = 255, b = 255 } or
             { r = 0, g = 255, b = 255 })
         network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], CAP,
-        gPlayerSyncTable[m.playerIndex].powerup == FIRE and { r = 255, g = 255, b = 255 } or
+            gPlayerSyncTable[m.playerIndex].powerup == FIRE and { r = 255, g = 255, b = 255 } or
             { r = 0, g = 255, b = 255 })
         network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], PANTS,
             network_player_get_palette_color(gNetworkPlayers[m.playerIndex], SHIRT))

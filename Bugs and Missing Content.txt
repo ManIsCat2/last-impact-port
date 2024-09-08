@@ -123,7 +123,6 @@ Course 12 - Gamble Game Gallery:
 --Pinball machine isn't finished yet (missing bumpers, some reds and the flippers)
 
 Course 13 - Colossal Circuits:
---No virus boss yet
 --Spring Mario borked somewhat due to sm64 shiz
 --Final red coin isn't in yet (rolling battery custom behavior and object)
 

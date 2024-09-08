@@ -30,6 +30,11 @@ local repack = function(value, pack_fmt, unpack_fmt)
     return string.unpack(unpack_fmt, string.pack(pack_fmt, value))
 end
 
+obj_delete_if_flood = function(obj)
+    if gFloodIsOn then
+        obj_mark_for_deletion(obj)
+    end
+end
 -- (can) place Mario in dialog?
 -- initiate dialog?
 -- return values:
@@ -136,6 +141,18 @@ function is_star_colected(course, star, is100star)
     else
         return false
     end
+end
+
+function obj_get_model_id(obj)
+    if (obj ~= nil) then
+        ---@type ModelExtendedId
+        for i = E_MODEL_NONE, E_MODEL_MAX - 1 do
+            if (obj_has_model_extended(obj, i) ~= 0) then
+                return i;
+            end
+        end
+    end
+    return E_MODEL_NONE;
 end
 
 ---@param obj Object
@@ -500,6 +517,7 @@ local function bhv_taptap_loop(o)
         end
     elseif o.oAction == 1 then
         o.oGraphYOffset = o.oGraphYOffset - 4
+        o.oInteractType = 0
         o.oForwardVel = 0
         o.oBowserUnk106 = o.oBowserUnk106 + 1
         if o.oBowserUnk106 > 80 then
@@ -1255,9 +1273,7 @@ local function bhv_rocket_door_loop(o)
         obj_mark_for_deletion(o)
     end
 
-    if gFloodIsOn then
-        obj_mark_for_deletion(o)
-    end
+    obj_delete_if_flood(o)
 end
 
 bhvRocketDoor = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_rocket_door_init, bhv_rocket_door_loop)
@@ -1299,9 +1315,7 @@ local function bhv_rocket_loop(o)
         end
     end
 
-    if gFloodIsOn then
-        obj_mark_for_deletion(o)
-    end
+    obj_delete_if_flood(o)
 end
 
 bhvRocket = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_rocket_init, bhv_rocket_loop)
@@ -1934,6 +1948,8 @@ local function bhv_cg_20_gate_loop(o)
     if get_curr_star_count() >= 20 then
         obj_mark_for_deletion(o)
     end
+
+    obj_delete_if_flood(o)
 end
 
 bhvCG20Gate = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cg_20_gate_init, bhv_cg_20_gate_loop)
@@ -2193,9 +2209,7 @@ end
 local function bhv_boat_loop(o)
     load_object_collision_model()
 
-    if gFloodIsOn then
-        obj_mark_for_deletion(o)
-    end
+    obj_delete_if_flood(o)
 
     if o.oAction == 0 then
         o.oForwardVel = 0
@@ -4898,3 +4912,135 @@ end
 
 bhvWeirdFloatingOrb = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_weird_floating_orb_init,
     bhv_weird_floating_orb_loop)
+
+
+---@param o Object
+function bhv_virus_boss_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE|OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+
+    o.oGravity = 2
+
+    o.hitboxHeight = 120
+    o.hitboxRadius = 100
+
+    o.oInteractType = INTERACT_BOUNCE_TOP
+
+    o.oIntangibleTimer = 0
+
+    o.oBounciness = 0
+    o.oBuoyancy = 0
+
+    o.oHealth = 0
+
+    o.oDamageOrCoinValue = 2
+
+    cur_obj_set_home_once()
+
+    smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
+end
+
+VIRUS_IDLE = 0
+VIRUS_JUMP_TO_MARIO = 1
+VIRUS_WIND_BEND = 2
+VIRUS_WALK = 3
+VIRUS_NORMAL_JUMP = 4
+VIRUS_THROW_FIRE = 5
+VIRUS_SCALE_BIG = 6
+VIRUS_RETURN_HOME = 7
+VIRUS_ATTACKED = 8
+
+---@param o Object
+function bhv_virus_boss_loop(o)
+    local nearplayer = nearest_player_to_object(o)
+
+    if o.oAction == VIRUS_IDLE then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
+        if dist_between_objects(o, nearplayer) < 1900 then
+            if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 and o.oBehParams == 0 then
+                o.oAction = VIRUS_JUMP_TO_MARIO
+            end
+        end
+    elseif o.oAction == VIRUS_JUMP_TO_MARIO then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_jump")
+        if o.oAnimState == 0 then
+            o.oVelY = 50
+            o.oAnimState = 1
+        end
+        o.oForwardVel = 20
+        o.oFriction = 1
+        local stepObjResult = object_step()
+        if stepObjResult & OBJ_COL_FLAG_GROUNDED == 1 then
+            o.oForwardVel = 0
+            o.oAction = VIRUS_WALK
+        end
+    elseif o.oAction == VIRUS_WALK then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_walk")
+        cur_obj_move_standard(-78)
+        cur_obj_update_floor_and_walls()
+
+        o.oGravity = -2
+
+        if (o.oMoveFlags & OBJ_MOVE_HIT_EDGE) ~= 0 then
+            o.oMoveAngleYaw = o.oMoveAngleYaw + 32768
+        end
+        o.oForwardVel = 12
+        cur_obj_rotate_yaw_toward(obj_angle_to_object(o, nearplayer), 0x230)
+
+        if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 then
+            o.oInteractStatus = 0
+            o.oAction = VIRUS_ATTACKED
+        else
+            o.oInteractStatus = 0
+        end
+    elseif o.oAction == VIRUS_ATTACKED then
+        smlua_anim_util_set_animation(o, "anim_virus_boss_die")
+
+        o.oHealth = o.oHealth + 1
+
+        if o.oHealth > 30 then
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            cur_obj_set_pos_to_home()
+            o.oHealth = 0
+            o.oInteractStatus = 0
+            o.oMoveAngleYaw = 32768
+            o.oForwardVel = 0
+            o.oAction = 0
+            o.oAnimState = 0
+            o.oBehParams = 1
+            if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oAction = VIRUS_JUMP_TO_MARIO
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oPosX = o.oHomeX
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oPosY = o.oHomeY
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed).oPosZ = o.oHomeZ
+                cur_obj_disable_rendering_and_become_intangible(o)
+            end
+
+            if obj_has_behavior_id(o, bhvVirusBossRed) ~= 0 then
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossYellow).oAction = VIRUS_JUMP_TO_MARIO
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossYellow).oPosX =
+                    obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue).oHomeX
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossYellow).oPosY =
+                    obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue).oHomeY
+                obj_get_nearest_object_with_behavior_id(o, bhvVirusBossYellow).oPosZ =
+                    obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue).oHomeZ
+                cur_obj_disable_rendering_and_become_intangible(o)
+            end
+
+            if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
+                obj_mark_for_deletion(o)
+                obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue))
+                obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed))
+                spawn_red_coin_cutscene_star(11440, 176, -5130)
+            end
+        end
+    end
+end
+
+bhvVirusBossBlue = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_virus_boss_init,
+    bhv_virus_boss_loop)
+
+bhvVirusBossRed = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_virus_boss_init,
+    bhv_virus_boss_loop)
+
+bhvVirusBossYellow = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_virus_boss_init,
+    bhv_virus_boss_loop)
