@@ -2,6 +2,8 @@
 -- incompatible: romhack
 -- description: Romhack from the legendary Kaze, written with over 100,000\nlines of custom assembly code.\n\nPorted By:\n\\#00ff00\\I'mYourCat\\#FF0000\\2 (Creator)\n\\#dcdcdc\\x\\#00FF00\\Luigi\\#434343\\Gamer\\#dcdcdc\\x (Programmer)\n\\#0000FF\\Woissil (Model Porter)\n\\#105009\\Emeraldsniper (Programmer, Tester)\n\\#FFC0CB\\OneCalledRPG (Programmer)\n\\#FFFFFF\\Fe\\#ffcdab\\arl (Custom Skyboxes)\n\\#FFC0CB\\MaiskX3 (Music Porter, Tester)\n\\#FF0000\\NinteNerd (Model Porter)\n\\#8B8000\\CT Himself (Tester)\n\\#ADD8E6\\Saniky (Tester)\n\\#FFC0CB\\Sunk (MOPS)\n\\#00FFFF\\Steven (Rideable Yoshi)
 
+camera_set_use_course_specific_settings(false)
+
 gFloodIsOn = false
 for curMod in pairs(gActiveMods) do
     if gActiveMods[curMod].name:find("Flood") then

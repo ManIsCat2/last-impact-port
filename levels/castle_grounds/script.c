@@ -80,7 +80,7 @@ const LevelScript level_castle_grounds_entry[] = {
 		OBJECT(MODEL_CG_20_GATE, 7507, -663, 5470, 0, -25, 0, 0x2130000, bhvCG20Gate),
 		OBJECT(MODEL_CG_20_GATE, 7674, -655, 5108, 0, 155, 0, 0x2130000, bhvCG20Gate),
 		OBJECT(MODEL_ROCKET_DOOR, 4278, 146, -4936, 0, 0, 0, 0x30e0000, bhvRocketDoor),
-		//OBJECT(E_MODEL_BITS_WARP_PIPE, 7945, -426, -3306, 0, 0, 0, 0x0, id_bhvWarpPipe),
+		OBJECT(E_MODEL_BITS_WARP_PIPE, 7945, -426, -3306, 0, 0, 0, 0x0, id_bhvWarpPipe),
 		OBJECT(E_MODEL_TOAD, 7108, -662, 5262, 0, -130, 0, (DIALOG_019 << 24), id_bhvToadMessage),
 		OBJECT(E_MODEL_TOAD, 535, -835, -2463, 0, 0, 0, (53 << 24), id_bhvToadMessage),
 		OBJECT(E_MODEL_TOAD, 4688, 5, -4916, 0, 0, 0, (54 << 24) | (3 << 16), id_bhvToadMessage),

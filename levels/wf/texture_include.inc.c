@@ -13,16 +13,6 @@ u8 wf_dl__630DF1_c_i8[] = {
 	#include "levels/wf/_630DF1_c.i8.inc.c"
 };
 
-Gfx wf_dl__21152C09_c_ci8_aligner[] = {gsSPEndDisplayList()};
-u8 wf_dl__21152C09_c_ci8[] = {
-	#include "levels/wf/_21152C09_c.ci8.inc.c"
-};
-
-Gfx wf_dl__21152C09_c_pal_rgba16_aligner[] = {gsSPEndDisplayList()};
-u8 wf_dl__21152C09_c_pal_rgba16[] = {
-	#include "levels/wf/_21152C09_c.rgba16.pal"
-};
-
 Gfx wf_dl__2A481B3A_c_ci8_aligner[] = {gsSPEndDisplayList()};
 u8 wf_dl__2A481B3A_c_ci8[] = {
 	#include "levels/wf/_2A481B3A_c.ci8.inc.c"
@@ -33,14 +23,19 @@ u8 wf_dl__2A481B3A_c_pal_rgba16[] = {
 	#include "levels/wf/_2A481B3A_c.rgba16.pal"
 };
 
+Gfx wf_dl__21155809_c_ci8_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 wf_dl__21155809_c_ci8_rgba16[] = {
+	#include "levels/wf/_21155809_c.ci8.rgba16.inc.c"
+};
+
 Gfx wf_dl__3F333FB1_c_rgba16_aligner[] = {gsSPEndDisplayList()};
 u8 wf_dl__3F333FB1_c_rgba16[] = {
 	#include "levels/wf/_3F333FB1_c.rgba16.inc.c"
 };
 
-Gfx wf_dl__23242D71_c_i8_aligner[] = {gsSPEndDisplayList()};
-u8 wf_dl__23242D71_c_i8[] = {
-	#include "levels/wf/_23242D71_c.i8.inc.c"
+Gfx wf_dl__23242D71_c_ia8_aligner[] = {gsSPEndDisplayList()};
+u8 wf_dl__23242D71_c_ia8[] = {
+	#include "levels/wf/_23242D71_c.ia8.inc.c"
 };
 
 Gfx wf_dl__232EE69B_c_i8_aligner[] = {gsSPEndDisplayList()};

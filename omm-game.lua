@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field, undefined-global
 if _G.OmmEnabled then
     _G.OmmApi.omm_register_game("SM64 Last Impact", function() return true end, function()
         ---------------
