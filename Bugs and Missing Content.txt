@@ -54,6 +54,7 @@ OW2 - Desolate Village:
 --Pipe to Drybone Desert has weird collisions
 --Grate in pipe not there due to no Paper powerup
 --Music is in but needs fixing to properly be sequences with instruments
+--Caution sign right beside path to Course 8 isn't in
 
 Course 6 - Super Sweet Sugarland:
 --Choco mountain doesn't erupt
