@@ -91,6 +91,10 @@ function remove_water_act5_jrb(m)
     end
 end
 
+function fix_cap_on(m)
+    m.flags = m.flags | MARIO_CAP_ON_HEAD
+end
+
 function hook_level_inits()
     tp_lll_2()
 end
@@ -102,6 +106,7 @@ function mario_update_hooks(m)
     remove_fd(m)
     particles_sparkles_bossfight(m)
     remove_water_act5_jrb(m)
+    fix_cap_on(m)
 end
 
 function remove_all_extra_states()

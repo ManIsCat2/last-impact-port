@@ -2898,7 +2898,7 @@ function bhv_boss_shadow_mario_init(o)
     o.oFriction = 1
     o.oGravity = 3
 
-    o.oInteractType = INTERACT_DAMAGE
+    o.oInteractType = INTERACT_BOUNCE_TOP2
     o.oIntangibleTimer = 0
     o.oDamageOrCoinValue = 1
 
@@ -2911,6 +2911,14 @@ function bhv_boss_shadow_mario_init(o)
     network_init_object(o, true,
         { "oAction", "oBirdSpeed", "oMoveAngleYaw", "oAnimState", "oInteractStatus", "oForwardVel", "oSubAction",
             "oHeldState", "oHealth" })
+end
+
+function do_boss_mario_shadow_attacks(o)
+    if o.oInteractStatus & INT_STATUS_WAS_ATTACKED ~= 0 and o.oAction ~= 5 then
+        o.oAction = 5
+        o.oInteractStatus = 0
+        o.oHealth = o.oHealth - 1
+    end
 end
 
 ---@param o Object
@@ -2957,13 +2965,14 @@ function bhv_boss_shadow_mario_loop(o)
         o.oForwardVel = 0
         obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 0, true)
     elseif o.oAction == 1 then
-        o.oInteractType = INTERACT_DAMAGE
+        o.oInteractType = INTERACT_BOUNCE_TOP2
         obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 1, true, 3.2)
         if o.oInteractStatus & INT_STATUS_ATTACKED_MARIO ~= 0 and o.oAnimState == 0 then
             o.oInteractStatus = 0
             o.oAction = 2
         end
 
+        do_boss_mario_shadow_attacks(o)
         if dist_between_objects(o, nearestP) < 300 and o.oAnimState == 1 then
             o.oAction = 3
         end
@@ -2972,7 +2981,8 @@ function bhv_boss_shadow_mario_loop(o)
             o.oAction = 4
         end
     elseif o.oAction == 2 then
-        o.oInteractStatus = 0
+        --o.oInteractStatus = 0
+        do_boss_mario_shadow_attacks(o)
         o.oForwardVel = 0
         obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 2, true, 0.1)
         o.oSubAction = o.oSubAction + 1
@@ -2980,7 +2990,8 @@ function bhv_boss_shadow_mario_loop(o)
             o.oAction = 1
         end
     elseif o.oAction == 3 then
-        o.oInteractStatus = 0
+        do_boss_mario_shadow_attacks(o)
+        --o.oInteractStatus = 0
         o.oForwardVel = 48
         o.oSubAction = o.oSubAction + 1
         if o.oSubAction < 15 then
@@ -2993,7 +3004,8 @@ function bhv_boss_shadow_mario_loop(o)
             end
         end
     elseif o.oAction == 4 then
-        o.oInteractStatus = 0
+        --o.oInteractStatus = 0
+        do_boss_mario_shadow_attacks(o)
         if o.oSubAction == 0 then
             o.oVelY = 40
         end
@@ -3013,16 +3025,10 @@ function bhv_boss_shadow_mario_loop(o)
         obj_init_animation_from_custom_table(o, bossShadowMarioAnims, 6, true, 1)
         if o.oSubAction > 35 then
             o.oAction = 1
+            o.oInteractStatus = 0
         end
     end
 
-    if dist_between_objects(o, nearestP) < 130 and o.oAction ~= 5 then
-        if nearestMstate.action == ACT_JUMP_KICK or nearestMstate.action == ACT_PUNCHING or nearestMstate.action == ACT_MOVE_PUNCHING or nearestMstate.action == ACT_GROUND_POUND then
-            play_sound(SOUND_ACTION_HIT_2, gGlobalSoundSource)
-            o.oAction = 5
-            o.oHealth = o.oHealth - 1
-        end
-    end
 
     if o.oHealth <= 0 then
         spawn_triangle_break_particles(20, 138, 3.0, 4);
@@ -5157,6 +5163,7 @@ end
 ---@param o Object
 function bhv_spider_boss_loop(o)
     o.oInteractStatus = 0
+    obj_delete_if_flood(o)
     load_object_collision_model()
     if o.oAction == SPIDER_IDLE then
         if nearest_mario_state_to_object(o).floor.object ~= o then
@@ -5232,7 +5239,7 @@ function bhv_spider_boss_loop(o)
             o.oAction = SPIDER_IDLE
             o.oSubAction = 0
             o.oGraphYOffset = 0
-            o.oPosY = o.oHomeY 
+            o.oPosY = o.oHomeY
         end
     end
 
