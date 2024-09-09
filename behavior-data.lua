@@ -4959,6 +4959,8 @@ VIRUS_ATTACKED = 8
 function bhv_virus_boss_loop(o)
     local nearplayer = nearest_player_to_object(o)
 
+    obj_delete_if_flood(o)
+
     if o.oAction == VIRUS_IDLE then
         smlua_anim_util_set_animation(o, "anim_virus_boss_idle")
         if dist_between_objects(o, nearplayer) < 2100 then
@@ -5144,6 +5146,8 @@ function bhv_spider_boss_init(o)
     cur_obj_set_home_once()
 
     o.collisionData = smlua_collision_util_get("spider_boss_collision")
+
+    o.header.gfx.skipInViewCheck = true
 
     smlua_anim_util_set_animation(o, "anim_spider_boss_idle")
 

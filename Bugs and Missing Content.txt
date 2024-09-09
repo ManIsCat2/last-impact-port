@@ -15,7 +15,6 @@ OW1 - Castle Grounds:
 --Cutscene for Moon in the distance after a certain star count in beginning
 --Cutscene of Peach getting kidnapped by Rashay when Key 1 and 45 stars are collected
 --Inner cave texture to tunnel isn't there
---Entering CG always shocks you
 
 Underground Tunnel:
 --Lava bubble sound effects not in
