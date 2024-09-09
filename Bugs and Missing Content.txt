@@ -31,7 +31,6 @@ Course 2 - Stonesnake Shatters:
 
 Course 3 - Sunset Islet:
 --No crabs due to export failure
---Weird delay with the explosives when using fireflower
 
 Course 4 - Crystal Caves:
 --One end of the bridge has a gap where you can clip out of bounds
@@ -75,7 +74,6 @@ Course 8 - Melty Molten Mountains:
 
 Course 9 - Harried Honey Hive:
 --Dialog limits for Stars 1, 2 and 3 (Guards, bee racer and queen can't progress dialog)
---No spider boss
 
 Shadow Factory:
 --Certain shadow spots need fixing (ones at top with rotations)

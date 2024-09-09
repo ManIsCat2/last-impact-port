@@ -82,7 +82,7 @@ function base_hud()
         -- Life Counter
 
         local lifeIcon = charSelect and charSelect.character_get_life_icon(0) or m.character.hudHeadTexture
-        djui_hud_render_texture(lifeIcon, 22, 15, charSelect and 16/lifeIcon.width or 1, charSelect and 16/lifeIcon.height or 1)
+        djui_hud_render_texture(lifeIcon, 22, 15, charSelect and 16 / lifeIcon.width or 1, charSelect and 16 / lifeIcon.height or 1)
 
         djui_hud_print_text("@", 38, 15, 1)
         djui_hud_print_text(tostring(m.numLives), 54, 15, 1)
@@ -90,18 +90,20 @@ function base_hud()
         -- Star Counter
 
         local starIcon = charSelect and charSelect.character_get_star_icon(0) or gTextures.star
-        djui_hud_render_texture(starIcon == nil and gTextures.star or starIcon, 22, screenHeight - 32, charSelect and 16/starIcon.width or 1, charSelect and 16/starIcon.height or 1)
+        djui_hud_render_texture(starIcon == nil and gTextures.star or starIcon, 22, screenHeight - 32, charSelect and 16 / starIcon.width or 1, charSelect and 16 / starIcon.height or 1)
 
         djui_hud_print_text("@", 38, screenHeight - 32, 1)
         djui_hud_print_text(tostring(hud_get_value(HUD_DISPLAY_STARS)), 54, screenHeight - 32, 1)
 
         -- Coin Counter + Reds
 
-        djui_hud_render_texture(gTextures.coin, screenWidth - 76, screenHeight - 32, 1, 1)
-        djui_hud_print_text("@", screenWidth - 76 + 16, screenHeight - 32, 1)
-        djui_hud_print_text(tostring(hud_get_value(HUD_DISPLAY_COINS)), screenWidth - 76 + 32, screenHeight - 32, 1)
-        numRedCoins = gMarioStates[0].area.numRedCoins - obj_count_objects_with_behavior_id(id_bhvRedCoin)
+        if gNetworkPlayers[0].currCourseNum ~= COURSE_NONE then
+            djui_hud_render_texture(gTextures.coin, screenWidth - 76, screenHeight - 32, 1, 1)
+            djui_hud_print_text("@", screenWidth - 76 + 16, screenHeight - 32, 1)
+            djui_hud_print_text(tostring(hud_get_value(HUD_DISPLAY_COINS)), screenWidth - 76 + 32, screenHeight - 32, 1)
+        end
 
+        numRedCoins = gMarioStates[0].area.numRedCoins - obj_count_objects_with_behavior_id(id_bhvRedCoin)
         if is_game_paused() and numRedCoins > 0 then
             djui_hud_print_text("\"@" .. tostring(numRedCoins), screenWidth / 2 + 16, screenHeight - 32, 1)
         end

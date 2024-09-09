@@ -25,6 +25,7 @@ if _G.OmmEnabled then
         _G.OmmApi.omm_register_star_behavior(id_bhvWfSlidingPlatform, "Blue Thief", "BLUE THIEF", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvCorkDrainWater, "Cork", "CORK", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvMusicalFruitStarSpawn, "Musical Fruits", "MUSICAL FRUITS", function(bhvParams) return true end)
+        _G.OmmApi.omm_register_star_behavior(bhvSpiderBoss, "Big Spider", "BIG SPIDER", function(bhvParams) return true end)
 
 
         --------------------

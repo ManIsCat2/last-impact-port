@@ -3588,15 +3588,10 @@ function bhv_tnt_and_boulder_loop(o)
         if nfire then
             if obj_check_hitbox_overlap(o, nfire) then
                 obj_mark_for_deletion(nfire)
-                o.oAction = 1
+                spawn_triangle_break_particles(20, 138, 3.0, 4);
+                play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
+                obj_mark_for_deletion(o)
             end
-        end
-    elseif o.oAction == 1 then
-        o.oAnimState = o.oAnimState + 1
-        if o.oAnimState > 20 then
-            spawn_triangle_break_particles(20, 138, 3.0, 4);
-            play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
-            obj_mark_for_deletion(o)
         end
     end
 end
@@ -5122,3 +5117,128 @@ bhvVirusBossRed = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_virus_boss_ini
 
 bhvVirusBossYellow = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_virus_boss_init,
     bhv_virus_boss_loop)
+
+---@param o Object
+function bhv_spider_boss_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.oGravity = 2
+
+    o.oHealth = 3
+
+    o.hitboxRadius = 180
+    o.hitboxHeight = 300
+
+    o.oInteractType = INTERACT_DAMAGE
+
+    o.oIntangibleTimer = 0
+
+    o.oDamageOrCoinValue = 2
+
+    cur_obj_set_home_once()
+
+    o.collisionData = smlua_collision_util_get("spider_boss_collision")
+
+    smlua_anim_util_set_animation(o, "anim_spider_boss_idle")
+
+    network_init_object(o, true, { "oAction", "oAnimState", "oSubAction", "oInteractStatus", "oHealth", "oPosY" })
+end
+
+SPIDER_IDLE = 0
+SPIDER_ATTACK_MOUTH = 1
+SPIDER_DEFEND = 2
+SPIDER_DIE = 3
+SPIDER_JUMP = 4
+
+function do_air_kb(o)
+    nearest_mario_state_to_object(o).action = ACT_BACKWARD_AIR_KB_MODIFIED; nearest_mario_state_to_object(o).vel.y = 40; nearest_mario_state_to_object(o).actionArg = 35
+end
+
+---@param o Object
+function bhv_spider_boss_loop(o)
+    o.oInteractStatus = 0
+    load_object_collision_model()
+    if o.oAction == SPIDER_IDLE then
+        if nearest_mario_state_to_object(o).floor.object ~= o then
+            o.oFaceAngleYaw = approach_s16_symmetric(o.oFaceAngleYaw, obj_angle_to_object(o, nearest_player_to_object(o)),
+                0x340)
+        else
+            if nearest_mario_state_to_object(o).marioObj.platform == o then
+                o.oAnimState = o.oAnimState + 1
+                if o.oAnimState > 30 then
+                    o.oAction = SPIDER_JUMP
+                    do_air_kb(o)
+                    cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
+                    o.oAnimState = 0
+                    o.oSubAction = 0
+                end
+            end
+        end
+        cur_obj_become_intangible()
+        smlua_anim_util_set_animation(o, "anim_spider_boss_idle")
+        if is_any_mario_groundpounding_obj(o) then
+            if nearest_mario_state_to_object(o).floor.type == SURFACE_NOT_SLIPPERY then
+                o.oHealth = o.oHealth - 1
+                --[[o.oAction = SPIDER_DEFEND
+                do_air_kb(o)
+                cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
+                smlua_anim_util_set_animation(o, "anim_spider_boss_jump")
+                o.oSubAction = 0
+                o.header.gfx.animInfo.animFrame = 0
+                o.header.gfx.animInfo.prevAnimFrame = 0]]
+                o.oAction = SPIDER_JUMP
+                do_air_kb(o)
+                cur_obj_play_sound_1(SOUND_OBJ2_BOWSER_ROAR)
+                o.oSubAction = 0
+            end
+        end
+
+        if dist_between_objects(o, nearest_player_to_object(o)) < 300 and nearest_mario_state_to_object(o).floor.object ~= o then
+            o.oAction = SPIDER_ATTACK_MOUTH
+        end
+    elseif o.oAction == SPIDER_DEFEND then
+        smlua_anim_util_set_animation(o, "anim_spider_boss_defend")
+        cur_obj_become_tangible()
+
+        o.oSubAction = o.oSubAction + 1
+
+        if o.oSubAction > 50 then
+            o.oAction = SPIDER_IDLE
+        end
+    elseif o.oAction == SPIDER_ATTACK_MOUTH then
+        smlua_anim_util_set_animation(o, "anim_spider_boss_attack_mouth")
+        cur_obj_become_tangible()
+
+        o.oSubAction = o.oSubAction + 1
+
+        if o.oSubAction > 70 then
+            o.oAction = SPIDER_IDLE
+        end
+    elseif o.oAction == SPIDER_DIE then
+        smlua_anim_util_set_animation(o, "anim_spider_boss_die")
+
+        if cur_obj_check_if_near_animation_end() == 1 then
+            spawn_mist_particles()
+            spawn_red_coin_cutscene_star(o.oPosX, o.oPosY + 200, o.oPosZ)
+            obj_mark_for_deletion(o)
+        end
+    elseif o.oAction == SPIDER_JUMP then
+        smlua_anim_util_set_animation(o, "anim_spider_boss_jump")
+        o.oSubAction = o.oSubAction + 1
+
+        o.oPosY = o.oHomeY + 100
+
+        if o.oSubAction > 50 then
+            o.oAction = SPIDER_IDLE
+            o.oSubAction = 0
+            o.oGraphYOffset = 0
+            o.oPosY = o.oHomeY 
+        end
+    end
+
+    if o.oHealth <= 0 and o.oAction ~= SPIDER_DIE then
+        o.oAction = SPIDER_DIE
+    end
+end
+
+bhvSpiderBoss = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_spider_boss_init, bhv_spider_boss_loop)
