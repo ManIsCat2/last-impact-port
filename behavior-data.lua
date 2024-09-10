@@ -5253,3 +5253,36 @@ function bhv_spider_boss_loop(o)
 end
 
 bhvSpiderBoss = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_spider_boss_init, bhv_spider_boss_loop)
+
+MODEL_FLUDD_BOX = smlua_model_util_get_id("fludd_box_geo")
+
+---@param o Object
+function fludd_box_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("fludd_box_collision")
+end
+
+---@param o Object
+function fludd_box_loop(o)
+    if o.oAction == 0 then
+        load_object_collision_model()
+        cur_obj_unhide()
+        if nearest_player_to_object(o).platform == o then
+            spawn_triangle_break_particles(20, 138, 3.0, 4);
+            play_sound(SOUND_GENERAL_BREAK_BOX, gGlobalSoundSource)
+            o.oAction = 1
+            spawn_object2(o, MODEL_FLUDD, bhvFLUDD)
+        end
+    elseif o.oAction == 1 then
+        cur_obj_hide()
+        o.oAnimState = o.oAnimState + 1
+        if o.oAnimState > (5 * 30) then -- 5 seconds
+            o.oAction = 0
+            o.oAnimState = 0
+        end
+    end
+end
+
+bhvFLUDDBox = hook_behavior(nil, OBJ_LIST_SURFACE, true, fludd_box_init, fludd_box_loop)

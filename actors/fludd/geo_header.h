@@ -1,0 +1,15 @@
+extern const GeoLayout fludd_geo[];
+extern Lights1 fludd_Fast3D_Material_003_lights;
+extern Lights1 fludd_Fast3D_Material_004_lights;
+extern Lights1 fludd_Material_1_f3d_002_lights;
+extern u8 fludd__1_rgba16[];
+extern Vtx fludd_000_displaylist_mesh_layer_1_vtx_0[215];
+extern Gfx fludd_000_displaylist_mesh_layer_1_tri_0[];
+extern Vtx fludd_000_displaylist_mesh_layer_1_vtx_1[372];
+extern Gfx fludd_000_displaylist_mesh_layer_1_tri_1[];
+extern Vtx fludd_000_displaylist_mesh_layer_1_vtx_2[79];
+extern Gfx fludd_000_displaylist_mesh_layer_1_tri_2[];
+extern Gfx mat_fludd_Fast3D_Material_003[];
+extern Gfx mat_fludd_Fast3D_Material_004[];
+extern Gfx mat_fludd_Material_1_f3d_002[];
+extern Gfx fludd_000_displaylist_mesh_layer_1[];
