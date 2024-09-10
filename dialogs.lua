@@ -278,7 +278,7 @@ Congrats, Mario!"))
 
 smlua_text_utils_dialog_replace(DIALOG_032,1,5,30,200, ("This box contains the\
 F.L.U.D.D. powerup.\
-To hover, press the [A]\
+To hover, press the X\
 button.\
 \
 If you take damage or\

@@ -33,7 +33,6 @@ Course 2 - Stonesnake Shatters:
 --Tent area not implemented
 --Snake Temple not implemented
 --Specialized rolling enemies not implemented (star 2)
---F.L.U.D.D. not made yet
 --Ancient Attacker boss isn't in yet
 
 Course 3 - Sunset Islet:

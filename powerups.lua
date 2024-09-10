@@ -353,6 +353,7 @@ function bhv_fludd_init(obj)
     obj_set_model_extended(obj, MODEL_FLUDD)
     network_init_object(obj, true, nil)
 end
+
 ---@param obj Object
 function bhv_beesuit_loop(obj)
     object_step()
@@ -823,6 +824,39 @@ function spring_powerup(m)
     end
 end
 
+local fluddTimer = 0
+local hasFludded = false
+
+---@param m MarioState
+function fludd_powerup(m)
+    if m.playerIndex ~= 0 then return end
+    if gPlayerSyncTable[0].powerup == FLUDD then
+        if (m.action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION) ~= 0 then
+            if (m.action & ACT_FLAG_INVULNERABLE) == 0 then
+                if (m.controller.buttonDown & X_BUTTON) ~= 0 then
+                    if m.pos.y > m.floorHeight + 72 * 2.3 then
+                        if not hasFludded then
+                            fluddTimer = fluddTimer + 1
+                            m.particleFlags = PARTICLE_SNOW
+                            m.vel.y = 0
+                            m.action = ACT_FLUDD_FLOAT
+                            m.forwardVel = 12
+                        end
+
+                        if fluddTimer > 9 * 30 then ----- 9 seconds
+                            fluddTimer = 0
+                            hasFludded = true
+                        end
+                    end
+                end
+            end
+        end
+        if m.action & ACT_FLAG_AIR == 0 then
+            hasFludded = false
+        end
+    end
+end
+
 hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
@@ -830,3 +864,4 @@ hook_event(HOOK_MARIO_UPDATE, spring_powerup)
 hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
 hook_event(HOOK_MARIO_UPDATE, ice_fire_flower_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)
+hook_event(HOOK_MARIO_UPDATE, fludd_powerup)

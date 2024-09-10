@@ -5262,10 +5262,13 @@ function fludd_box_init(o)
 
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("fludd_box_collision")
+
+    network_init_object(o, true, {"oAnimState", "oAction"})
 end
 
 ---@param o Object
 function fludd_box_loop(o)
+    obj_delete_if_flood(o)
     if o.oAction == 0 then
         load_object_collision_model()
         cur_obj_unhide()

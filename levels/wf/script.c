@@ -68,7 +68,7 @@ const LevelScript level_wf_entry[] = {
 		OBJECT(0, 3901, -2751, -1339, 0, -112, 0, 0x0, bhvCoinFormation),
 		OBJECT(0, 4802, -3594, 3679, 0, 58, 0, 0x0, bhvCoinFormation),
 		OBJECT(0, 0, -2457, 5509, 0, 53, 0, 0x0, bhvCoinFormation),
-		OBJECT_WITH_ACTS(0, -300, -819, -5677, 0, 157, 0, 0x0, bhvCoinFormation, ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5),
+		OBJECT_WITH_ACTS(0, -216, -858, -6095, 0, 157, 0, 0x0, bhvCoinFormation, ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5),
 		OBJECT(0, -6127, -1493, -1900, 0, -31, 0, 0x0, bhvCoinFormation),
 		OBJECT(0, 5052, -3271, 7193, 0, 0, 0, 0x20000, bhvCoinFormation),
 		OBJECT(0, -6509, -3262, 2603, 0, -36, 0, 0x0, bhvCoinFormation),
