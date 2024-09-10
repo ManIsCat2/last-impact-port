@@ -27,7 +27,14 @@ Course 1 - Wildlife Valley:
 --Dandelion needs 2 more flower spawns to make 3 total when interacted with
 
 Course 2 - Stonesnake Shatters:
---Everything lmao
+--Normal enemies not implemented
+--Puzzle star (star 4) is in but gate and puzzle mechanics not implemented yet (star is inside the wall)
+--NPCs/Major NPCs for stars not implemented yet
+--Tent area not implemented
+--Snake Temple not implemented
+--Specialized rolling enemies not implemented (star 2)
+--F.L.U.D.D. not made yet
+--Ancient Attacker boss isn't in yet
 
 Course 3 - Sunset Islet:
 --No crabs due to export failure
@@ -153,3 +160,4 @@ Global Bugs/Missing Content Not Tied to Levels:
 --Bee powerup fly meter not implemented
 --HUD only appearing for specific interactions (1 ups/life lost, coin collections, star get, damage/recovery)
 --Bridges in Course 4 and Underground Tunnel has weight interactions not implemented yet
+--Spiked Piranha Plant enemy not implemented yet
