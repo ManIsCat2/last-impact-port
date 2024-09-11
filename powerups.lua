@@ -857,6 +857,12 @@ function fludd_powerup(m)
     end
 end
 
+function normal_powerup(m)
+    if gPlayerSyncTable[m.playerIndex].powerup == NORMAL then
+        network_player_reset_override_palette(gNetworkPlayers[m.playerIndex])
+    end
+end
+
 hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
@@ -865,3 +871,4 @@ hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
 hook_event(HOOK_MARIO_UPDATE, ice_fire_flower_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)
 hook_event(HOOK_MARIO_UPDATE, fludd_powerup)
+hook_event(HOOK_MARIO_UPDATE, normal_powerup)
