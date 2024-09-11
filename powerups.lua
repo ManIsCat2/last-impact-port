@@ -843,7 +843,7 @@ function fludd_powerup(m)
                             m.forwardVel = 12
                         end
 
-                        if fluddTimer > 9 * 30 then ----- 9 seconds
+                        if fluddTimer > 4.5 * 30 then ----- 5 seconds
                             fluddTimer = 0
                             hasFludded = true
                         end

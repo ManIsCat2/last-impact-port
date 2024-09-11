@@ -32,7 +32,7 @@ Course 2 - Stonesnake Shatters:
 --NPCs/Major NPCs for stars not implemented yet
 --Tent area not implemented
 --Snake Temple not implemented
---Specialized rolling enemies not implemented (star 2)
+--Specialized rolling enemies not implemented (star 1)
 --Ancient Attacker boss isn't in yet
 
 Course 3 - Sunset Islet:
@@ -43,6 +43,7 @@ Course 4 - Crystal Caves:
 --Mermaids due to dialog limit, including any stars related to them
 --Giant whale boss
 --Music change trigger to mermaid cove isn't in
+--Main music shares Course 2 due to different version exports (ignore for now)
 
 Course 5 - Abandoned Outpost:
 --Flying bots don't shoot
@@ -78,6 +79,7 @@ Course 8 - Melty Molten Mountains:
 --Star 3 not there yet due to puzzle and boulder mechanics not implemented in
 --Both large bosses aren't finished
 --Music transition triggers need more work
+--Fire and Ice blob enemies scattered in level aren't finished yet
 
 Course 9 - Harried Honey Hive:
 --Dialog limits for Stars 1, 2 and 3 (Guards, bee racer and queen can't progress dialog)
