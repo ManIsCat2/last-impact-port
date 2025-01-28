@@ -3,12 +3,59 @@
 E_MODEL_YOSHI_RIDEABLE = smlua_model_util_get_id("yoshi_rideable_geo")
 E_MODEL_YOSHI_RIDEABLE_RECOLORABLE = smlua_model_util_get_id("yoshi_rideable_recolorable_geo")
 E_MODEL_YOSHI_METAL = smlua_model_util_get_id("yoshi_metal_geo")
+E_MODEL_YOSHI_TONGUE = smlua_model_util_get_id("yoshi_tongue_geo")
+
+E_MODEL_YOSHI_TONGUE1 = smlua_model_util_get_id("yoshi_tongue1_geo")
+E_MODEL_YOSHI_TONGUE2 = smlua_model_util_get_id("yoshi_tongue2_geo")
+E_MODEL_YOSHI_TONGUE3 = smlua_model_util_get_id("yoshi_tongue3_geo")
+E_MODEL_YOSHI_TONGUE4 = smlua_model_util_get_id("yoshi_tongue4_geo")
 -- E_MODEL_YOSHI_NEST = smlua_model_util_get_id("yoshi_nest_geo")
 
 
 
 local SOUND_YOSHI_FLUTTER_SHORT = audio_sample_load("flutter-short.mp3")
 local SOUND_YOSHI_HIT = audio_sample_load("yoshi_hit.mp3")
+
+---@param o Object
+function yohi_tongue_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    o.header.gfx.skipInViewCheck = true
+end
+local msf = 285
+---@param o Object
+function yohi_tongue_loop(o)
+    o.oPosX = o.parentObj.oPosX + (sins(o.parentObj.oFaceAngleYaw) * msf)
+    o.oPosY = o.parentObj.oPosY + 120
+    o.oPosZ = o.parentObj.oPosZ + (coss(o.parentObj.oFaceAngleYaw) * msf)
+    o.oFaceAngleYaw = o.parentObj.oFaceAngleYaw
+    local min1 = 2
+    local min2 = 4
+    local min3 = 8
+    local min4 = 16
+
+    if o.oTimer > 0 and o.oTimer < min1 then
+        obj_set_model_extended(o, E_MODEL_YOSHI_TONGUE1)
+    end
+
+    if o.oTimer > min1 and o.oTimer < min2 then
+        obj_set_model_extended(o, E_MODEL_YOSHI_TONGUE2)
+    end
+
+    if o.oTimer > min2 and o.oTimer < min3 then
+        obj_set_model_extended(o, E_MODEL_YOSHI_TONGUE3)
+    end
+
+    if o.oTimer > min3 and o.oTimer < min4 then
+        obj_set_model_extended(o, E_MODEL_YOSHI_TONGUE4)
+    end
+
+    if o.oTimer > min4 then
+        obj_mark_for_deletion(o)
+    end
+end
+
+bhvYoshiTongue = hook_behavior(nil, OBJ_LIST_SURFACE, true, yohi_tongue_init, yohi_tongue_loop)
 
 define_custom_obj_fields(
     {
@@ -81,9 +128,19 @@ function bhv_yoshi_rideable_loop(o)
 
         if rider.action == ACT_RIDE_YOSHI_IDLE then
             cur_obj_init_animation(0)
+            if rider.controller.buttonPressed & B_BUTTON ~= 0 then
+                spawn_non_sync_object(bhvYoshiTongue, E_MODEL_YOSHI_TONGUE, o.oPosX, o.oPosY + 120, o.oPosZ, function(d) d.parentObj = o
+                    d.oPosY = 90000
+                 end)
+            end
         elseif rider.action == ACT_RIDE_YOSHI_WALK then
             cur_obj_init_animation_with_accel_and_sound(1, math.abs(rider.forwardVel) / 14)
             cur_obj_play_sound_at_anim_range(0, 15, SOUND_GENERAL_YOSHI_WALK)
+            if rider.controller.buttonPressed & B_BUTTON ~= 0 then
+                spawn_non_sync_object(bhvYoshiTongue, E_MODEL_YOSHI_TONGUE, o.oPosX, o.oPosY + 120, o.oPosZ, function(d) d.parentObj = o
+                    d.oPosY = 90000
+                 end)
+            end
         elseif rider.action == ACT_RIDE_YOSHI_JUMP then
             if rider.vel.y >= -21 then
                 cur_obj_init_animation(2)
@@ -156,10 +213,10 @@ function bhv_yoshi_unridden(o)
     if not yoshiRidingActions[player.action] then
         if
             (((player.action & ACT_FLAG_AIR) ~= 0 and (player.action & ACT_FLAG_SWIMMING_OR_FLYING) == 0 and
-                player.vel.y <= 0) and
+                    player.vel.y <= 0) and
                 distanceToPlayer < 85) or
-                (((yoshiGrabbingActions[player.action]) and player.actionArg == 2) and distanceToPlayer < 100)
-         then
+            (((yoshiGrabbingActions[player.action]) and player.actionArg == 2) and distanceToPlayer < 100)
+        then
             player.pos.x = o.oPosX
             player.pos.z = o.oPosZ
             player.faceAngle.y = o.oMoveAngleYaw
@@ -178,8 +235,8 @@ end
 function yoshi_set_model(o)
     local rider = gMarioStates[o.heldByPlayerIndex]
     o.globalPlayerIndex = network_global_index_from_local(rider.playerIndex)
-    
-    
+
+
     if gPlayerSyncTable[rider.playerIndex].yoshi_model == true then
         if o.oAction == 0 then
             obj_set_model_extended(o, E_MODEL_YOSHI_RIDEABLE)
@@ -217,7 +274,6 @@ id_bhvYoshiRideable = hook_behavior(nil, OBJ_LIST_PUSHABLE, true, bhv_yoshi_ride
 gPlayerSyncTable[0].yoshi_model = true
 
 function yoshi_model_command(msg)
-
     if msg == "on" then
         gPlayerSyncTable[0].yoshi_model = true
         djui_popup_create("Your Yoshi is now using the modded model.", 1)
