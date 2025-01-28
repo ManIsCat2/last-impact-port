@@ -22,7 +22,7 @@ function yohi_tongue_init(o)
 
     o.header.gfx.skipInViewCheck = true
 end
-local msf = 285
+local msf = 285 
 ---@param o Object
 function yohi_tongue_loop(o)
     o.oPosX = o.parentObj.oPosX + (sins(o.parentObj.oFaceAngleYaw) * msf)

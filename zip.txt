@@ -1,0 +1,1 @@
+zip -r last_impact_coop.zip * -x \*.c \*.h \*.png \*.blend \*.blend1 \*.bmp \*.mtl \*.obj
