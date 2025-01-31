@@ -1290,6 +1290,7 @@ local function bhv_rocket_init(o)
     o.hitboxHeight = 900
     o.hitboxRadius = 310
     o.oIntangibleTimer = 0
+    o.oFaceAngleYaw = o.oFaceAngleYaw + 32768
     cur_obj_set_home_once()
     network_init_object(o, true, { "oPosY", "oAction", "oTimer" })
 end
@@ -5263,7 +5264,7 @@ function fludd_box_init(o)
     o.header.gfx.skipInViewCheck = true
     o.collisionData = smlua_collision_util_get("fludd_box_collision")
 
-    network_init_object(o, true, {"oAnimState", "oAction"})
+    network_init_object(o, true, { "oAnimState", "oAction" })
 end
 
 ---@param o Object
@@ -5289,3 +5290,17 @@ function fludd_box_loop(o)
 end
 
 bhvFLUDDBox = hook_behavior(nil, OBJ_LIST_SURFACE, true, fludd_box_init, fludd_box_loop)
+
+function bhv_do_not_consume(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+    o.collisionData = smlua_collision_util_get("do_not_consume_collision")
+    o.oCollisionDistance = 2000
+end
+
+function bhv_do_not_consume_loop(o)
+    load_object_collision_model()
+end
+
+---bhvFadingWarpStand
+bhvDoNotConsume = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_do_not_consume, bhv_do_not_consume_loop)
