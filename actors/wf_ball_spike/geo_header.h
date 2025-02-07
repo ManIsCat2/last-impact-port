@@ -1,0 +1,10 @@
+extern const GeoLayout wf_ball_spike_geo[];
+extern Lights1 wf_ball_spike_Material_1_f3d_lights;
+extern u8 wf_ball_spike__1_ci8[];
+extern u8 wf_ball_spike__1_pal_rgba16[];
+extern Vtx wf_ball_spike_sm64_mesh_mesh_layer_1_vtx_cull[8];
+extern Vtx wf_ball_spike_sm64_mesh_mesh_layer_1_vtx_0[76];
+extern Gfx wf_ball_spike_sm64_mesh_mesh_layer_1_tri_0[];
+extern Gfx mat_wf_ball_spike_Material_1_f3d[];
+extern Gfx mat_revert_wf_ball_spike_Material_1_f3d[];
+extern Gfx wf_ball_spike_sm64_mesh_mesh_layer_1[];

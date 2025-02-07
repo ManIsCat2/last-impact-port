@@ -833,8 +833,8 @@ function fludd_powerup(m)
     if gPlayerSyncTable[0].powerup == FLUDD then
         if (m.action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION) ~= 0 then
             if (m.action & ACT_FLAG_INVULNERABLE) == 0 then
-                if (m.controller.buttonDown & X_BUTTON) ~= 0 then
-                    if m.pos.y > m.floorHeight + 72 * 2.3 then
+                if (m.controller.buttonDown & A_BUTTON) ~= 0 then
+                    if m.pos.y > m.floorHeight + 102 * 2.3 then
                         if not hasFludded then
                             fluddTimer = fluddTimer + 1
                             m.particleFlags = PARTICLE_SNOW

@@ -15,10 +15,6 @@ OW1 - Castle Grounds:
 --Cutscene for Moon in the distance after a certain star count in beginning
 --Cutscene of Peach getting kidnapped by Rashay when Key 1 and 45 stars are collected
 
-Underground Tunnel:
---Lava bubble sound effects not in
---Texture for entryway to cave and exit beyond the gates are not there
-
 Course 1 - Wildlife Valley:
 --Wigglers are broken
 --Monkey is not in due to import failure of model and armature
