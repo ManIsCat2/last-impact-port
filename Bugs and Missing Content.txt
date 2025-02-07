@@ -7,7 +7,7 @@ limitations. Until coop is updated with higher dialog/cutscene trig limits, any 
 modified properly cannot be added to this port.
 
 OW1 - Castle Grounds: 
---Coconuts for Yoshi for CG Star 1
+--CG Star 1
 --Certain mods break compatibility after some use (ignore for now)
 --Opening cutscene not in
 --Both goomba bros. encounters are broken due to dialog limit
