@@ -5302,5 +5302,4 @@ function bhv_do_not_consume_loop(o)
     load_object_collision_model()
 end
 
----bhvFadingWarpStand
 bhvDoNotConsume = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_do_not_consume, bhv_do_not_consume_loop)

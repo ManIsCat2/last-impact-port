@@ -14,7 +14,6 @@ OW1 - Castle Grounds:
 --Moon getting closer to CG for every star you collect
 --Cutscene for Moon in the distance after a certain star count in beginning
 --Cutscene of Peach getting kidnapped by Rashay when Key 1 and 45 stars are collected
---Inner cave texture to tunnel isn't there
 
 Underground Tunnel:
 --Lava bubble sound effects not in
@@ -28,10 +27,8 @@ Course 1 - Wildlife Valley:
 
 Course 2 - Stonesnake Shatters:
 --Normal enemies not implemented
---Puzzle star (star 4) is in but gate and puzzle mechanics not implemented yet (star is inside the wall)
+--Puzzle star (star 4) is in but gate and puzzle mechanics not implemented yet
 --NPCs/Major NPCs for stars not implemented yet
---Tent area not implemented
---Snake Temple not implemented
 --Specialized rolling enemies not implemented (star 1)
 --Ancient Attacker boss isn't in yet
 

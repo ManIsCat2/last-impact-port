@@ -85,7 +85,7 @@ function base_hud()
         djui_hud_render_texture(lifeIcon, 22, 15, charSelect and 16 / lifeIcon.width or 1, charSelect and 16 / lifeIcon.height or 1)
 
         djui_hud_print_text("@", 38, 15, 1)
-        djui_hud_print_text(tostring(m.numLives), 54, 15, 1)
+        djui_hud_print_text(tostring(hud_get_value(HUD_DISPLAY_LIVES)), 54, 15, 1)
 
         -- Star Counter
 
