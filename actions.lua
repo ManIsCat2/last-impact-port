@@ -28,6 +28,18 @@ function act_fludd_float(m)
     common_air_action_step(m, ACT_JUMP_LAND, CHAR_ANIM_DOUBLE_JUMP_RISE,
         AIR_STEP_CHECK_LEDGE_GRAB | AIR_STEP_CHECK_HANG);
     m.faceAngle.y = approach_s16_symmetric(m.faceAngle.y, s16(m.intendedYaw), 0x280)
+    targetSpeed = m.intendedMag < 12 and m.intendedMag or 12;
+    if (m.forwardVel <= 0.0) then
+        m.forwardVel = m.forwardVel + 1.1;
+    elseif (m.forwardVel <= targetSpeed) then
+        m.forwardVel = m.forwardVel + 1.1 - m.forwardVel / 43.0;
+    elseif (m.floor ~= nil and m.floor.normal.y >= 0.95) then
+        m.forwardVel = m.forwardVel - 1.0;
+    end
+    m.pos.y = m.pos.y +1
+    if (m.forwardVel > 12) then
+        m.forwardVel = 12;
+    end
 end
 
 hook_mario_action(ACT_BACKWARD_AIR_KB_MODIFIED, { every_frame = act_backward_air_kb_modified })

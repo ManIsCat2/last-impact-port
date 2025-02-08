@@ -78,7 +78,7 @@ end
 
 ---@param m MarioState
 ---@param button number
-function is_button_down(m, button)
+local function is_button_down(m, button)
     return m.controller.buttonDown & button ~= 0
 end
 
@@ -953,18 +953,11 @@ local function bhv_cotmc_tree_init(o)
     o.hitboxRadius = 160
     o.hitboxHeight = 864
     o.oIntangibleTimer = 0
-    o.oCollisionDistance = 19455 --kaze what the fuck
-    o.oInteractType = INTERACT_BREAKABLE
-    o.collisionData = smlua_collision_util_get("cotmc_tree_collision")
+    o.oInteractType = INTERACT_IGLOO_BARRIER
     obj_set_model_extended(o, MODEL_COTMC_TREE)
 end
 
----@param o Object
-local function bhv_cotmc_tree_loop(o)
-    load_object_collision_model()
-end
-
-bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, bhv_cotmc_tree_loop)
+bhvCustomCotmcTrees = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_cotmc_tree_init, nil)
 
 local function bhv_gummy_bear_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE

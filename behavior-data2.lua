@@ -2499,7 +2499,6 @@ end
 
 bhvDoNotConsume = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_do_not_consume, bhv_do_not_consume_loop)
 
-
 local function bhv_ball_spike(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
@@ -2583,7 +2582,7 @@ bhvWFBalls = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_wf_balls, bhv_wf_ba
 
 
 ---taken from Behavior Ball example from examples in docs/lua and edited to work with last impact
-function bhv_ball_init(obj)
+local function bhv_ball_init(obj)
     obj.oFlags            = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     obj.oGraphYOffset     = 35
 
@@ -2602,7 +2601,7 @@ function bhv_ball_init(obj)
     network_init_object(obj, true, nil)
 end
 
-function bhv_ball_loop(obj)
+local function bhv_ball_loop(obj)
     local m = nearest_mario_state_to_object(obj)
     local player = m.marioObj
     local distanceToPlayer = dist_between_objects(obj, player)
@@ -2675,3 +2674,29 @@ function bhv_ball_loop(obj)
 end
 
 bhvCGCoconut = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_ball_init, bhv_ball_loop)
+
+local function bhv_fludd_blackspot(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    o.header.gfx.skipInViewCheck = true
+
+    o.hitboxRadius = 120
+    o.hitboxHeight = 2000
+    o.oIntangibleTimer = 0
+    o.oOpacity=255
+end
+MODEL_BLACKSPOT=smlua_model_util_get_id("fludd_blackspot_geo")
+local function bhv_fludd_blackspot_loop(o)
+    local pm = nearest_mario_state_to_object(o)
+    obj_set_model_extended(o,MODEL_BLACKSPOT)
+    if pm.action == ACT_FLUDD_FLOAT then
+        if obj_check_hitbox_overlap(o, pm.marioObj) then
+            o.oOpacity = o.oOpacity - 1
+            if o.oOpacity <= 0 then
+                obj_mark_for_deletion(o)
+            end
+        end
+    end
+end
+
+bhvFluddBlackSpot = hook_behavior(id_bhvWfRotatingWoodenPlatform, OBJ_LIST_LEVEL, true, bhv_fludd_blackspot,
+    bhv_fludd_blackspot_loop)

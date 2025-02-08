@@ -840,7 +840,7 @@ function fludd_powerup(m)
                             m.particleFlags = PARTICLE_SNOW
                             m.vel.y = 0
                             m.action = ACT_FLUDD_FLOAT
-                            m.forwardVel = 12
+                           -- m.forwardVel = 12
                         end
 
                         if fluddTimer > 4.5 * 30 then ----- 5 seconds

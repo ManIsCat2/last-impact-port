@@ -20,7 +20,7 @@ for i = 0, (MAX_PLAYERS - 1) do
     e.hasMagicWand = false
 end
 
-function fuzzy_dizziness(m)
+local function fuzzy_dizziness(m)
     local e = gMarioStateExtras[m.playerIndex]
 
     if e.fuzzied and m.playerIndex == 0 then
@@ -34,7 +34,7 @@ function fuzzy_dizziness(m)
     end
 end
 
-function health_fix(m)
+local function health_fix(m)
     if m.playerIndex ~= 0 then return end
 
     if (m.health >> 8) > 6 then
@@ -46,7 +46,7 @@ local wdwmodf1 = 0.002
 local wdwmodf2 = 500
 local wdwmodf3 = 3100
 
-function wdw_water_behavior(m)
+local function wdw_water_behavior(m)
     ---o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     if gNetworkPlayers[0].currLevelNum == LEVEL_WDW and gNetworkPlayers[0].currAreaIndex == 1 and obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvMouthWaterThing).oAction ~= 1 then
         set_water_level(0, (math.sin(get_global_timer() * wdwmodf1) * wdwmodf2) - wdwmodf3, true)
@@ -55,11 +55,11 @@ function wdw_water_behavior(m)
     end
 end
 
-function remove_fd(m)
+local function remove_fd(m)
     m.peakHeight = m.pos.y
 end
 
-function particles_sparkles_bossfight(m)
+local function particles_sparkles_bossfight(m)
     if m.playerIndex == 0 then
         if obj_get_nearest_object_with_behavior_id(m.marioObj, bhvGoombaBros) and obj_get_nearest_object_with_behavior_id(m.marioObj, bhvGoombaBros).oAction == 1 then
             m.particleFlags = PARTICLE_SPARKLES
@@ -67,7 +67,7 @@ function particles_sparkles_bossfight(m)
     end
 end
 
-function tp_lll_2()
+local function tp_lll_2()
     if gNetworkPlayers[0].currActNum == 5 then
         if gNetworkPlayers[0].currLevelNum == LEVEL_LLL then
             if gNetworkPlayers[0].currAreaIndex == 1 then
@@ -79,7 +79,7 @@ end
 
 local jrbwath = 1
 
-function remove_water_act5_jrb(m)
+local function remove_water_act5_jrb(m)
     if m.playerIndex == 0 then
         if gNetworkPlayers[0].currActNum == 5 then
             if gNetworkPlayers[0].currLevelNum == LEVEL_JRB then
@@ -93,25 +93,25 @@ function remove_water_act5_jrb(m)
     end
 end
 
-function fix_cap_on(m)
+local function fix_cap_on(m)
     m.flags = m.flags | MARIO_CAP_ON_HEAD
 end
 
-function hook_level_inits()
+local function hook_level_inits()
     tp_lll_2()
 end
 
-function mario_update_hooks(m)
+local function mario_update_hooks(m)
     health_fix(m)
     fuzzy_dizziness(m)
     wdw_water_behavior(m)
     remove_fd(m)
-    particles_sparkles_bossfight(m)
+    --particles_sparkles_bossfight(m)
     remove_water_act5_jrb(m)
     fix_cap_on(m)
 end
 
-function remove_all_extra_states()
+local function remove_all_extra_states()
     local e = gMarioStateExtras[0]
     e.fuzzied = false
     e.fuzziedtimer = 0
