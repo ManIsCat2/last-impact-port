@@ -27,6 +27,7 @@ if _G.OmmEnabled then
         _G.OmmApi.omm_register_star_behavior(bhvCorkDrainWater, "Cork", "CORK", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvMusicalFruitStarSpawn, "Musical Fruits", "MUSICAL FRUITS", function(bhvParams) return true end)
         _G.OmmApi.omm_register_star_behavior(bhvSpiderBoss, "Boss Spider", "BOSS SPIDER", function(bhvParams) return true end)
+        _G.OmmApi.omm_register_star_behavior(bhvFluddBlackSpotStarSpawn, "Mud", "MUD", function(bhvParams) return true end)
 
 
         --------------------

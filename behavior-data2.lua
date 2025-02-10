@@ -2682,12 +2682,16 @@ local function bhv_fludd_blackspot(o)
     o.hitboxRadius = 120
     o.hitboxHeight = 2000
     o.oIntangibleTimer = 0
-    o.oOpacity=255
+    ---doesnt work???
+    o.oOpacity = 80
+    network_init_object(o, true, {"activeFlags"})
 end
-MODEL_BLACKSPOT=smlua_model_util_get_id("fludd_blackspot_geo")
+
+MODEL_BLACKSPOT = smlua_model_util_get_id("fludd_blackspot_geo")
+
 local function bhv_fludd_blackspot_loop(o)
     local pm = nearest_mario_state_to_object(o)
-    obj_set_model_extended(o,MODEL_BLACKSPOT)
+    obj_set_model_extended(o, MODEL_BLACKSPOT)
     if pm.action == ACT_FLUDD_FLOAT then
         if obj_check_hitbox_overlap(o, pm.marioObj) then
             o.oOpacity = o.oOpacity - 1
@@ -2700,3 +2704,12 @@ end
 
 bhvFluddBlackSpot = hook_behavior(id_bhvWfRotatingWoodenPlatform, OBJ_LIST_LEVEL, true, bhv_fludd_blackspot,
     bhv_fludd_blackspot_loop)
+
+local function fludd_blackspot_starspawn(o)
+    if obj_count_objects_with_behavior_id(bhvFluddBlackSpot) == 0 then
+        spawn_red_coin_cutscene_star(o.oPosX, o.oPosY, o.oPosZ)
+    end
+end
+
+bhvFluddBlackSpotStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, nil,
+    fludd_blackspot_starspawn)
