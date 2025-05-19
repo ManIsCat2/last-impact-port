@@ -9,7 +9,6 @@
 E_MODEL_BEE_MARIO = smlua_model_util_get_id("bee_mario_geo")
 E_MODEL_CLOUD_MARIO = smlua_model_util_get_id("cloud_mario_geo")
 E_MODEL_SPRING_MARIO = smlua_model_util_get_id("spring_mario_geo")
-E_MODEL_FLUDD_MARIO = smlua_model_util_get_id("fludd_mario_geo")
 
 -- Sounds
 
@@ -24,7 +23,6 @@ RAINBOW = 3
 FIRE = 4
 ICE = 5
 SPRING = 6
-FLUDD = 7
 
 -- Powerup Relatives
 local cloudcount = 0        -- for cloud flower
@@ -33,11 +31,19 @@ local savedBGM = 0          -- for rainbow star
 local rainbow_music = false -- for rainbow star
 
 characterPowerupModels = {
-    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, fludd = E_MODEL_FLUDD_MARIO },
-    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, fludd = E_MODEL_FLUDD_MARIO },
-    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, fludd = E_MODEL_FLUDD_MARIO },
-    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, fludd = E_MODEL_FLUDD_MARIO },
-    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, fludd = E_MODEL_FLUDD_MARIO },
+    [CT_MARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, },
+    [CT_LUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, },
+    [CT_TOAD] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, },
+    [CT_WARIO] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, },
+    [CT_WALUIGI] = { bee = E_MODEL_BEE_MARIO, cloud = E_MODEL_CLOUD_MARIO, rainbow = nil, fire = nil, ice = nil, spring = E_MODEL_SPRING_MARIO, },
+}
+
+local default_models = {
+    [CT_MARIO] = E_MODEL_MARIO,
+    [CT_LUIGI] = E_MODEL_LUIGI,
+    [CT_TOAD] = E_MODEL_TOAD_PLAYER,
+    [CT_WALUIGI] = E_MODEL_WALUIGI,
+    [CT_WARIO] = E_MODEL_WARIO
 }
 
 -- Powerups are a PlayerSyncTable by the way.
@@ -45,6 +51,7 @@ characterPowerupModels = {
 -- Powerup States, to add more powerups here, you must first add them to the enum and assign a number
 
 -- To fix script errors on startup
+local powerup_model = nil
 local powerupStates = {
     [NORMAL] = { modelId = nil },
     [BEE] = { modelId = nil },
@@ -53,7 +60,6 @@ local powerupStates = {
     [FIRE] = { modelId = nil },
     [ICE] = { modelId = nil },
     [SPRING] = { modelId = nil },
-    [FLUDD] = { modelId = nil },
 }
 function get_character_model(m)
     if m.playerIndex ~= 0 then return end
@@ -61,46 +67,22 @@ function get_character_model(m)
     CPMM = characterPowerupModels[CT_MARIO]        -- To get Mario's model easily
 
     powerupStates = {
-        [NORMAL] = { modelId = nil },
+        [NORMAL] = { modelId = default_models[gMarioStates[0].character.type] },
         [BEE] = { modelId = CPM.bee and CPM.bee or CPMM.bee },
         [CLOUD] = { modelId = CPM.cloud and CPM.cloud or CPMM.cloud },
         [RAINBOW] = { modelId = CPM.rainbow and CPM.rainbow or CPMM.rainbow },
         [FIRE] = { modelId = CPM.fire and CPM.fire or CPMM.fire },
         [ICE] = { modelId = CPM.ice and CPM.ice or CPMM.ice },
         [SPRING] = { modelId = CPM.spring and CPM.spring or CPMM.spring },
-        [FLUDD] = { modelId = CPM.fludd and CPM.fludd or CPMM.fludd },
     }
+
+    powerup_model = powerupStates[gPlayerSyncTable[0].powerup].modelId
+    gPlayerSyncTable[0].modelId = powerup_model
 end
 
---- Charselect Model fix. By OneCalledRPG
-function cs_model_set(m)
-    if _G.charSelectExists then
-        if _G.charSelect.character_get_current_number() == 1 then
-            get_character_model(m)
-        else
-            powerupStates = {
-                [NORMAL] = { modelId = nil },
-                [BEE] = { modelId = nil },
-                [CLOUD] = { modelId = nil },
-                [RAINBOW] = { modelId = nil },
-                [FIRE] = { modelId = nil },
-                [ICE] = { modelId = nil },
-                [SPRING] = { modelId = nil },
-                [FLUDD] = { modelId = nil },
-            }
-        end
-    else
-        get_character_model(m)
-    end
-end
-
-hook_event(HOOK_MARIO_UPDATE, cs_model_set)
+hook_event(HOOK_MARIO_UPDATE, get_character_model)
 
 -- Powerup Model Functions --
-
-function powerups()
-    gPlayerSyncTable[0].modelId = powerupStates[gPlayerSyncTable[0].powerup].modelId
-end
 
 hook_event(HOOK_OBJECT_SET_MODEL, function(o)
     if obj_has_behavior_id(o, id_bhvMario) ~= 0 then
@@ -108,10 +90,16 @@ hook_event(HOOK_OBJECT_SET_MODEL, function(o)
 
         if gPlayerSyncTable[i].powerup == nil then gPlayerSyncTable[i].powerup = NORMAL end
 
-        if gPlayerSyncTable[i].modelId ~= nil and obj_has_model_extended(o, gPlayerSyncTable[i].modelId) == 0 then
-            obj_set_model_extended(o, gPlayerSyncTable[i].modelId)
+        if _G.charSelectExists then
+			for i = 1, 5 do
+    			_G.charSelect.character_edit_costume(1, i, nil, nil, nil, nil, powerup_model)
+			end
+		else
+            if gPlayerSyncTable[i].modelId ~= nil and obj_has_model_extended(o, gPlayerSyncTable[i].modelId) == 0 then
+                obj_set_model_extended(o, gPlayerSyncTable[i].modelId)
+            end
         end
-        return
+        --return
     end
 end)
 
@@ -144,7 +132,6 @@ function damage_check(m)
     end
 end
 
-hook_event(HOOK_UPDATE, powerups)
 hook_event(HOOK_MARIO_UPDATE, damage_check)
 hook_event(HOOK_ON_DEATH, on_death_warp)
 hook_event(HOOK_ON_WARP, on_death_warp)
@@ -339,21 +326,6 @@ function bhv_ice_flower_init(obj)
     network_init_object(obj, true, nil)
 end
 
-MODEL_FLUDD = smlua_model_util_get_id("fludd_geo")
-
----@param obj Object
-function bhv_fludd_init(obj)
-    obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    obj.hitboxRadius = 65
-    obj.hitboxHeight = 65
-    obj.oIntangibleTimer = 0
-    obj.oGravity = 3
-    obj_scale(obj, 0.3)
-    --obj.oFaceAngleYaw = obj.oFaceAngleYaw + 32768
-    obj_set_model_extended(obj, MODEL_FLUDD)
-    network_init_object(obj, true, nil)
-end
-
 ---@param obj Object
 function bhv_beesuit_loop(obj)
     object_step()
@@ -388,12 +360,6 @@ function bhv_spring_mushroom_loop(obj)
     object_step()
     obj.oFaceAngleYaw = obj.oFaceAngleYaw + ((65536 / 360) * 2.2)
     general_powerup_handler(obj, SPRING)
-end
-
----@param obj Object
-function bhv_fludd_loop(obj)
-    object_step()
-    general_powerup_handler2(obj, FLUDD)
 end
 
 ---only deletes for local player
@@ -565,7 +531,6 @@ bhvBeeShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_beesuit_init, bhv
 bhvCloudFlower = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cloudflower_init, bhv_cloudflower_loop)
 bhvRainbowStar = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_rainbow_star_init, bhv_rainbow_star_loop)
 bhvSpringShroom = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_spring_mushroom_init, bhv_spring_mushroom_loop)
-bhvFLUDD = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_fludd_init, bhv_fludd_loop)
 ---bhvFireFlower
 hook_behavior(id_bhvMetalCap, OBJ_LIST_GENACTOR, true, bhv_fire_flower_init, bhv_fire_flower_loop)
 ---bhvIceFlower
@@ -682,56 +647,53 @@ local rainbow_acts = {
 
 ---@param m MarioState
 function rainbow_powerup(m)
-    if m.playerIndex == 0 then
-        --djui_chat_message_create(tostring(gMarioObject.oHiddenBlueCoinSwitch))
-        if gPlayerSyncTable[0].powerup == RAINBOW then
-            if not rainbow_music then
-                audio_stream_set_looping(audio_rainbowmario, true)
-                audio_stream_play(audio_rainbowmario, true, 1.2)
-                rainbow_music = true
-            end
+    if m.playerIndex ~= 0 then return end
+    local gMarioObject = m.marioObj
 
-            rainbow_timer = rainbow_timer + 1
-            set_background_music(0, 0, 0)
-
-            m.particleFlags = PARTICLE_SPARKLES
-
-            if rainbow_acts[m.action] then
-                m.action = ACT_SPECIAL_TRIPLE_JUMP
-            end
-
-
-            if m.action == ACT_WALKING then
-                m.forwardVel = 45
-            end
-
-            if rainbow_timer > (20 * 30) then
-                gPlayerSyncTable[0].powerup = NORMAL
-                network_player_reset_override_palette(gNetworkPlayers[0])
-                rainbow_timer = 0
-                rainbow_music = false
-                audio_stream_stop(audio_rainbowmario)
-                set_background_music(0, savedBGM, 0)
-            end
-        else
-            savedBGM = get_current_background_music()
+    local gt = get_global_timer()
+    --djui_chat_message_create(tostring(gMarioObject.oHiddenBlueCoinSwitch))
+    if gPlayerSyncTable[0].powerup == RAINBOW then
+        if not rainbow_music then
+            audio_stream_set_looping(audio_rainbowmario, true)
+            audio_stream_play(audio_rainbowmario, true, 1.2)
+            rainbow_music = true
         end
-    end
 
-    if gPlayerSyncTable[m.playerIndex].powerup == RAINBOW then
+        rainbow_timer = rainbow_timer + 1
+        set_background_music(0, 0, 0)
+
+        m.particleFlags = PARTICLE_SPARKLES
+
+        if rainbow_acts[m.action] then
+            m.action = ACT_SPECIAL_TRIPLE_JUMP
+        end
+
+
+        if m.action == ACT_WALKING then
+            m.forwardVel = 45
+        end
         ---@type PlayerPart
         for part = PANTS, PLAYER_PART_MAX - 1 do
             for i = 0, 255 do
-                local gt = get_global_timer()
                 i = i + 20
                 j = gt / 50
-                local gMarioObject = m.marioObj
                 local r = math.sin(0.00 + i / 15 + gMarioObject.oTimer / 2) * 127 + 127
                 local g = math.sin(0.33 + i / 33 + j) * 127 + 127
                 local b = math.sin(0.66 + i / 77 + j) * 127 + 127
-                network_player_set_override_palette_color(gNetworkPlayers[m.playerIndex], part, { r = r, g = g, b = b })
+                network_player_set_override_palette_color(gNetworkPlayers[0], part, { r = r, g = g, b = b })
             end
         end
+
+        if rainbow_timer > (20 * 30) then
+            gPlayerSyncTable[0].powerup = NORMAL
+            network_player_reset_override_palette(gNetworkPlayers[0])
+            rainbow_timer = 0
+            rainbow_music = false
+            audio_stream_stop(audio_rainbowmario)
+            set_background_music(0, savedBGM, 0)
+        end
+    else
+        savedBGM = get_current_background_music()
     end
 end
 
@@ -743,6 +705,12 @@ function ice_fire_flower_powerup(m)
     if m.playerIndex == 0 then
         local gMarioObject = m.marioObj
         if gPlayerSyncTable[0].powerup == FIRE or gPlayerSyncTable[0].powerup == ICE then
+            network_player_set_override_palette_color(gNetworkPlayers[0], SHIRT,
+                gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
+            network_player_set_override_palette_color(gNetworkPlayers[0], CAP,
+                gPlayerSyncTable[0].powerup == FIRE and { r = 255, g = 255, b = 255 } or { r = 0, g = 255, b = 255 })
+            network_player_set_override_palette_color(gNetworkPlayers[0], PANTS,
+                network_player_get_palette_color(gNetworkPlayers[0], SHIRT))
             if m.controller.buttonPressed & B_BUTTON ~= 0 and numFlamesThrown ~= 3 then
                 if m.action & ACT_FLAG_STATIONARY ~= 0 or m.action & ACT_FLAG_MOVING ~= 0 or rainbow_acts[m.action] or m.action == ACT_JUMP_KICK or m.action == ACT_MOVE_PUNCHING then
                     spawn_sync_object(bhvFireFlowerFire,
@@ -824,45 +792,6 @@ function spring_powerup(m)
     end
 end
 
-local fluddTimer = 0
-local hasFludded = false
-
----@param m MarioState
-function fludd_powerup(m)
-    if m.playerIndex ~= 0 then return end
-    if gPlayerSyncTable[0].powerup == FLUDD then
-        if (m.action & ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION) ~= 0 then
-            if (m.action & ACT_FLAG_INVULNERABLE) == 0 then
-                if (m.controller.buttonDown & A_BUTTON) ~= 0 then
-                    if m.pos.y > m.floorHeight + 102 * 2.3 then
-                        if not hasFludded then
-                            fluddTimer = fluddTimer + 1
-                            m.particleFlags = PARTICLE_SNOW
-                            m.vel.y = 0
-                            m.action = ACT_FLUDD_FLOAT
-                           -- m.forwardVel = 12
-                        end
-
-                        if fluddTimer > 4.5 * 30 then ----- 5 seconds
-                            fluddTimer = 0
-                            hasFludded = true
-                        end
-                    end
-                end
-            end
-        end
-        if m.action & ACT_FLAG_AIR == 0 then
-            hasFludded = false
-        end
-    end
-end
-
-function normal_powerup(m)
-    if gPlayerSyncTable[m.playerIndex].powerup == NORMAL then
-        network_player_reset_override_palette(gNetworkPlayers[m.playerIndex])
-    end
-end
-
 hook_mario_action(ACT_FLY, { every_frame = act_fly })
 
 hook_event(HOOK_MARIO_UPDATE, bee_update)
@@ -870,5 +799,3 @@ hook_event(HOOK_MARIO_UPDATE, spring_powerup)
 hook_event(HOOK_MARIO_UPDATE, rainbow_powerup)
 hook_event(HOOK_MARIO_UPDATE, ice_fire_flower_powerup)
 hook_event(HOOK_MARIO_UPDATE, cloud_powerup)
-hook_event(HOOK_MARIO_UPDATE, fludd_powerup)
-hook_event(HOOK_MARIO_UPDATE, normal_powerup)
