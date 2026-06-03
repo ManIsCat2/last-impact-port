@@ -1,6 +1,9 @@
 smlua_audio_utils_replace_sequence(0x01, 0x22, 75, "01_Seq_custom") --star collect
 --smlua_audio_utils_replace_sequence(0x02, 0x11, 75, "02_Seq_custom") --title
+smlua_audio_utils_replace_sequence(0x03, 0x25, 75, "03_Seq_custom") --level intro
+smlua_audio_utils_replace_sequence(0x04, 0x25, 75, "04_Seq_custom") --level intro minor (evil)
 smlua_audio_utils_replace_sequence(0x06, 0x25, 75, "06_Seq_custom") --snake temple
+smlua_audio_utils_replace_sequence(0x08, 0x1A, 75, "08_Seq_custom") --intro cutscene
 smlua_audio_utils_replace_sequence(0x09, 0x25, 75, "09_Seq_custom") --above the clouds
 smlua_audio_utils_replace_sequence(0x0B, 0x25, 75, "0B_Seq_custom") --dangerous minigame
 smlua_audio_utils_replace_sequence(0x0C, 0x15, 75, "0C_Seq_custom") --water temple
