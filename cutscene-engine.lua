@@ -15,6 +15,8 @@ local focusStep = gVec3fZero()
 local moveTimer = 0
 local focusTimer = 0
 
+local cutsceneMusic = 0
+
 local ls = gLakituState
 
 local function bhv_cutscene_obj_init(o)
@@ -60,6 +62,8 @@ function cutscene_play(data, skipable)
     moveTimer = 0
     focusTimer = 0
 
+    cutsceneMusic = 0
+
     prevCamMode = ls.mode
     ls.mode = CAMERA_MODE_NONE
 
@@ -81,6 +85,13 @@ function cutscene_end()
     ls.mode = prevCamMode
 
     hud_show()
+
+    -- not sure what the condition to stop music is
+    -- i'll add a "stop on cutscene end" param to cmd_play_music
+    -- once cutscenes are converted to lua
+    if cutsceneMusic ~= 0 and cutsceneMusic ~= 0x08 then
+        stop_background_music(cutsceneMusic)
+    end
 
     for _, o in pairs(cutsceneObjs) do
         obj_mark_for_deletion(o)
@@ -199,7 +210,9 @@ local function cmd_play_sound(flags, soundId)
         local layer = (flags >> 7) & 1
         local seqId = flags & 0x7F
 
-        set_background_music(layer, seqId, 0)
+        cutsceneMusic = seqId
+
+        play_music(layer, seqId, 0)
     else
         play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
     end
