@@ -182,6 +182,7 @@ local function cmd_set_obj_params(id, params, deactivate)
     if o then
         if deactivate then
             obj_mark_for_deletion(o)
+            cutsceneObjs[id] = nil
             return
         end
 
