@@ -121,6 +121,8 @@ event.onframeend(function()
             else
                 gui.addmessage("failed to open: " .. filename)
             end
+        else
+            gui.addmessage(string.format("%08x already dumped", hash))
         end
     end
 
