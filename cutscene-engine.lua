@@ -213,7 +213,7 @@ local function cmd_play_sound(flags, soundId)
 
         cutsceneMusic = seqId
 
-        play_music(layer, seqId, 0)
+        play_music(layer, (0x04 << 8) | seqId, 0)
     else
         play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
     end
