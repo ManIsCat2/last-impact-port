@@ -318,10 +318,6 @@ local function cutscene_update()
         skipTextTimer = skipTextTimer - 1
     end
 
-    if shouldGreyOut then
-        greyOutTimer = greyOutTimer - 1
-    end
-
     if isSkipable and gControllers[0].buttonPressed & A_BUTTON ~= 0 then
         if skipTextTimer > 0 then
             cutscene_end()
