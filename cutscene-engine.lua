@@ -34,7 +34,7 @@ local function bhv_cutscene_obj_loop(o)
     end
 end
 
-local id_bhvCutsceneObject = hook_behavior(nil, OBJ_LIST_GENACTOR, false, bhv_cutscene_obj_init, bhv_cutscene_obj_loop, "CutsceneObject")
+local id_bhvCutsceneObject = hook_behavior(nil, OBJ_LIST_GENACTOR, false, bhv_cutscene_obj_init, bhv_cutscene_obj_loop, "bhvCutsceneObject")
 
 local function act_kaze_cutscene(m)
     if not gCutsceneActive then
@@ -86,44 +86,39 @@ function cutscene_end()
 
     hud_show()
 
-    -- not sure what the condition to stop music is
-    -- i'll add a "stop on cutscene end" param to cmd_play_music
-    -- once cutscenes are converted to lua
     if cutsceneMusic ~= 0 and cutsceneMusic ~= 0x08 then
         stop_background_music(cutsceneMusic)
     end
 
-    for _, o in pairs(cutsceneObjs) do
-        obj_mark_for_deletion(o)
+    for k, v in pairs(cutsceneObjs) do
+        obj_mark_for_deletion(v)
+        cutsceneObjs[k] = nil
     end
 end
 
-local function cmd_define_object(model, id, params, animPtr)
+local function cmd_new_cutscene_obj(model, id, params, animPtr)
     if cutsceneObjs[id] then
         obj_mark_for_deletion(cutsceneObjs[id])
         cutsceneObjs[id] = nil
     end
 
-    local modelId = gCutsceneModelIds[model] or E_MODEL_ERROR_MODEL
+    local modelId = model or E_MODEL_ERROR_MODEL
 
     -- sync??
     local o = spawn_non_sync_object(id_bhvCutsceneObject, modelId, 0, 0, 0, function(o)
         o.oBehParams = params
-
-        if gCutsceneAnimPtrs[animPtr] then
-            o.oAnimations = gCutsceneAnimPtrs[animPtr]
-        end
+        o.oAnimations = animPtr
     end)
 
     cutsceneObjs[id] = o
 end
 
-local function cmd_next_frame(nFrames)
+local function cmd_skip_frames(nFrames)
     waitTimer = nFrames
     return true -- yield
 end
 
-local function cmd_set_obj_speed(id, speed, rotSpd)
+local function cmd_obj_spd(id, speed, rotSpd)
     local o = cutsceneObjs[id] ---@type Object
 
     if o then
@@ -134,7 +129,7 @@ local function cmd_set_obj_speed(id, speed, rotSpd)
     end
 end
 
-local function cmd_set_obj_rot(id, yRot, zRot)
+local function cmd_obj_rot(id, yRot, zRot)
     local o = cutsceneObjs[id]
 
     if o then 
@@ -144,7 +139,7 @@ local function cmd_set_obj_rot(id, yRot, zRot)
     end
 end
 
-local function cmd_warp_obj(id, x, y, z)
+local function cmd_obj_warp(id, x, y, z)
     local o = cutsceneObjs[id]
 
     if o then
@@ -154,7 +149,7 @@ local function cmd_warp_obj(id, x, y, z)
     end
 end
 
-local function cmd_set_cam_focus(nFrames, x, y, z)
+local function cmd_cam_focus(nFrames, x, y, z)
     nFrames = math.max(1, nFrames)
     focusTimer = nFrames
 
@@ -165,7 +160,7 @@ local function cmd_set_cam_focus(nFrames, x, y, z)
     vec3f_set(focusStep, dx, dy, dz)
 end
 
-local function cmd_set_cam_pos(nFrames, x, y, z)
+local function cmd_cam_pos(nFrames, x, y, z)
     nFrames = math.max(1, nFrames)
     moveTimer = nFrames
 
@@ -176,7 +171,7 @@ local function cmd_set_cam_pos(nFrames, x, y, z)
     vec3f_set(moveStep, dx, dy, dz)
 end
 
-local function cmd_set_obj_params(id, params, deactivate)
+local function cmd_obj_params(id, params, deactivate)
     local o = cutsceneObjs[id]
 
     if o then
@@ -190,7 +185,7 @@ local function cmd_set_obj_params(id, params, deactivate)
     end
 end
 
-local function cmd_scale_obj(id, scale)
+local function cmd_obj_scale(id, scale)
     local o = cutsceneObjs[id]
 
     if o then
@@ -198,7 +193,7 @@ local function cmd_scale_obj(id, scale)
     end
 end
 
-local function cmd_set_anim(id, _, anim)
+local function cmd_obj_anim(id, anim)
     local o = cutsceneObjs[id]
 
     if o then
@@ -234,30 +229,28 @@ local function cmd_cutscene_params(flags, daynight)
     if (flags & 0x04) ~= 0 then hud_show() end
 end
 
-local function cmd_show_text(xyPacked, textPtr)
-    local x = xyPacked & 0x3F
-    local y = (xyPacked >> 6) & 0x3F
+local function cmd_show_text(x, y, text)
 end
 
 local function cmd_spawn_obj(modelId, x, y, z, behavior)
 end
 
-local commands = {
-    [0x00] = { fmt = ">BBBI4",      handler = cmd_define_object  },
-    [0x01] = { fmt = ">I3",         handler = cmd_next_frame     },
-    [0x02] = { fmt = ">Bbb",        handler = cmd_set_obj_speed  },
-    [0x03] = { fmt = ">Bbb",        handler = cmd_set_obj_rot    },
-    [0x04] = { fmt = ">Bhhh",       handler = cmd_warp_obj       },
-    [0x05] = { fmt = ">Bhhh",       handler = cmd_set_cam_focus  },
-    [0x06] = { fmt = ">Bhhh",       handler = cmd_set_cam_pos    },
-    [0x07] = { fmt = ">BBB",        handler = cmd_set_obj_params },
-    [0x08] = { fmt = ">BB",         handler = cmd_scale_obj      },
-    [0x09] = { fmt = ">BBB",        handler = cmd_set_anim       },
-    [0x0A] = { fmt = ">BH",         handler = cmd_play_sound     },
-    [0x0B] = { fmt = ">BhhhhHI4",   handler = cmd_set_mario      },
-    [0x0C] = { fmt = ">BH",         handler = cmd_cutscene_params},
-    [0x0D] = { fmt = ">I3I4",       handler = cmd_show_text      },
-    [0x0E] = { fmt = ">BhhhI4",     handler = cmd_spawn_obj      },
+local cmdHandlers = {
+    obj_new = cmd_new_cutscene_obj,
+    skip_frames = cmd_skip_frames,
+    obj_speed = cmd_obj_spd,
+    obj_rot = cmd_obj_rot,
+    obj_warp = cmd_obj_warp,
+    cam_focus = cmd_cam_focus,
+    cam_pos = cmd_cam_pos,
+    obj_params = cmd_obj_params,
+    obj_scale = cmd_obj_scale,
+    obj_anim = cmd_obj_anim,
+    play_sound = cmd_play_sound,
+    set_mario = cmd_set_mario,
+    set_params = cmd_cutscene_params,
+    show_text = cmd_show_text,
+    spawn_obj = cmd_spawn_obj,
 }
 
 local function cutscene_update_camera()
@@ -281,29 +274,26 @@ end
 
 local function cutscene_run_frame()
     while gCutsceneActive do
-        local op = string.byte(cutsceneData, scriptPos)
+        local instr = cutsceneData[scriptPos]
 
-        if not op then
+        if not instr then
             cutscene_end()
             error("Cutscene reached EOF!!! Should not happen!!!")
             return
         end
 
-        local cmd = commands[op]
+        local handler = cmdHandlers[instr[1]]
 
-        if not cmd then
+        if not handler then
             cutscene_end()
-            error(string.format("unknown cutscene cmd 0x%02X at offset %d", op, scriptPos))
-
+            error(string.format("unknown cutscene cmd '%s' at offset %d", tostring(instr[1]), scriptPos))
             return
         end
 
-        local args = { string.unpack(cmd.fmt, cutsceneData, scriptPos + 1) }
-        scriptPos = table.remove(args) -- last value from unpack is the new pos
+        scriptPos = scriptPos + 1
 
-        local yield = cmd.handler(table.unpack(args))
-
-        if yield then
+        -- yield if handler returns true
+        if handler(table.unpack(instr, 2)) then
             return
         end
     end
@@ -318,7 +308,7 @@ local function cutscene_update()
         skipTextTimer = skipTextTimer - 1
     end
 
-    if isSkipable and gControllers[0].buttonPressed & A_BUTTON ~= 0 then
+    if isSkipable and (gControllers[0].buttonPressed & A_BUTTON) ~= 0 then
         if skipTextTimer > 0 then
             cutscene_end()
             return
