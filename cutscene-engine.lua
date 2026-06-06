@@ -137,7 +137,7 @@ local function cmd_obj_rot(id, yRot, zRot)
     if o then 
         o.oFaceAngleYaw = yRot << 8
         o.oMoveAngleYaw = yRot << 8
-        o.oFaceAnglePitch = zRot << 8
+        o.oFaceAngleRoll = zRot << 8
     end
 end
 
