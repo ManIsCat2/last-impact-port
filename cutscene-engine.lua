@@ -16,6 +16,7 @@ local moveTimer = 0
 local focusTimer = 0
 
 local cutsceneMusic = 0
+local keepMusicOnEnd = false
 
 local ls = gLakituState
 
@@ -86,13 +87,12 @@ function cutscene_end()
 
     hud_show()
 
-    if cutsceneMusic ~= 0x08 then
+    if not keepMusicOnEnd then
         stop_background_music(cutsceneMusic)
     end
 
-    for k, v in pairs(cutsceneObjs) do
+    for _, v in pairs(cutsceneObjs) do
         obj_mark_for_deletion(v)
-        cutsceneObjs[k] = nil
     end
 end
 
@@ -203,7 +203,7 @@ local function cmd_obj_anim(id, anim)
     end
 end
 
-local function cmd_play_sound(flags, soundId)
+local function cmd_play_sound(flags, soundId, keepOnEnd)
     if soundId == 0 then
         local layer = (flags >> 7) & 1
         local seqId = flags & 0x7F
@@ -212,6 +212,7 @@ local function cmd_play_sound(flags, soundId)
         play_music(layer, (0x04 << 8) | seqId, 0)
 
         cutsceneMusic = seqId
+        keepMusicOnEnd = keepOnEnd
     else
         play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
     end
