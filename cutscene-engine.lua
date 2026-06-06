@@ -86,7 +86,7 @@ function cutscene_end()
 
     hud_show()
 
-    if cutsceneMusic ~= 0 and cutsceneMusic ~= 0x08 then
+    if cutsceneMusic ~= 0x08 then
         stop_background_music(cutsceneMusic)
     end
 
@@ -99,7 +99,6 @@ end
 local function cmd_new_cutscene_obj(model, id, params, animPtr)
     if cutsceneObjs[id] then
         obj_mark_for_deletion(cutsceneObjs[id])
-        cutsceneObjs[id] = nil
     end
 
     local modelId = model or E_MODEL_ERROR_MODEL
@@ -209,9 +208,10 @@ local function cmd_play_sound(flags, soundId)
         local layer = (flags >> 7) & 1
         local seqId = flags & 0x7F
 
-        cutsceneMusic = seqId
-
+        stop_background_music(cutsceneMusic)
         play_music(layer, (0x04 << 8) | seqId, 0)
+
+        cutsceneMusic = seqId
     else
         play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
     end
