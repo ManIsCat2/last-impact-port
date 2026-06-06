@@ -2,7 +2,7 @@
 
 CUTSCENE_HMC_ACT_6 = {
 	{"play_sound", 0x03, 0x0000},
-	{"obj_new", dummy.model_0x66, 0, 0x00, dummy.anim_0x06025178},
+	{"obj_new", E_MODEL_CHAIN_CHOMP, 0, 0x00, gObjectAnimations.chain_chomp_seg6_anims_06025178},
 	{"obj_warp", 0, 2085, -891, -1199},
 	{"obj_anim", 0, 0},
 	{"obj_scale", 0, 200},

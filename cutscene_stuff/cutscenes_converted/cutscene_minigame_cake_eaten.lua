@@ -1,9 +1,7 @@
--- CUTSCENE_MINIGAME_CAKE_EATEN
-
 CUTSCENE_MINIGAME_CAKE_EATEN = {
-	{"obj_new", dummy.model_0xc0, 1, 0x80, dummy.anim_0x0801da4c},
-	{"obj_new", dummy.model_0xc0, 3, 0x80, dummy.anim_0x0801da4c},
-	{"obj_new", dummy.model_0xc0, 5, 0x80, dummy.anim_0x0801da4c},
+	{"obj_new", E_MODEL_GOOMBA, 1, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
+	{"obj_new", E_MODEL_GOOMBA, 3, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
+	{"obj_new", E_MODEL_GOOMBA, 5, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
 	{"obj_anim", 1, 0},
 	{"obj_anim", 3, 0},
 	{"obj_anim", 5, 0},

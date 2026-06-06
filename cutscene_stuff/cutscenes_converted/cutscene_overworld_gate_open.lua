@@ -3,8 +3,8 @@
 CUTSCENE_OVERWORLD_GATE_OPEN = {
 	{"cam_pos", 1, 6867, 0, 4562},
 	{"cam_focus", 1, 8161, -519, 5852},
-	{"obj_new", dummy.model_0x39, 0, 0x00, dummy.anim_0x00000000},
-	{"obj_new", dummy.model_0x39, 2, 0x00, dummy.anim_0x00000000},
+	{"obj_new", MODEL_CG_20_GATE, 0, 0x00, 0},
+	{"obj_new", MODEL_CG_20_GATE, 2, 0x00, 0},
 	{"obj_warp", 0, 8063, -707, 4804},
 	{"obj_warp", 2, 7527, -707, 5957},
 	{"play_sound", 0x00, 0x3006},

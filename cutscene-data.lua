@@ -372,7 +372,7 @@ CUTSCENE_HMC_ACT_4 = {
 
 CUTSCENE_HMC_ACT_6 = {
 	{"play_sound", 0x03, 0x0000},
-	{"obj_new", dummy.model_0x66, 0, 0x00, dummy.anim_0x06025178},
+	{"obj_new", E_MODEL_CHAIN_CHOMP, 0, 0x00, gObjectAnimations.chain_chomp_seg6_anims_06025178},
 	{"obj_warp", 0, 2085, -891, -1199},
 	{"obj_anim", 0, 0},
 	{"obj_scale", 0, 200},
@@ -397,7 +397,7 @@ CUTSCENE_HMC_ACT_6 = {
 
 CUTSCENE_INTRO = {
 	{"play_sound", 0x08, 0x0000},
-	{"spawn_obj", dummy.model_0xdd, 4226, -379, 4468, dummy.beh_0x13000600},
+	{"spawn_obj", E_MODEL_TOAD, 4226, -379, 4468, id_bhvToadMessage},
 	{"skip_frames", 1},
 	{"cam_focus", 1, 4155, -390, 4667},
 	{"cam_pos", 1, 6255, 443, 3084},
@@ -409,17 +409,18 @@ CUTSCENE_INTRO = {
 	{"cam_pos", 96, 3292, 235, 3343},
 	{"skip_frames", 96},
 	{"cam_focus", 160, 12323, 21936, 5064},
-	{"spawn_obj", dummy.model_0x37, 12323, 26032, 5064, dummy.beh_0x13000174},
-	{"spawn_obj", dummy.model_0x37, 12323, 26032, 5064, dummy.beh_0x13000198},
-	{"spawn_obj", dummy.model_0x37, 12323, 26032, 5064, dummy.beh_0x130001b0},
+	{"spawn_obj", smlua_model_util_get_id("meteor_geo"), 12323, 26032, 5064, bhvIntroMeteor0},
+	{"spawn_obj", smlua_model_util_get_id("meteor_geo"), 12323, 26032, 5064, bhvIntroMeteor1},
+	{"spawn_obj", smlua_model_util_get_id("meteor_geo"), 12323, 26032, 5064, bhvIntroMeteor2},
 	{"skip_frames", 64},
 	{"cam_focus", 32, 4686, -527, 4911},
 	{"cam_pos", 32, 2270, 1335, 3895},
 	{"skip_frames", 16},
 	{"play_sound", 0x00, 0x507f},
 	{"skip_frames", 16},
-	{"spawn_obj", dummy.model_0x00, 4332, -527, 3419, dummy.beh_0x13000e24},
-	{"spawn_obj", dummy.model_0x00, 4271, -527, 5579, dummy.beh_0x13000e24},
+	-- piranha plant spawners
+	{"spawn_obj", E_MODEL_NONE, 4332, -527, 3419, dummy.beh_0x13000e24},
+	{"spawn_obj", E_MODEL_NONE, 4271, -527, 5579, dummy.beh_0x13000e24},
 	{"play_sound", 0x00, 0x302e},
 	{"obj_new", dummy.model_0x85, 0, 0x00, dummy.anim_0x007ef5e0},
 	{"obj_new", dummy.model_0x85, 2, 0x00, dummy.anim_0x007ef5e0},
@@ -480,7 +481,7 @@ CUTSCENE_INTRO = {
 	{"skip_frames", 48},
 	{"obj_params", 0, 0x00, 1},
 	{"obj_params", 2, 0x00, 1},
-	{"spawn_obj", dummy.model_0x00, 0, 0, 0, dummy.beh_0x13000214},
+	{"spawn_obj", E_MODEL_NONE, 0, 0, 0, dummy.beh_0x13000214},
 	{"set_params", 0x80, 0x0000},
 }
 
@@ -658,9 +659,9 @@ CUTSCENE_MINIGAME_CAKE = {
 -- CUTSCENE_MINIGAME_CAKE_EATEN
 
 CUTSCENE_MINIGAME_CAKE_EATEN = {
-	{"obj_new", dummy.model_0xc0, 1, 0x80, dummy.anim_0x0801da4c},
-	{"obj_new", dummy.model_0xc0, 3, 0x80, dummy.anim_0x0801da4c},
-	{"obj_new", dummy.model_0xc0, 5, 0x80, dummy.anim_0x0801da4c},
+	{"obj_new", E_MODEL_GOOMBA, 1, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
+	{"obj_new", E_MODEL_GOOMBA, 3, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
+	{"obj_new", E_MODEL_GOOMBA, 5, 0x80, gObjectAnimations.goomba_seg8_anims_0801DA4C},
 	{"obj_anim", 1, 0},
 	{"obj_anim", 3, 0},
 	{"obj_anim", 5, 0},
@@ -758,8 +759,8 @@ CUTSCENE_OVERWORLD_BOAT_SAIL = {
 CUTSCENE_OVERWORLD_GATE_OPEN = {
 	{"cam_pos", 1, 6867, 0, 4562},
 	{"cam_focus", 1, 8161, -519, 5852},
-	{"obj_new", dummy.model_0x39, 0, 0x00, dummy.anim_0x00000000},
-	{"obj_new", dummy.model_0x39, 2, 0x00, dummy.anim_0x00000000},
+	{"obj_new", MODEL_CG_20_GATE, 0, 0x00, 0},
+	{"obj_new", MODEL_CG_20_GATE, 2, 0x00, 0},
 	{"obj_warp", 0, 8063, -707, 4804},
 	{"obj_warp", 2, 7527, -707, 5957},
 	{"play_sound", 0x00, 0x3006},

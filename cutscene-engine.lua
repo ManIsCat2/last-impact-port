@@ -107,7 +107,10 @@ local function cmd_new_cutscene_obj(model, id, params, animPtr)
     -- sync??
     local o = spawn_non_sync_object(id_bhvCutsceneObject, modelId, 0, 0, 0, function(o)
         o.oBehParams = params
-        o.oAnimations = animPtr
+
+        if animPtr ~= 0 then
+            o.oAnimations = animPtr
+        end
     end)
 
     cutsceneObjs[id] = o
@@ -233,6 +236,7 @@ local function cmd_show_text(x, y, text)
 end
 
 local function cmd_spawn_obj(modelId, x, y, z, behavior)
+    spawn_non_sync_object(behavior, modelId, x, y, z, nil)
 end
 
 local cmdHandlers = {

@@ -2713,3 +2713,42 @@ end
 
 bhvFluddBlackSpotStarSpawn = hook_behavior(nil, OBJ_LIST_LEVEL, true, nil,
     fludd_blackspot_starspawn)
+
+local function bhv_intro_meteor0_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.oVelY = -272
+end
+
+local function bhv_intro_meteor1_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.oForwardVel = 80
+    o.oMoveAngleYaw = -18528
+    o.oVelY = -272
+
+    obj_scale(o, 0.16)
+end
+
+local function bhv_intro_meteor2_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.oForwardVel = 80
+    o.oMoveAngleYaw = -15616
+    o.oVelY = -272
+
+    obj_scale(o, 0.16)
+end
+
+local function bhv_intro_meteor_loop(o)
+    local angle = o.oMoveAngleYaw
+
+    o.oVelX = o.oForwardVel * sins(angle)
+    o.oVelZ = o.oForwardVel * coss(angle)
+
+    -- 0x8029F070 inlined
+    o.oPosX = o.oPosX + o.oVelX
+    o.oPosY = o.oPosY + o.oVelY
+    o.oPosZ = o.oPosZ + o.oVelZ
+end
+
+bhvIntroMeteor0 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor0_init, bhv_intro_meteor_loop)
+bhvIntroMeteor1 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor1_init, bhv_intro_meteor_loop)
+bhvIntroMeteor2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor2_init, bhv_intro_meteor_loop)
