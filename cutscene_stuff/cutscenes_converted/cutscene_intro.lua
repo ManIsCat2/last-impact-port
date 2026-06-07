@@ -1,7 +1,7 @@
 -- CUTSCENE_INTRO
 
 CUTSCENE_INTRO = {
-	{"play_sound", 0x08, 0x0000},
+	{"play_sound", 0x08, 0x0000, true},
 	{"spawn_obj", E_MODEL_TOAD, 4226, -379, 4468, id_bhvToadMessage},
 	{"skip_frames", 1},
 	{"cam_focus", 1, 4155, -390, 4667},

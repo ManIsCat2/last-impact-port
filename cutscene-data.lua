@@ -221,6 +221,15 @@ CUTSCENE_BOWSER_DEFEATED = {
 	{"set_params", 0x80, 0x0000},
 }
 
+-- CUTSCENE_BUNNY_IN_BELLY_FREED
+
+CUTSCENE_BUNNY_IN_BELLY_FREED = {
+	{"cam_focus", 32, 4144, -1867, 623},
+	{"cam_pos", 48, 1738, -1479, 1266},
+	{"skip_frames", 72},
+	{"set_params", 0x80, 0x0000},
+}
+
 -- CUTSCENE_CCM_ACT_1
 
 CUTSCENE_CCM_ACT_1 = {
@@ -294,6 +303,15 @@ CUTSCENE_DDD_ACT_1 = {
 	{"cam_pos", 112, -8482, 1613, -11336},
 	{"skip_frames", 127},
 	{"set_params", 0x80, 0x0001},
+}
+
+-- CUTSCENE_ENTER_THE_BEAST
+
+CUTSCENE_ENTER_THE_BEAST = {
+	{"cam_focus", 32, 2239, 1794, 3916},
+	{"cam_pos", 48, -1168, 2034, 846},
+	{"skip_frames", 95},
+	{"set_params", 0x80, 0x0000},
 }
 
 -- CUTSCENE_HMC_ACT_1
@@ -996,6 +1014,249 @@ CUTSCENE_TAPTAP_KEY = {
 	{"set_params", 0x80, 0x0000},
 }
 
+-- CUTSCENE_THI_ACT_1
+
+CUTSCENE_THI_ACT_1 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, 188, 35, -5692},
+	{"cam_pos", 1, 3098, 1523, -5581},
+	{"skip_frames", 0},
+	{"cam_focus", 88, -798, 291, -12639},
+	{"cam_pos", 88, 4118, 1983, -8842},
+	{"skip_frames", 87},
+	{"cam_focus", 88, 4689, 1735, -17379},
+	{"cam_pos", 88, 2959, 3329, -11601},
+	{"skip_frames", 104},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_THI_ACT_2
+
+CUTSCENE_THI_ACT_2 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -3497, 3177, -1262},
+	{"cam_pos", 1, -784, 5030, -4312},
+	{"skip_frames", 0},
+	{"cam_focus", 88, -6933, 6533, -1336},
+	{"cam_pos", 88, -292, 9788, -2868},
+	{"skip_frames", 87},
+	{"cam_focus", 88, -6567, 8786, 4535},
+	{"cam_pos", 88, -803, 14145, -3958},
+	{"skip_frames", 103},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_THI_ACT_3
+
+CUTSCENE_THI_ACT_3 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, 4887, 22, -6201},
+	{"cam_pos", 1, 3410, 1875, -1996},
+	{"skip_frames", 71},
+	{"cam_focus", 1, 11655, 623, -10435},
+	{"cam_pos", 1, 9765, 2075, -7935},
+	{"skip_frames", 0},
+	{"cam_pos", 103, 12845, 2075, -7381},
+	{"skip_frames", 119},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_THI_ACT_4
+
+CUTSCENE_THI_ACT_4 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, 13774, 1639, -8186},
+	{"cam_pos", 1, 13782, 1829, -9041},
+	{"skip_frames", 16},
+	{"cam_focus", 168, 13475, 3239, -3297},
+	{"cam_pos", 168, 13109, 4926, -9189},
+	{"skip_frames", 180},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_THI_ACT_6
+
+CUTSCENE_THI_ACT_6 = {
+	{"play_sound", 0x04, 0x0000},
+	{"cam_focus", 1, 10069, 1342, -1970},
+	{"cam_pos", 1, 9075, 1787, -3218},
+	{"skip_frames", 0},
+	{"cam_pos", 184, 12830, 2121, -9546},
+	{"cam_focus", 184, 11937, 1302, -1720},
+	{"skip_frames", 196},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_TTC_ACT_1
+
+CUTSCENE_TTC_ACT_1 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -815, 7039, -780},
+	{"cam_pos", 1, -79, 7364, -1160},
+	{"skip_frames", 8},
+	{"cam_focus", 64, -2830, 7892, 2517},
+	{"cam_pos", 80, -4764, 8257, 1578},
+	{"skip_frames", 79},
+	{"cam_focus", 80, 4221, 10450, 7265},
+	{"cam_pos", 56, -1358, 11140, 4352},
+	{"skip_frames", 39},
+	{"cam_pos", 40, 2542, 11140, 6941},
+	{"skip_frames", 55},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_TTC_ACT_2
+
+CUTSCENE_TTC_ACT_2 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -2662, 9638, -5450},
+	{"cam_pos", 1, -247, 10328, -5476},
+	{"skip_frames", 8},
+	{"cam_focus", 80, -10233, 10328, -4516},
+	{"cam_pos", 48, -3534, 11993, -4882},
+	{"skip_frames", 47},
+	{"cam_pos", 32, -10233, 11993, -4516},
+	{"skip_frames", 31},
+	{"cam_focus", 80, -10233, 256, -4516},
+	{"skip_frames", 96},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_TTC_ACT_3
+
+CUTSCENE_TTC_ACT_3 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, 126, 7430, -4361},
+	{"cam_pos", 1, 824, 7464, -4173},
+	{"skip_frames", 44},
+	{"cam_focus", 1, 2783, 7464, -6720},
+	{"cam_pos", 1, 3233, 7593, -7135},
+	{"skip_frames", 44},
+	{"cam_focus", 1, 6479, 8091, -5834},
+	{"cam_pos", 1, 6138, 8256, -5246},
+	{"skip_frames", 44},
+	{"cam_focus", 1, 2275, 6636, 11066},
+	{"cam_pos", 1, 3105, 6746, 12243},
+	{"skip_frames", 60},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_TTC_ACT_6
+
+CUTSCENE_TTC_ACT_6 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -38, 7080, -7984},
+	{"cam_pos", 1, 685, 7415, -7556},
+	{"skip_frames", 4},
+	{"cam_pos", 48, 650, 7415, -8345},
+	{"skip_frames", 47},
+	{"cam_pos", 48, 9, 7415, -8785},
+	{"skip_frames", 47},
+	{"cam_pos", 32, -1072, 7415, -8585},
+	{"skip_frames", 31},
+	{"cam_focus", 48, -55, 8050, -7987},
+	{"cam_pos", 32, -1918, 7553, -8752},
+	{"skip_frames", 56},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_TTM_ACT_1
+
+CUTSCENE_TTM_ACT_1 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_pos", 1, -4354, 260, -1428},
+	{"cam_focus", 1, -3954, -52, -784},
+	{"skip_frames", 0},
+	{"cam_focus", 48, -4, -52, 52},
+	{"cam_pos", 48, -154, 469, 2242},
+	{"skip_frames", 47},
+	{"cam_pos", 48, -28, 1927, 2470},
+	{"cam_focus", 72, -48, 2760, -5},
+	{"skip_frames", 47},
+	{"cam_pos", 24, 3553, 3906, 2815},
+	{"skip_frames", 23},
+	{"cam_focus", 64, -137, 6510, -123},
+	{"skip_frames", 72},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_VIRUS_JUMP_OFF
+
+CUTSCENE_VIRUS_JUMP_OFF = {
+	{"cam_focus", 32, 10139, 1253, -2141},
+	{"cam_pos", 24, 10134, -104, -3779},
+	{"skip_frames", 72},
+	{"cam_focus", 64, 11321, -104, -3392},
+	{"cam_pos", 64, 10120, 228, -3851},
+	{"skip_frames", 64},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_WDW_ACT_1
+
+CUTSCENE_WDW_ACT_1 = {
+	{"play_sound", 0x04, 0x0000},
+	{"cam_focus", 1, 4312, -1833, 641},
+	{"cam_pos", 1, 2724, -1639, 1589},
+	{"skip_frames", 0},
+	{"cam_pos", 144, 3036, -1703, 162},
+	{"skip_frames", 179},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_WDW_ACT_2
+
+CUTSCENE_WDW_ACT_2 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -943, -2641, 4478},
+	{"cam_pos", 1, -1502, -1689, 2606},
+	{"skip_frames", 0},
+	{"cam_pos", 64, -385, -2340, 3470},
+	{"skip_frames", 63},
+	{"cam_pos", 48, -1216, -2490, 5154},
+	{"cam_focus", 48, -2230, -2645, 6838},
+	{"skip_frames", 47},
+	{"cam_focus", 48, -2487, -2511, 7032},
+	{"cam_pos", 48, -1755, -2626, 6493},
+	{"skip_frames", 72},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_WDW_ACT_3
+
+CUTSCENE_WDW_ACT_3 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -2593, -3759, -409},
+	{"cam_pos", 1, -2953, -3425, -1364},
+	{"skip_frames", 0},
+	{"cam_pos", 72, -2239, -3561, -973},
+	{"skip_frames", 87},
+	{"cam_focus", 1, -1859, 669, -9199},
+	{"cam_pos", 1, -2655, 269, -10185},
+	{"skip_frames", 0},
+	{"cam_pos", 72, -1728, 569, -10758},
+	{"skip_frames", 87},
+	{"set_params", 0x80, 0x0000},
+}
+
+-- CUTSCENE_WDW_ACT_4
+
+CUTSCENE_WDW_ACT_4 = {
+	{"play_sound", 0x03, 0x0000},
+	{"cam_focus", 1, -943, -2641, 4478},
+	{"cam_pos", 1, -1502, -1689, 2606},
+	{"skip_frames", 0},
+	{"cam_pos", 64, -385, -2340, 3470},
+	{"skip_frames", 63},
+	{"cam_pos", 48, -1430, -2621, 5153},
+	{"cam_focus", 48, -1071, -2767, 6241},
+	{"skip_frames", 47},
+	{"cam_pos", 48, -1438, -2631, 6048},
+	{"cam_focus", 48, 653, -2733, 6820},
+	{"skip_frames", 71},
+	{"set_params", 0x80, 0x0000},
+}
+
 -- CUTSCENE_WF_ACT_1
 
 CUTSCENE_WF_ACT_1 = {
@@ -1161,10 +1422,28 @@ gStarCutscenes = {
 		[3] = CUTSCENE_SSL_ACT_3,
 		[4] = CUTSCENE_SSL_ACT_4,
 	},
-	[COURSE_THI] = {},
-	[COURSE_TTC] = {},
-	[COURSE_TTM] = {},
-	[COURSE_WDW] = {},
+	[COURSE_THI] = {
+		[1] = CUTSCENE_THI_ACT_1,
+		[2] = CUTSCENE_THI_ACT_2,
+		[3] = CUTSCENE_THI_ACT_3,
+		[4] = CUTSCENE_THI_ACT_4,
+		[6] = CUTSCENE_THI_ACT_6,
+	},
+	[COURSE_TTC] = {
+		[1] = CUTSCENE_TTC_ACT_1,
+		[2] = CUTSCENE_TTC_ACT_2,
+		[3] = CUTSCENE_TTC_ACT_3,
+		[6] = CUTSCENE_TTC_ACT_6,
+	},
+	[COURSE_TTM] = {
+		[1] = CUTSCENE_TTM_ACT_1,
+	},
+	[COURSE_WDW] = {
+		[1] = CUTSCENE_WDW_ACT_1,
+		[2] = CUTSCENE_WDW_ACT_2,
+		[3] = CUTSCENE_WDW_ACT_3,
+		[4] = CUTSCENE_WDW_ACT_4,
+	},
 	[COURSE_WF] = {
 		[1] = CUTSCENE_WF_ACT_1,
 		[2] = CUTSCENE_WF_ACT_2,
