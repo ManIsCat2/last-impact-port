@@ -96,7 +96,7 @@ function cutscene_end()
     end
 end
 
-local function cmd_new_cutscene_obj(model, id, params, animPtr)
+local function cmd_new_cutscene_obj(model, id, params, anim)
     if cutsceneObjs[id] then
         obj_mark_for_deletion(cutsceneObjs[id])
     end
@@ -107,8 +107,10 @@ local function cmd_new_cutscene_obj(model, id, params, animPtr)
     local o = spawn_non_sync_object(id_bhvCutsceneObject, modelId, 0, 0, 0, function(o)
         o.oBehParams = params
 
-        if animPtr ~= 0 then
-            o.oAnimations = animPtr
+        if type(anim) == "string" then            
+            smlua_anim_util_set_animation(o, anim)
+        elseif anim ~= 0 then
+            o.oAnimations = anim
         end
     end)
 
@@ -199,7 +201,11 @@ local function cmd_obj_anim(id, anim)
     local o = cutsceneObjs[id]
 
     if o then
-        obj_init_animation(o, anim)
+        if type(anim) == "string" then
+            smlua_anim_util_set_animation(o, anim)
+        elseif anim ~= 0 then
+            obj_init_animation(o, anim)
+        end
     end
 end
 
