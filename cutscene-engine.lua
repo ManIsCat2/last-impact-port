@@ -107,7 +107,7 @@ local function cmd_new_cutscene_obj(model, id, params, anim)
     local o = spawn_non_sync_object(id_bhvCutsceneObject, modelId, 0, 0, 0, function(o)
         o.oBehParams = params
 
-        if type(anim) == "string" then            
+        if type(anim) == "string" then
             smlua_anim_util_set_animation(o, anim)
         elseif anim ~= 0 then
             o.oAnimations = anim
@@ -203,6 +203,8 @@ local function cmd_obj_anim(id, anim)
     if o then
         if type(anim) == "string" then
             smlua_anim_util_set_animation(o, anim)
+            o.header.gfx.animInfo.animFrame = 0
+            o.header.gfx.animInfo.animAccel = 0
         elseif anim ~= 0 then
             obj_init_animation(o, anim)
         end
