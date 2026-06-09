@@ -255,3 +255,61 @@ end
 
 hook_event(HOOK_BEFORE_WARP, reset_lights)
 
+local function bhv_cg_pipe_spawner(o)
+    -- wip
+    if get_curr_star_count() > 0 then
+        spawn_object(o, E_MODEL_BITS_WARP_PIPE, id_bhvWarpPipe)
+    end
+
+    obj_mark_for_deletion(o)
+end
+
+bhvCGPipeSpawner = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cg_pipe_spawner, nil)
+
+---@param o Object
+local function bhv_intro_barrier(o)
+    o.hitboxHeight = 1400
+    o.hitboxRadius = 1400
+    o.oIntangibleTimer = 0
+    o.oInteractType = INTERACT_IGLOO_BARRIER
+end
+
+bhvIntroBarrier = hook_behavior(nil, OBJ_LIST_SURFACE, true, bhv_intro_barrier, nil)
+
+---@param o Object
+local function bhv_intro_spawner_init(o)
+    local barriers = spawn_object(o, E_MODEL_NONE, bhvIntroBarrier)
+
+    obj_set_pos(barriers, -702, -816, 5088)
+    barriers.oFaceAngleYaw = 0
+
+    local plant1 = spawn_object(o, E_MODEL_SPIKY_PIRANHA_PLANT, bhvSpikyPiranhaPlant)
+    obj_set_pos(plant1, 4260, -523, 5560)
+    plant1.oMoveAngleYaw = 0x8000
+
+    local plant2 = spawn_object(o, E_MODEL_SPIKY_PIRANHA_PLANT, bhvSpikyPiranhaPlant)
+    obj_set_pos(plant2, 4260, -523, 3400)
+    plant2.oMoveAngleYaw = 0
+
+    o.oHiddenBlueCoinSwitch = barriers
+end
+
+local function bhv_intro_spawner_loop(o)
+    if get_current_background_music() == 0 then
+        play_music(0, 0x16, 0)
+    end
+
+    if count_objects_with_behavior(get_behavior_from_id(bhvSpikyPiranhaPlant)) == 0 then
+        local pipe = spawn_object(o, E_MODEL_BITS_WARP_PIPE, id_bhvWarpPipe)
+        obj_set_pos(pipe, 7945, -508, -3493)
+
+        cutscene_object_with_dialog(CUTSCENE_DIALOG, obj_get_nearest_object_with_behavior_id(o, bhvTalkingPeach), DIALOG_015)
+
+        obj_mark_for_deletion(o.oHiddenBlueCoinSwitch)
+        obj_mark_for_deletion(o)
+
+        stop_background_music(get_current_background_music())
+    end
+end
+
+bhvIntroSpawner = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_spawner_init, bhv_intro_spawner_loop)

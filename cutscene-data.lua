@@ -436,9 +436,8 @@ CUTSCENE_INTRO = {
 	{"skip_frames", 16},
 	{"play_sound", 0x00, 0x507f},
 	{"skip_frames", 16},
-	-- piranha plant spawners
-	{"spawn_obj", E_MODEL_NONE, 4332, -527, 3419, dummy.beh_0x13000e24},
-	{"spawn_obj", E_MODEL_NONE, 4271, -527, 5579, dummy.beh_0x13000e24},
+	{"spawn_obj", E_MODEL_NONE, 4332, -527, 3419, id_bhvMistCircParticleSpawner},
+	{"spawn_obj", E_MODEL_NONE, 4271, -527, 5579, id_bhvMistCircParticleSpawner},
 	{"play_sound", 0x00, 0x302e},
 	{"obj_new", E_MODEL_SPIKY_PIRANHA_PLANT, 0, 0x00, 0},
 	{"obj_new", E_MODEL_SPIKY_PIRANHA_PLANT, 2, 0x00, 0},
@@ -499,7 +498,7 @@ CUTSCENE_INTRO = {
 	{"skip_frames", 48},
 	{"obj_params", 0, 0x00, 1},
 	{"obj_params", 2, 0x00, 1},
-	{"spawn_obj", E_MODEL_NONE, 0, 0, 0, dummy.beh_0x13000214},
+	{"spawn_obj", E_MODEL_NONE, 0, 0, 0, bhvIntroSpawner},
 	{"set_params", 0x80, 0x0000},
 }
 

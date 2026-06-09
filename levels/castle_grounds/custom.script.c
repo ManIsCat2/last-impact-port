@@ -85,7 +85,7 @@ END_AREA(),
 RETURN()
 };
 const LevelScript local_objects_castle_grounds_1_[] = {
-OBJECT(22,7945,-508,-3493,0,0,0,0x0, bhvWarpPipe),
+OBJECT(0,7945,-508,-3493,0,0,0,0x0, bhvCGPipeSpawner),
 OBJECT(53,1699,-585,-4073,0,-154,0,0x0, bhvCGCoconut),
 /*OBJECT(53,1441,-537,-3944,0,0,0,0x0, bhvCGCoconut),
 OBJECT(53,1367,-693,-3179,0,0,0,0x0, bhvCGCoconut),
