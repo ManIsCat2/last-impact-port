@@ -31,6 +31,10 @@ local function bhv_intro_meteor_loop(o)
     o.oPosX = o.oPosX + o.oVelX
     o.oPosY = o.oPosY + o.oVelY
     o.oPosZ = o.oPosZ + o.oVelZ
+
+    if o.oTimer > 300 then
+        obj_mark_for_deletion(o)
+    end
 end
 
 bhvIntroMeteor0 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor0_init, bhv_intro_meteor_loop)
