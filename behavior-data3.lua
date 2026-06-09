@@ -239,8 +239,8 @@ end
 
 bhvCGMoon = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cg_moon_init, nil)
 
-local function reset_lights_on_cg_moon_unload(o)
-    if obj_has_behavior_id(o, bhvCGMoon) ~= 0 then
+local function reset_lights()
+    if gNetworkPlayers[0].currLevelNum == LEVEL_CASTLE_GROUNDS then
         local color = 0xFF
 
         set_lighting_color(0, color)
@@ -253,4 +253,5 @@ local function reset_lights_on_cg_moon_unload(o)
     end
 end
 
-hook_event(HOOK_ON_OBJECT_UNLOAD, reset_lights_on_cg_moon_unload)
+hook_event(HOOK_BEFORE_WARP, reset_lights)
+
