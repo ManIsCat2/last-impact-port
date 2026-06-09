@@ -207,7 +207,8 @@ local function bhv_spiky_piranha_plant_loop(o)
         if o.oTimer == 24 then
             create_sound_spawner(0x50610081)
             obj_mark_for_deletion(o)
-            spawn_object(o, E_MODEL_BLUE_COIN, id_bhvBlueCoinJumping);
+            spawn_object(o, E_MODEL_BLUE_COIN, id_bhvBlueCoinJumping)
+            spawn_object(o, E_MODEL_NONE, id_bhvMistCircParticleSpawner)
         end
     end
 
@@ -217,3 +218,39 @@ end
 
 bhvSpikyPiranhaPlant = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_spiky_piranha_plant_init, bhv_spiky_piranha_plant_loop)
 E_MODEL_SPIKY_PIRANHA_PLANT = smlua_model_util_get_id("spiky_piranha_plant_geo")
+
+local function bhv_cg_moon_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+
+    local count = save_file_get_total_star_count(get_current_save_file_num() - 1, 0, 24)
+
+    o.oPosY = 23946 - (count * 144);
+
+    local color = 255 - ((count >> 1) + (count >> 3))
+
+    set_lighting_color(0, color)
+    set_lighting_color(1, color)
+    set_lighting_color(2, color)
+
+    set_skybox_color(0, color)
+    set_skybox_color(1, color)
+    set_skybox_color(2, color)
+end
+
+bhvCGMoon = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_cg_moon_init, nil)
+
+local function reset_lights_on_cg_moon_unload(o)
+    if obj_has_behavior_id(o, bhvCGMoon) ~= 0 then
+        local color = 0xFF
+
+        set_lighting_color(0, color)
+        set_lighting_color(1, color)
+        set_lighting_color(2, color)
+
+        set_skybox_color(0, color)
+        set_skybox_color(1, color)
+        set_skybox_color(2, color)
+    end
+end
+
+hook_event(HOOK_ON_OBJECT_UNLOAD, reset_lights_on_cg_moon_unload)

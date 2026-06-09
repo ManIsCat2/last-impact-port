@@ -1,0 +1,7 @@
+const GeoLayout cg_moon_geo[]= {
+GEO_CULLING_RADIUS(32767),
+GEO_OPEN_NODE(),
+GEO_DISPLAY_LIST(4,DL_custom_DL_190015c0_0xe0f0a60),
+GEO_CLOSE_NODE(),
+GEO_END(),
+};
