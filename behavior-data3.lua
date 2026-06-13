@@ -313,3 +313,29 @@ local function bhv_intro_spawner_loop(o)
 end
 
 bhvIntroSpawner = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_spawner_init, bhv_intro_spawner_loop)
+---@param o Object
+local function bhv_ssl_changes_music_init(o)
+    o.hitboxHeight = 60000
+    o.hitboxRadius = 3700
+    o.hitboxDownOffset = 2000
+    o.oIntangibleTimer = 0
+end
+
+---@param o Object
+local function bhv_ssl_changes_music_loop(o)
+    if obj_check_hitbox_overlap(gMarioStates[0].marioObj, obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, bhvSSLChangesMusic)) then
+        set_background_music(0, 48, 0)
+    else
+        if get_current_background_music() ~= 47 then
+            set_background_music(0, 47, 0)
+        end
+    end
+    if o.oBehParams == 1 then
+        o.hitboxRadius = 6000
+    end
+    if o.oBehParams == 2 then
+        o.hitboxRadius = 5600 * 2.3
+    end
+end
+
+bhvSSLChangesMusic = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_ssl_changes_music_init, bhv_ssl_changes_music_loop)

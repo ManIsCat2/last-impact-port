@@ -2163,7 +2163,6 @@ local function bhv_virus_boss_loop(o)
             if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
                 o.oAction = VIRUS_JUMP_TO_MARIO
                 set_background_music(0, 0x3d, 0)
-                audio_stop_all()
             end
         end
     elseif o.oAction == VIRUS_JUMP_TO_MARIO then
@@ -2291,8 +2290,7 @@ local function bhv_virus_boss_loop(o)
 
             if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
                 obj_mark_for_deletion(o)
-                set_background_music(0, 0, 0)
-                play_seq_streamed(streamed_collosal_circuits)
+                set_background_music(0, 0x3c, 0)
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue))
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed))
                 spawn_red_coin_cutscene_star(11440, 176, -5130)

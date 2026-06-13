@@ -17,14 +17,18 @@ smlua_audio_utils_replace_sequence(0x14, 0x1A, 75, "14_Seq_custom") --race fanfa
 smlua_audio_utils_replace_sequence(0x15, 0x0E, 75, "15_Seq_custom") --star spawn
 smlua_audio_utils_replace_sequence(0x16, 0x1A, 75, "16_Seq_custom") --boss theme B
 smlua_audio_utils_replace_sequence(0x17, 0x1A, 75, "17_Seq_custom") --collect key
-smlua_audio_utils_replace_sequence(0x1A, 0x1B, 75, "1A_Seq_custom") --rashay's moon cellar
+
+audio_utils_replace_sequence_streamed(0x1A, "1A_Seq_streamed.mp3", true, 0, 5307785) -- rashay's moon cellar
+
 smlua_audio_utils_replace_sequence(0x1B, 0x0C, 75, "1B_Seq_custom") --solve puzzle
 smlua_audio_utils_replace_sequence(0x46, 0x25, 75, "1C_Seq_custom") --rashay phase 1
 smlua_audio_utils_replace_sequence(0x1D, 0x0C, 75, "1D_Seq_custom") --intro cutscene
 smlua_audio_utils_replace_sequence(0x1E, 0x25, 75, "1E_Seq_custom") --bob-omb village
 smlua_audio_utils_replace_sequence(0x1F, 0x1A, 75, "1F_Seq_custom") --rashay defeat
 smlua_audio_utils_replace_sequence(0x20, 0x1B, 75, "20_Seq_custom") --
-smlua_audio_utils_replace_sequence(0x21, 0x24, 75, "21_Seq_custom") --rashay phase 2
+
+audio_utils_replace_sequence_streamed(0x21, "21_Seq_streamed.mp3", true, 0, 3559582) -- rashay phase 2
+
 smlua_audio_utils_replace_sequence(0x23, 0x25, 75, "23_Seq_custom") --wildlife valley
 smlua_audio_utils_replace_sequence(0x24, 0x25, 75, "24_Seq_custom") --stonesnake shatters
 smlua_audio_utils_replace_sequence(0x25, 0x11, 75, "25_Seq_custom") --sunset islet
@@ -35,6 +39,10 @@ smlua_audio_utils_replace_sequence(0x2B, 0x25, 75, "2B_Seq_custom") --skyhigh is
 smlua_audio_utils_replace_sequence(0x2D, 0x25, 75, "2D_Seq_custom") --cave theme
 smlua_audio_utils_replace_sequence(0x2E, 0x25, 75, "2E_Seq_custom") --slider theme
 smlua_audio_utils_replace_sequence(0x2F, 0x19, 75, "2F_Seq_custom") --melty molten mountains fire side
+
+-- TODO: make they both sequenced and play simultaneously, with crossfade and shit
+audio_utils_replace_sequence_streamed(0x30, "MeltyMoltenMountainsIceSide.mp3", true) -- melty molten mountains ice side
+
 smlua_audio_utils_replace_sequence(0x31, 0x15, 75, "31_Seq_custom") --dusky doomed dale
 smlua_audio_utils_replace_sequence(0x32, 0x25, 75, "32_Seq_custom") --boo dance
 smlua_audio_utils_replace_sequence(0x34, 0x25, 75, "34_Seq_custom") --file select
@@ -42,7 +50,9 @@ smlua_audio_utils_replace_sequence(0x35, 0x2A, 75, "35_Seq_custom") --drybone de
 smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried honey hive
 smlua_audio_utils_replace_sequence(0x38, 0x17, 75, "38_Seq_custom") --giant desk
 smlua_audio_utils_replace_sequence(0x3A, 0x2A, 80, "3A_Seq_custom") --big beast's belly
-smlua_audio_utils_replace_sequence(0x3C, 0x14, 80, "3C_Seq_custom") --broken song //uses streamed music
+
+audio_utils_replace_sequence_streamed(0x3C, "3C_Seq_streamed.mp3", true, 0, 4953341) -- colossal circuits
+
 smlua_audio_utils_replace_sequence(0x3D, 0x25, 80, "3D_Seq_custom") -- virus boss
 smlua_audio_utils_replace_sequence(0x3F, 0x25, 75, "3F_Seq_custom") --secret aquarium
 smlua_audio_utils_replace_sequence(0x3E, 0x0C, 75, "3E_Seq_custom") --starlight zone
