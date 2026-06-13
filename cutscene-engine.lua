@@ -111,6 +111,7 @@ local function cmd_new_cutscene_obj(model, id, params, anim)
             smlua_anim_util_set_animation(o, anim)
         elseif anim ~= 0 then
             o.oAnimations = anim
+            obj_init_animation(o, 0)
         end
     end)
 

@@ -992,7 +992,7 @@ CUTSCENE_SSL_ACT_4 = {
 -- CUTSCENE_TAPTAP_KEY
 
 CUTSCENE_TAPTAP_KEY = {
-	{"obj_new", E_MODEL_MIPS, 0, 0xc0, gObjectAnimations.mips_seg6_anims_06015634},
+	--{"obj_new", E_MODEL_MIPS, 0, 0xc0, gObjectAnimations.mips_seg6_anims_06015634},
 	{"obj_warp", 0, 6327, -2646, -8171},
 	{"obj_anim", 0, 0},
 	{"obj_rot", 0, -96, 0},

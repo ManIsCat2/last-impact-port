@@ -259,6 +259,10 @@ function spawn_object_relative(behaviorParam, relativePosX, relativePosY,
     return obj;
 end
 
+function obj_is_local_player(o)
+    return o == gMarioStates[0].marioObj
+end
+
 MODEL_MAGIKOOPA_WAND = smlua_model_util_get_id("magikoopa_wand_geo")
 MODEL_TOTWC_STATIC_CLOUD = smlua_model_util_get_id("totwc_static_cloud_geo")
 
@@ -364,12 +368,20 @@ end
 ---@param o Object
 local function bhv_bob_prison_gate_loop(o)
     load_object_collision_model()
-    nearkey = obj_get_nearest_object_with_behavior_id(o, bhvTapTapKey)
-    if nearkey and nearkey.oAction == 1 then
-        o.oPosY = o.oPosY - 10
+
+    if o.oAction == 0 then
+        nearkey = obj_get_nearest_object_with_behavior_id(o, bhvTapTapKey)
+
+        if nearkey and nearkey.oAction == 1 then
+            o.oAction = 1
+        end
+
+        return
     end
 
-    if o.oPosY < -3900 then
+    if o.oTimer < 0x5A then
+        o.oPosY = o.oPosY - 18
+    else
         obj_mark_for_deletion(nearkey)
         obj_mark_for_deletion(o)
     end
@@ -398,6 +410,7 @@ end
 
 MODEL_RABBIT = smlua_model_util_get_id("parent_mips_geo")
 
+-- todo make accurate
 ---@param o Object
 local function bhv_parent_rabbit_loop(o)
     obj_set_model_extended(o, MODEL_RABBIT)
@@ -550,10 +563,13 @@ end
 local function bhv_taptap_key_loop(o)
     o.oPosY = o.oPosY + math_sin(o.oTimer * 0.07) * 2
     o.oFaceAngleYaw = o.oFaceAngleYaw + 0x120
-    if obj_check_hitbox_overlap(nearest_player_to_object(o), o) then
-        if o.oAction == 0 then
-            play_puzzle_jingle()
+    local player = nearest_player_to_object(o)
+
+    if obj_check_hitbox_overlap(player, o) then
+        if o.oAction == 0 and obj_is_local_player(player) then
+            cutscene_play(CUTSCENE_TAPTAP_KEY, false)
         end
+
         cur_obj_disable_rendering()
         o.oAction = 1
     end
@@ -595,12 +611,12 @@ local function bhv_flower_generator_loop(o)
     load_object_collision_model()
 
     if o.oAction == 0 then
-        o.header.gfx.animInfo.curAnim.loopEnd = 0
+        --o.header.gfx.animInfo.curAnim.loopEnd = 0
         if (cur_obj_was_attacked_or_ground_pounded()) == 1 then
             o.oAction = 1
         end
     elseif o.oAction == 1 then
-        o.header.gfx.animInfo.curAnim.loopEnd = 88
+       -- o.header.gfx.animInfo.curAnim.loopEnd = 88
 
         if o.oTimer == 40 then
             o.oDoorUnk100 = 27184
