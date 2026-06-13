@@ -36,10 +36,11 @@ local function streamed_music_update()
     local curStream = streams[curMusic]
 
     if curStream then
+        local masterVolume = get_volume_master() / 127
         local baseVolume = get_current_background_music_default_volume() / 127
         local fadeVolume = sequence_player_get_fade_volume(SEQ_PLAYER_LEVEL)
 
-        audio_stream_set_volume(curStream, baseVolume > 0 and fadeVolume / baseVolume or 0)
+        audio_stream_set_volume(curStream, masterVolume * (baseVolume > 0 and fadeVolume / baseVolume or 0))
     end
 
     prevMusic = curMusic
