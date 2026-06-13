@@ -23,14 +23,12 @@ local function streamed_music_update()
         local prevStream = streams[prevMusic]
 
         if prevStream then
-            djui_chat_message_create("stop")
             audio_stream_stop(prevStream)
         end
 
         local nextStream = streams[curMusic]
 
         if nextStream then
-            djui_chat_message_create("play")
             audio_stream_play(nextStream, false, 1.0)
         end
     end

@@ -2014,7 +2014,7 @@ end
 ---@param o Object
 local function bhv_bowser_door_key_loop(o)
     load_object_collision_model()
-    if is_star_colected(COURSE_BITDW, 5) or true then
+    if is_star_colected(COURSE_BITDW, 5) then
         if dist_between_objects(o, nearest_player_to_object(o)) < 1200 then
             o.oAction = 1
         end
