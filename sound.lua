@@ -46,7 +46,9 @@ audio_utils_replace_sequence_streamed(0x30, "MeltyMoltenMountainsIceSide.mp3", t
 smlua_audio_utils_replace_sequence(0x31, 0x15, 75, "31_Seq_custom") --dusky doomed dale
 smlua_audio_utils_replace_sequence(0x32, 0x25, 75, "32_Seq_custom") --boo dance
 smlua_audio_utils_replace_sequence(0x34, 0x25, 75, "34_Seq_custom") --file select
-smlua_audio_utils_replace_sequence(0x35, 0x2A, 75, "35_Seq_custom") --drybone desert
+
+audio_utils_replace_sequence_streamed(0x35, "35_Seq_streamed.mp3", true, 0, 2536381) -- drybone desert
+
 smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried honey hive
 smlua_audio_utils_replace_sequence(0x38, 0x17, 75, "38_Seq_custom") --giant desk
 smlua_audio_utils_replace_sequence(0x3A, 0x2A, 80, "3A_Seq_custom") --big beast's belly
