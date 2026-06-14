@@ -1,58 +1,23 @@
-local wasActive = false
-
 local CMD_SIZE  = {
-    [0x00] = 8,
-    [0x01] = 4,
-    [0x02] = 4,
-    [0x03] = 4,
-    [0x04] = 8,
-    [0x05] = 8,
-    [0x06] = 8,
-    [0x07] = 4,
-    [0x08] = 4,
-    [0x09] = 4,
-    [0x0A] = 4,
-    [0x0B] = 16,
-    [0x0C] = 4,
-    [0x0D] = 8,
-    [0x0E] = 12,
+    [0x00] = 8, [0x01] = 4, [0x02] = 4, [0x03] = 4,
+    [0x04] = 8, [0x05] = 8, [0x06] = 8, [0x07] = 4,
+    [0x08] = 4, [0x09] = 4, [0x0A] = 4, [0x0B] = 16,
+    [0x0C] = 4, [0x0D] = 8, [0x0E] = 12,
 }
 
-local cd = debug.getinfo(1, "S").source:match("@?(.+[\\/])") or ""
-local outDir = cd .. "cutscenes\\"
-local hashes = outDir .. "hashes.txt"
+local OUT = "cutscenes\\"
+local HASHES = OUT .. "hashes.txt"
 
 local dumped = {}
-
-local function crc32(data)
-    local crc = 0xFFFFFFFF
-
-    for i = 1, #data do
-        local byte = data:byte(i)
-        crc = crc ~ byte
-
-        for _ = 1, 8 do
-            if crc & 1 ~= 0 then
-                crc = (crc >> 1) ~ 0xEDB88320
-            else
-                crc = crc >> 1
-            end
-        end
-    end
-    
-    return (crc ~ 0xFFFFFFFF) & 0xFFFFFFFF
-end
+local chkForce
+local chkCredits
 
 local function load_log()
-    local f = io.open(hashes, "r")
+    local f = io.open(HASHES, "r")
 
     if f then
-        for line in f:lines() do
-            local hash = tonumber(line, 16)
-
-            if hash then
-                dumped[hash] = true
-            end
+        for hash in f:lines() do
+            dumped[hash] = true
         end
 
         f:close()
@@ -60,71 +25,90 @@ local function load_log()
 end
 
 local function append_log(hash)
-    local f = io.open(hashes, "a")
+    local f = io.open(HASHES, "a")
 
     if f then
-        f:write(string.format("%08X\n", hash))
+        f:write(string.format("%s\n", hash))
         f:close()
     end
 end
 
 local function dump_cutscene(ptr)
-    local result = {}
     local offset = 0
+    local output = {}
 
     while true do
-        local cmd = mainmemory.read_u8(ptr + offset)
+        local cmd = memory.read_u8(ptr + offset)
         local size = CMD_SIZE[cmd]
 
         if not size then
-            gui.addmessage(string.format("invalid cmd 0x%02X at offset 0x%08X (0x%08X)", cmd, offset, ptr + offset))
-            return table.concat(result)
+            gui.addmessage(string.format("Failed to dump %08X: Invalid command %02X at offset 0x%X", ptr, cmd, offset))
+            return
         end
 
-        for i = 0, size - 1 do
-            table.insert(result, string.char(mainmemory.read_u8(ptr + offset + i)))
+        local data = memory.read_bytes_as_binary_string(ptr + offset, size)
+        table.insert(output, data)
+
+        if cmd == 0x0C and data:byte(2, 2) & 0x80 ~= 0 then
+            break
         end
 
-        if cmd == 0x0C and (mainmemory.read_u8(ptr + offset + 1) & 0x80) ~= 0 then
+        local isCredits = forms.ischecked(chkCredits)
+        if data:match("\0\0\0\0\0\0\0\0") and isCredits then
             break
         end
 
         offset = offset + size
     end
 
-    return table.concat(result)
+    return table.concat(output, "")
 end
 
-os.execute('mkdir "' .. outDir .. '"')
-load_log()
+local function call_cutscene_post()
+    local ptr = memory.read_u32_be(0x8041F000)
+    local data = dump_cutscene(ptr)
 
-event.onframeend(function()
-    local active = mainmemory.read_u8(0x41F004)
+    if data then
+        local hash = memory.hash_region(ptr, #data)
+        local force = forms.ischecked(chkForce)
 
-    if active ~= 0 and not wasActive then
-        local ptr = mainmemory.read_u32_be(0x41F000)
-        local data = dump_cutscene(ptr & 0x1FFFFFFF)
-        local hash = crc32(data)
+        if not force and dumped[hash] then
+            return
+        end
 
-        if not dumped[hash] then
-            local filename = outDir .. string.format("cutscene_%08X.bin", ptr)
-            local f = io.open(filename, "wb")
+        local filename = string.format("cutscene_%08X.bin", ptr)
+        local f = io.open(OUT .. filename, "wb")
 
-            if f then
-                f:write(data)
-                f:close()
+        if f then
+            f:write(data)
+            f:close()
 
-                dumped[hash] = true
-                append_log(hash)
+            dumped[hash] = true
+            append_log(hash)
 
-                gui.addmessage(string.format("dumped cutscene %s", filename))
-            else
-                gui.addmessage("failed to open: " .. filename)
-            end
-        else
-            gui.addmessage(string.format("%08x already dumped", hash))
+            gui.addmessage("Dumped " .. filename)
         end
     end
+end
 
-    wasActive = (active ~= 0)
-end)
+local function create_form()
+    local form = forms.newform(300, 110, "Cutscene Dumper")
+
+    chkForce = forms.checkbox(form, "Force dump", 10, 10)
+    chkCredits = forms.checkbox(form, "Is Credits?", 10, 30)
+
+    forms.button(form, "Reload hashes",
+        function()
+            dumped = {}
+            load_log()
+            gui.addmessage("Hashes reloaded.")
+        end,
+        10, 70, 280, 30
+    )
+end
+
+load_log()
+create_form()
+
+memory.usememorydomain("System Bus")
+event.onmemoryexecute(call_cutscene_post, 0x8040F910 + 0x48, "cs_entry")
