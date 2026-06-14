@@ -52,8 +52,8 @@ audio_utils_replace_sequence_streamed(0x35, "35_Seq_streamed.mp3", true, 0, 2536
 
 smlua_audio_utils_replace_sequence(0x36, 0x22, 75, "36_Seq_custom") --harried honey hive
 smlua_audio_utils_replace_sequence(0x38, 0x17, 75, "38_Seq_custom") --giant desk
-smlua_audio_utils_replace_sequence(0x3A, 0x2A, 80, "3A_Seq_custom") --big beast's belly
 
+audio_utils_replace_sequence_streamed(0x3A, "3A_Seq_streamed.mp3", true, 432028, 3450783) -- big beast's belly
 audio_utils_replace_sequence_streamed(0x3C, "3C_Seq_streamed.mp3", true, 0, 4953341) -- colossal circuits
 
 smlua_audio_utils_replace_sequence(0x3D, 0x25, 80, "3D_Seq_custom") -- virus boss
@@ -62,4 +62,5 @@ smlua_audio_utils_replace_sequence(0x3E, 0x0C, 75, "3E_Seq_custom") --starlight 
 smlua_audio_utils_replace_sequence(0x40, 0x11, 75, "40_Seq_custom") --gamble game gallery
 smlua_audio_utils_replace_sequence(0x41, 0x25, 75, "41_Seq_custom") --underground sewer
 smlua_audio_utils_replace_sequence(0x42, 0x18, 75, "42_Seq_custom") --livid surreal dream
-smlua_audio_utils_replace_sequence(0x43, 0x2A, 75, "43_Seq_custom") --rainbow road
+
+audio_utils_replace_sequence_streamed(0x43, "43_Seq_streamed.mp3", true, 0, 5655323) -- rainbow road
