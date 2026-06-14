@@ -256,7 +256,6 @@ local function cutscene_update_camera()
     vec3f_copy(ls.curPos, curPos)
     vec3f_copy(ls.goalPos, curPos)
     vec3f_copy(ls.focus, curFocus)
-    vec3f_copy(ls.curFocus, curFocus)
     vec3f_copy(ls.goalFocus, curFocus)
 end
 
