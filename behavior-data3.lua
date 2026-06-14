@@ -1,3 +1,20 @@
+local function bhv_cutscene_obj_init(o)
+    o.oFlags = OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+end
+
+local function bhv_cutscene_obj_loop(o)
+    if (o.oBehParams & 0x80) ~= 0 then
+        cur_obj_update_floor_height()
+        o.oPosY = o.oFloorHeight
+    end
+
+    if (o.oBehParams & 0x40) ~= 0 then
+        o.oFaceAngleYaw = o.oMoveAngleYaw
+    end
+end
+
+bhvCutsceneObject = hook_behavior(nil, OBJ_LIST_GENACTOR, false, bhv_cutscene_obj_init, bhv_cutscene_obj_loop, "bhvCutsceneObject")
+
 local function bhv_intro_meteor0_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     o.oVelY = -272

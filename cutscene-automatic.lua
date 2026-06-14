@@ -16,12 +16,12 @@ local function update_delayed_cutscene()
     end
 
     if delayedCutsceneTimer == 0 then
-        cutscene_play(delayedCutsceneData, delayedCutsceneSkipable)
+        kaze_cutscene_play(delayedCutsceneData, delayedCutsceneSkipable)
     end
 end
 
 local function try_play_star_cutscene()
-    cutscene_end()
+    kaze_cutscene_end()
 
     ---@type NetworkPlayer
     local np = gNetworkPlayers[0]

@@ -567,7 +567,7 @@ local function bhv_taptap_key_loop(o)
 
     if obj_check_hitbox_overlap(player, o) then
         if o.oAction == 0 and obj_is_local_player(player) then
-            cutscene_play(CUTSCENE_TAPTAP_KEY, false)
+            kaze_cutscene_play(CUTSCENE_TAPTAP_KEY, false)
         end
 
         cur_obj_disable_rendering()

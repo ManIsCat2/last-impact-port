@@ -20,33 +20,7 @@ local keepMusicOnEnd = false
 
 local ls = gLakituState
 
-local function bhv_cutscene_obj_init(o)
-    o.oFlags = OBJ_FLAG_MOVE_XZ_USING_FVEL | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-end
-
-local function bhv_cutscene_obj_loop(o)
-    if (o.oBehParams & 0x80) ~= 0 then
-        cur_obj_update_floor_height()
-        o.oPosY = o.oFloorHeight
-    end
-
-    if (o.oBehParams & 0x40) ~= 0 then
-        o.oFaceAngleYaw = o.oMoveAngleYaw
-    end
-end
-
-local id_bhvCutsceneObject = hook_behavior(nil, OBJ_LIST_GENACTOR, false, bhv_cutscene_obj_init, bhv_cutscene_obj_loop, "bhvCutsceneObject")
-
-local function act_kaze_cutscene(m)
-    if not gCutsceneActive then
-        set_mario_action(m, ACT_IDLE, 0)
-    end
-end
-
-local ACT_KAZE_CUTSCENE = allocate_mario_action(ACT_FLAG_CUSTOM_ACTION | ACT_FLAG_INTANGIBLE)
-hook_mario_action(ACT_KAZE_CUTSCENE, act_kaze_cutscene)
-
-function cutscene_play(data, skipable)
+function kaze_cutscene_play(data, skipable)
     if not data or gCutsceneActive then
         return
     end
@@ -77,7 +51,7 @@ function cutscene_play(data, skipable)
     hud_hide()
 end
 
-function cutscene_end()
+function kaze_cutscene_end()
     if not gCutsceneActive then
         return
     end
@@ -104,7 +78,7 @@ local function cmd_new_cutscene_obj(model, id, params, anim)
     local modelId = model or E_MODEL_ERROR_MODEL
 
     -- sync??
-    local o = spawn_non_sync_object(id_bhvCutsceneObject, modelId, 0, 0, 0, function(o)
+    local o = spawn_non_sync_object(bhvCutsceneObject, modelId, 0, 0, 0, function(o)
         o.oBehParams = params
 
         if type(anim) == "string" then
@@ -234,7 +208,7 @@ end
 -- tf does daynight do??
 -- *(u32*)0x80370008 = daynight;
 local function cmd_cutscene_params(flags, daynight)
-    if (flags & 0x80) ~= 0 then cutscene_end() end
+    if (flags & 0x80) ~= 0 then kaze_cutscene_end() end
     if (flags & 0x40) ~= 0 then set_environmental_camera_shake(20) end
     if (flags & 0x20) ~= 0 then end -- greyout
     if (flags & 0x10) ~= 0 then isSkipable = false end
@@ -291,7 +265,7 @@ local function cutscene_run_frame()
         local instr = cutsceneData[scriptPos]
 
         if not instr then
-            cutscene_end()
+            kaze_cutscene_end()
             error("Cutscene reached EOF!!! Should not happen!!!")
             return
         end
@@ -299,7 +273,7 @@ local function cutscene_run_frame()
         local handler = cmdHandlers[instr[1]]
 
         if not handler then
-            cutscene_end()
+            kaze_cutscene_end()
             error(string.format("unknown cutscene cmd '%s' at offset %d", tostring(instr[1]), scriptPos))
             return
         end
@@ -324,7 +298,7 @@ local function cutscene_update()
 
     if isSkipable and (gControllers[0].buttonPressed & A_BUTTON) ~= 0 then
         if skipTextTimer > 0 then
-            cutscene_end()
+            kaze_cutscene_end()
             return
         end
 
@@ -359,6 +333,6 @@ local function lock_r_if_active(mode)
 end
 
 hook_event(HOOK_UPDATE, cutscene_update)
-hook_event(HOOK_ON_WARP, cutscene_end)
+hook_event(HOOK_ON_WARP, kaze_cutscene_end)
 hook_event(HOOK_ON_HUD_RENDER, draw_overlays)
 hook_event(HOOK_ON_CHANGE_CAMERA_ANGLE, lock_r_if_active)
