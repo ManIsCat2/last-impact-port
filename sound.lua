@@ -32,6 +32,7 @@ audio_utils_replace_sequence_streamed(0x21, "21_Seq_streamed.mp3", true, 0, 3559
 smlua_audio_utils_replace_sequence(0x23, 0x25, 75, "23_Seq_custom") --wildlife valley
 smlua_audio_utils_replace_sequence(0x24, 0x25, 75, "24_Seq_custom") --stonesnake shatters
 smlua_audio_utils_replace_sequence(0x25, 0x11, 75, "25_Seq_custom") --sunset islet
+smlua_audio_utils_replace_sequence(0x26, 0x25, 75, "26_Seq_custom") --crystal caves
 smlua_audio_utils_replace_sequence(0x27, 0x25, 75, "27_Seq_custom") --abandoned outpost
 smlua_audio_utils_replace_sequence(0x28, 0x25, 75, "28_Seq_custom") --super sweet sugar land
 smlua_audio_utils_replace_sequence(0x29, 0x25, 75, "29_Seq_custom") --shadow factory
