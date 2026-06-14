@@ -9,7 +9,7 @@ def main():
             try:
                 with open(path, "rb") as f:
                     data = f.read()
-                hash = hashlib.sha256(data).hexdigest()
+                hash = hashlib.sha256(data).hexdigest().upper()
                 
                 out.write(hash + "\n")
                 print(f"{path} -> {hash}")
