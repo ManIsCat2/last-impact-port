@@ -16,7 +16,7 @@ local moveTimer = 0
 local focusTimer = 0
 
 local cutsceneMusic = 0
-local keepMusicOnEnd = false
+local keepMusic = false
 
 local ls = gLakituState
 
@@ -38,6 +38,7 @@ function kaze_cutscene_play(data, skipable)
     focusTimer = 0
 
     cutsceneMusic = 0
+    keepMusic = false
 
     prevCamMode = ls.mode
     ls.mode = CAMERA_MODE_NONE
@@ -61,7 +62,7 @@ function kaze_cutscene_end()
 
     hud_show()
 
-    if not keepMusicOnEnd then
+    if not keepMusic then
         stop_background_music(cutsceneMusic)
     end
 
@@ -186,7 +187,7 @@ local function cmd_obj_anim(id, anim)
     end
 end
 
-local function cmd_play_sound(flags, soundId, keepOnEnd)
+local function cmd_play_sound(flags, soundId)
     if soundId == 0 then
         local layer = (flags >> 7) & 1
         local seqId = flags & 0x7F
@@ -195,7 +196,6 @@ local function cmd_play_sound(flags, soundId, keepOnEnd)
         play_music(layer, (0x04 << 8) | seqId, 0)
 
         cutsceneMusic = seqId
-        keepMusicOnEnd = keepOnEnd
     else
         play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
     end
@@ -207,13 +207,15 @@ end
 
 -- tf does daynight do??
 -- *(u32*)0x80370008 = daynight;
-local function cmd_cutscene_params(flags, daynight)
-    if (flags & 0x80) ~= 0 then kaze_cutscene_end() end
-    if (flags & 0x40) ~= 0 then set_environmental_camera_shake(20) end
-    if (flags & 0x20) ~= 0 then end -- greyout
-    if (flags & 0x10) ~= 0 then isSkipable = false end
-    if (flags & 0x08) ~= 0 then isSkipable = true end
-    if (flags & 0x04) ~= 0 then hud_show() end
+local function cmd_cutscene_flags(flags, daynight)
+    if (flags & CUTSCENE_FLAG_KEEP_MUSIC) then keepMusic = true end
+
+    if (flags & CUTSCENE_FLAG_SHOW_HUD) ~= 0 then hud_show() end
+    if (flags & CUTSCENE_FLAG_SKIPABLE) ~= 0 then isSkipable = true end
+    if (flags & CUTSCENE_FLAG_UNSKIPABLE) ~= 0 then isSkipable = false end
+    if (flags & CUTSCENE_FLAG_GREYOUT) ~= 0 then end -- greyout
+    if (flags & CUTSCENE_FLAG_SHAKE) ~= 0 then set_environmental_camera_shake(20) end
+    if (flags & CUTSCENE_FLAG_END) ~= 0 then kaze_cutscene_end() end
 end
 
 local function cmd_show_text(x, y, text)
@@ -224,7 +226,7 @@ local function cmd_spawn_obj(modelId, x, y, z, behavior)
 end
 
 local cmdHandlers = {
-    obj_new = cmd_new_cutscene_obj,
+    cutscene_obj = cmd_new_cutscene_obj,
     skip_frames = cmd_skip_frames,
     obj_speed = cmd_obj_spd,
     obj_rot = cmd_obj_rot,
@@ -236,7 +238,7 @@ local cmdHandlers = {
     obj_anim = cmd_obj_anim,
     play_sound = cmd_play_sound,
     set_mario = cmd_set_mario,
-    set_params = cmd_cutscene_params,
+    set_flags = cmd_cutscene_flags,
     show_text = cmd_show_text,
     spawn_obj = cmd_spawn_obj,
 }

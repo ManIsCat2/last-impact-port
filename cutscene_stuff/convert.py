@@ -1,7 +1,5 @@
-import re
 import struct
 import sys
-from collections import defaultdict
 from pathlib import Path
 
 CUTSCENES_DIR = Path("./cutscenes")
@@ -16,10 +14,22 @@ MODEL    = "dummy.model_0x%02x"
 ANIM_PTR = "dummy.anim_0x%08x"
 BEH_PTR  = "dummy.beh_0x%08x"
 TEXT_PTR = "dummy.text_0x%08x"
+FLAGS    = "__flags__"  # sentinel: expand via flags_to_lua
+
+SET_PARAMS_FLAGS = {
+    0x04:  "CUTSCENE_FLAG_SHOW_HUD",
+    0x08:  "CUTSCENE_FLAG_SKIPABLE",
+    0x10:  "CUTSCENE_FLAG_UNSKIPABLE",
+    0x20:  "CUTSCENE_FLAG_GREYOUT",
+    0x40:  "CUTSCENE_FLAG_SHAKE",
+    0x80:  "CUTSCENE_FLAG_END",
+    0x100: "CUTSCENE_FLAG_KEEP_MUSIC",
+    0x200: "CUTSCENE_FLAG_NEXT_CREDITS_ENTRY",
+}
 
 # (size, name, fmt, field types)
 COMMANDS = {
-    0x00: (8,  "obj_new",    ">BBBI",   (MODEL, DEC, HEX8, ANIM_PTR)),
+    0x00: (8,  "cutscene_obj",    ">BBBI",   (MODEL, DEC, HEX8, ANIM_PTR)),
     0x01: (4,  "skip_frames", None,     (DEC,)),
     0x02: (4,  "obj_speed",  ">Bbb",   (DEC, DEC, DEC)),
     0x03: (4,  "obj_rot",    ">Bbb",   (DEC, DEC, DEC)),
@@ -31,18 +41,10 @@ COMMANDS = {
     0x09: (4,  "obj_anim",   ">BxB",   (DEC, DEC)),
     0x0A: (4,  "play_sound", ">BH",    (HEX8, HEX16)),
     0x0B: (16, "set_mario",  ">BhhhhHI", (HEX8, DEC, DEC, DEC, DEC, DEC, ANIM_PTR)),
-    0x0C: (4,  "set_params", ">BH",    (HEX8, HEX16)),
+    0x0C: (4,  "set_flags", ">BH",    (FLAGS, DEC)),
     0x0D: (8,  "show_text",  None,     (DEC, DEC, TEXT_PTR)),
     0x0E: (12, "spawn_obj",  ">BhhhI", (MODEL, DEC, DEC, DEC, BEH_PTR)),
 }
-
-COURSES = {
-    "BOB", "WF",  "JRB", "CCM", "BBH",
-    "HMC", "LLL", "SSL", "DDD", "SL",
-    "WDW", "TTM", "THI", "TTC", "RR",
-}
-
-ACT_RE = re.compile(r"^CUTSCENE_([A-Z0-9]+)_ACT_(\d+)$")
 
 
 def unpack_cmd(data: bytes, pos: int) -> tuple[str, list, int]:
@@ -67,22 +69,31 @@ def unpack_cmd(data: bytes, pos: int) -> tuple[str, list, int]:
     return name, list(zip(field_specs, raw)), pos + size
 
 
+def flags_to_lua(val: int) -> str:
+    parts = [name for bit, name in SET_PARAMS_FLAGS.items() if val & bit]
+    return " | ".join(parts) if parts else "0"
+
+
 def field_to_lua(spec: str, val: int) -> str:
     return spec % val
 
 
 def cmd_to_lua(name: str, fields: list) -> str:
-    parts = [f'"{name}"'] + [field_to_lua(spec, val) for spec, val in fields]
+    parts = [f'"{name}"']
+    for spec, val in fields:
+        parts.append(flags_to_lua(val) if spec == FLAGS else field_to_lua(spec, val))
     return "{" + ", ".join(parts) + "}"
 
 
 def convert_binary(data: bytes, varname: str) -> str:
     lines = [f"-- {varname}", "", f"{varname} = {{"]
     pos = 0
+
     while pos < len(data):
         name, fields, pos = unpack_cmd(data, pos)
         lines.append(f"\t{cmd_to_lua(name, fields)},")
     lines.append("}")
+
     return "\n".join(lines)
 
 
@@ -131,47 +142,49 @@ def cmd_bundle():
         print(f"WARNING: {DEFINES_FILE} not found, skipping defines header.")
 
     lua_files = sorted(CONVERTED_DIR.glob("*.lua"))
+    
     if not lua_files:
         sys.exit(f"ERROR: no .lua files in {CONVERTED_DIR}. Run 'convert' first.")
 
-    star_cs: dict[str, dict[int, str]] = defaultdict(dict)
-
     for lf in lua_files:
-        varname = lf.stem.upper()
-        m = ACT_RE.match(varname)
-        if m:
-            course, act = m.group(1), int(m.group(2))
-            if course in COURSES:
-                star_cs[course][act] = varname
-
         out_lines.append(lf.read_text(encoding="utf-8").rstrip())
         out_lines.append("")
 
-    out_lines += ["", "gStarCutscenes = {"]
-    for course in sorted(COURSES):
-        acts = star_cs.get(course, {})
-        if not acts:
-            out_lines.append(f"\t[COURSE_{course}] = {{}},")
-        else:
-            out_lines.append(f"\t[COURSE_{course}] = {{")
-            for act in sorted(acts):
-                out_lines.append(f"\t\t[{act}] = {acts[act]},")
-            out_lines.append("\t},")
-    out_lines.append("}")
+    bundle = "\n".join(out_lines) + "\n"
 
-    OUT_BUNDLE.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
+    for extra in (Path("./star-cutscenes.lua"), Path("./credits-entries.lua")):
+        if extra.is_file():
+            bundle += "\n" + extra.read_text(encoding="utf-8").rstrip() + "\n"
+        else:
+            print(f"WARNING: {extra} not found, skipping.")
+
+    OUT_BUNDLE.write_text(bundle, encoding="utf-8")
     print(f"Written {OUT_BUNDLE}  ({len(lua_files)} files bundled)")
+
+
+def cmd_clean():
+    if not CONVERTED_DIR.is_dir():
+        print(f"Nothing to clean ({CONVERTED_DIR} does not exist).")
+        return
+    
+    files = list(CONVERTED_DIR.glob("*.lua"))
+
+    for f in files:
+        f.unlink()
+    print(f"Removed {len(files)} file(s) from {CONVERTED_DIR}.")
 
 
 def main():
     args = sys.argv[1:]
-    if not args or args[0] not in ("--convert", "--bundle"):
+    if not args or args[0] not in ("--convert", "--bundle", "--clean"):
         sys.exit(1)
 
     if args[0] == "--convert":
         cmd_convert(force="--force" in args)
-    else:
+    elif args[0] == "--bundle":
         cmd_bundle()
+    else:
+        cmd_clean()
 
 
 if __name__ == "__main__":

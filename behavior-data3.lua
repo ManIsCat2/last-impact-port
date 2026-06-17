@@ -15,12 +15,12 @@ end
 
 bhvCutsceneObject = hook_behavior(nil, OBJ_LIST_GENACTOR, false, bhv_cutscene_obj_init, bhv_cutscene_obj_loop, "bhvCutsceneObject")
 
-local function bhv_intro_meteor0_init(o)
+local function bhv_intro_meteor1_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     o.oVelY = -272
 end
 
-local function bhv_intro_meteor1_init(o)
+local function bhv_intro_meteor2_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     o.oForwardVel = 80
     o.oMoveAngleYaw = -18528
@@ -29,7 +29,7 @@ local function bhv_intro_meteor1_init(o)
     obj_scale(o, 0.16)
 end
 
-local function bhv_intro_meteor2_init(o)
+local function bhv_intro_meteor3_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
     o.oForwardVel = 80
     o.oMoveAngleYaw = -15616
@@ -54,9 +54,11 @@ local function bhv_intro_meteor_loop(o)
     end
 end
 
-bhvIntroMeteor0 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor0_init, bhv_intro_meteor_loop)
+E_MODEL_INTRO_METEOR = smlua_model_util_get_id("intro_meteor_geo")
+
 bhvIntroMeteor1 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor1_init, bhv_intro_meteor_loop)
 bhvIntroMeteor2 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor2_init, bhv_intro_meteor_loop)
+bhvIntroMeteor3 = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_intro_meteor3_init, bhv_intro_meteor_loop)
 
 local function bhv_spiky_piranha_plant_hitbox_init(o)
     o.oFlags = 0x0041
