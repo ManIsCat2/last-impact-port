@@ -208,7 +208,7 @@ end
 -- tf does daynight do??
 -- *(u32*)0x80370008 = daynight;
 local function cmd_cutscene_flags(flags, daynight)
-    if (flags & CUTSCENE_FLAG_KEEP_MUSIC) then keepMusic = true end
+    if (flags & CUTSCENE_FLAG_KEEP_MUSIC) ~= 0 then keepMusic = true end
 
     if (flags & CUTSCENE_FLAG_SHOW_HUD) ~= 0 then hud_show() end
     if (flags & CUTSCENE_FLAG_SKIPABLE) ~= 0 then isSkipable = true end
