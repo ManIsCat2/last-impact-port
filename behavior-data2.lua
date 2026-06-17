@@ -693,26 +693,6 @@ const BehaviorScript bhvWarp[] = {
 };
 ]]
 
----@param o Object
-local function bhv_totwc_entry_light(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    o.oIntangibleTimer = 0
-    o.oInteractType = INTERACT_WARP
-    o.hitboxHeight = 10000
-    o.hitboxRadius = 200
-
-    o.hitboxDownOffset = 300
-end
-
-bhvTOTWCEntryLight = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_totwc_entry_light,
-    function(o)
-        bhv_warp_loop();
-        if get_curr_star_count() < 12 then
-            obj_mark_for_deletion(o)
-        end
-    end)
-
-
 function bhv_bbh_spinning_meteor_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true

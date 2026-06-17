@@ -358,3 +358,63 @@ local function bhv_ssl_changes_music_loop(o)
 end
 
 bhvSSLChangesMusic = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_ssl_changes_music_init, bhv_ssl_changes_music_loop)
+
+local function bhv_totwc_entry_light_init(o)
+    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE | OBJ_FLAG_SET_FACE_YAW_TO_MOVE_YAW
+    o.oDrawingDistance = 33423360
+    o.hitboxHeight = 80
+    o.hitboxRadius = 144
+    o.oIntangibleTimer = 0
+
+    network_init_object(o, true, nil)
+end
+
+local function bhv_totwc_entry_light_loop(o)
+    local nStars = save_file_get_total_star_count(get_current_save_file_num() - 1, 0, 0x18)
+
+    if nStars < 12 then
+        obj_mark_for_deletion(o)
+        return
+    end
+
+    if o.oAction == 0 then
+        local player = nearest_player_to_object(o)
+
+        if obj_check_if_collided_with_object(o, player) == 0 then
+            return
+        end
+
+        o.oAction = 1
+        o.oHiddenBlueCoinSwitch = player
+
+        if obj_is_local_player(player) then
+            set_mario_animation(gMarioStates[0], 0x50)
+            kaze_cutscene_play(CUTSCENE_OW1_MARIO_ASCEND)
+        end
+    end
+
+    local player = o.oHiddenBlueCoinSwitch
+
+    player.header.gfx.angle.x = 0
+    player.header.gfx.angle.z = 0
+
+    player.header.gfx.pos.y = player.header.gfx.pos.y + 15
+    player.header.gfx.pos.x = player.header.gfx.pos.x + (o.oPosX - player.header.gfx.pos.x) * 0.0498046875
+    player.header.gfx.pos.z = player.header.gfx.pos.z + (o.oPosZ - player.header.gfx.pos.z) * 0.0498046875
+
+    if o.oTimer == 0x60 then
+        -- this is missing the warp transition
+        -- the original calls level_trigger_warp(m, 1) and sets sDelayedWarpId in level_update.c to 0x0E
+        -- (warp id 0x0E -> 0x0A at level 0x1D in area 1)
+        -- can't do that in lua, couldnt figure delayed warp
+        -- gonna fix it later
+
+        if obj_is_local_player(player) then
+            warp_to_level(LEVEL_TOTWC, 1, 1)
+        end
+
+        o.oAction = 0
+    end
+end
+
+bhvTOTWCEntryLight = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_totwc_entry_light_init, bhv_totwc_entry_light_loop)
