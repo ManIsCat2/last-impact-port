@@ -32,7 +32,7 @@ local function try_play_star_cutscene()
         local cutscene = gStarCutscenes[cNum][aNum]
 
         if cutscene then
-            play_delayed_cutscene(1, cutscene, true)
+            play_delayed_cutscene(2, cutscene, true)
         end
     end
 end
