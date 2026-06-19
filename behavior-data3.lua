@@ -369,6 +369,7 @@ local function bhv_totwc_entry_light_init(o)
     network_init_object(o, true, nil)
 end
 
+---@param o Object
 local function bhv_totwc_entry_light_loop(o)
     local nStars = save_file_get_total_star_count(get_current_save_file_num() - 1, 0, 0x18)
 
@@ -378,17 +379,18 @@ local function bhv_totwc_entry_light_loop(o)
     end
 
     if o.oAction == 0 then
-        local player = nearest_player_to_object(o)
+        local m = nearest_mario_state_to_object(o)
+        local mObj = m.marioObj
 
-        if obj_check_if_collided_with_object(o, player) == 0 then
+        if obj_check_if_collided_with_object(o, mObj) == 0 then
             return
         end
 
         o.oAction = 1
-        o.oHiddenBlueCoinSwitch = player
+        o.oHiddenBlueCoinSwitch = mObj
 
-        if obj_is_local_player(player) then
-            set_mario_animation(gMarioStates[0], 0x50)
+        if obj_is_local_player(mObj) then
+            set_mario_animation(m, 0x50)
             kaze_cutscene_play(CUTSCENE_OW1_MARIO_ASCEND)
         end
     end
@@ -403,14 +405,14 @@ local function bhv_totwc_entry_light_loop(o)
     player.header.gfx.pos.z = player.header.gfx.pos.z + (o.oPosZ - player.header.gfx.pos.z) * 0.0498046875
 
     if o.oTimer == 0x60 then
-        -- this is missing the warp transition
-        -- the original calls level_trigger_warp(m, 1) and sets sDelayedWarpId in level_update.c to 0x0E
-        -- (warp id 0x0E -> 0x0A at level 0x1D in area 1)
-        -- can't do that in lua, couldnt figure delayed warp
-        -- gonna fix it later
+        local m = get_mario_state_from_object(player)
 
-        if obj_is_local_player(player) then
-            warp_to_level(LEVEL_TOTWC, 1, 1)
+        if m.playerIndex == 0 then
+            o.oBehParams = 0x0E << 16
+            m.usedObj = o
+
+            level_trigger_warp(m, 2)
+            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource)
         end
 
         o.oAction = 0
