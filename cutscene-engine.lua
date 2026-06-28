@@ -7,18 +7,150 @@ local cutsceneObjs = {}
 local isSkipable = false
 local skipTextTimer = 0
 
-local prevCamMode = nil
 local curPos = gVec3fZero()
 local curFocus = gVec3fZero()
 local moveStep = gVec3fZero()
 local focusStep = gVec3fZero()
+
+local ls = gLakituState
+local cam
+
 local moveTimer = 0
 local focusTimer = 0
 
 local cutsceneMusic = 0
 local keepMusic = false
 
-local ls = gLakituState
+local cmds = {}
+
+function cmds.cutscene_obj(model, id, params, anim)
+    if cutsceneObjs[id] then
+        obj_mark_for_deletion(cutsceneObjs[id])
+    end
+
+    local modelId = model or E_MODEL_ERROR_MODEL
+
+    local o = spawn_non_sync_object(bhvCutsceneObject, modelId, 0, 0, 0, function(o)
+        o.oBehParams = params
+
+        if type(anim) == "string" then
+            smlua_anim_util_set_animation(o, anim)
+        elseif anim ~= 0 then
+            o.oAnimations = anim
+            obj_init_animation(o, 0)
+        end
+    end)
+
+    cutsceneObjs[id] = o
+end
+
+function cmds.skip_frames(nFrames)
+    waitTimer = nFrames
+    return true
+end
+
+function cmds.obj_speed(id, speed, rotSpd)
+    local o = cutsceneObjs[id]
+    if o then
+        o.oForwardVel = speed
+        o.oAngleVelYaw = rotSpd << 4
+    end
+end
+
+function cmds.obj_rot(id, yRot, zRot)
+    local o = cutsceneObjs[id]
+    if o then
+        o.oFaceAngleYaw = yRot << 8
+        o.oMoveAngleYaw = yRot << 8
+        o.oFaceAngleRoll = zRot << 8
+    end
+end
+
+function cmds.obj_warp(id, x, y, z)
+    local o = cutsceneObjs[id]
+    if o then
+        if x ~= 0 then o.oPosX = x end
+        if y ~= 0 then o.oPosY = y end
+        if z ~= 0 then o.oPosZ = z end
+    end
+end
+
+function cmds.cam_focus(nFrames, x, y, z)
+    nFrames = math.max(1, nFrames)
+    focusTimer = nFrames
+    vec3f_set(focusStep, (x - curFocus.x) / nFrames, (y - curFocus.y) / nFrames, (z - curFocus.z) / nFrames)
+end
+
+function cmds.cam_pos(nFrames, x, y, z)
+    nFrames = math.max(1, nFrames)
+    moveTimer = nFrames
+    vec3f_set(moveStep, (x - curPos.x) / nFrames, (y - curPos.y) / nFrames, (z - curPos.z) / nFrames)
+end
+
+function cmds.obj_params(id, params, deactivate)
+    local o = cutsceneObjs[id]
+    if o then
+        if deactivate then
+            obj_mark_for_deletion(o)
+            cutsceneObjs[id] = nil
+            return
+        end
+        o.oBehParams = params
+    end
+end
+
+function cmds.obj_scale(id, scale)
+    local o = cutsceneObjs[id]
+    if o then
+        obj_scale(o, scale / 100)
+    end
+end
+
+function cmds.obj_anim(id, anim)
+    local o = cutsceneObjs[id]
+    if o then
+        if type(anim) == "string" then
+            smlua_anim_util_set_animation(o, anim)
+            o.header.gfx.animInfo.animFrame = 0
+            o.header.gfx.animInfo.animAccel = 0
+        elseif anim ~= 0 then
+            obj_init_animation(o, anim)
+        end
+    end
+end
+
+function cmds.play_sound(flags, soundId)
+    if soundId == 0 then
+        local layer = (flags >> 7) & 1
+        local seqId = flags & 0x7F
+        stop_background_music(cutsceneMusic)
+        play_music(layer, (0x04 << 8) | seqId, 0)
+        cutsceneMusic = seqId
+    else
+        play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
+    end
+end
+
+function cmds.set_mario(skipAnim, x, y, z, rRot, animSize, animPtr)
+    -- unused
+end
+
+function cmds.set_flags(flags, daynight)
+    if (flags & CUTSCENE_FLAG_KEEP_MUSIC) ~= 0 then keepMusic = true end
+    if (flags & CUTSCENE_FLAG_SHOW_HUD) ~= 0 then hud_show() end
+    if (flags & CUTSCENE_FLAG_SKIPABLE) ~= 0 then isSkipable = true end
+    if (flags & CUTSCENE_FLAG_UNSKIPABLE) ~= 0 then isSkipable = false end
+    if (flags & CUTSCENE_FLAG_SHAKE) ~= 0 then set_environmental_camera_shake(20) end
+    if (flags & CUTSCENE_FLAG_END) ~= 0 then kaze_cutscene_end() end
+end
+
+function cmds.show_text(x, y, text)
+    -- unused
+end
+
+function cmds.spawn_obj(modelId, x, y, z, behavior)
+    spawn_non_sync_object(behavior, modelId, x, y, z, nil)
+end
 
 function kaze_cutscene_play(data, skipable)
     if not data or gCutsceneActive then
@@ -40,13 +172,10 @@ function kaze_cutscene_play(data, skipable)
     cutsceneMusic = 0
     keepMusic = false
 
-    prevCamMode = ls.mode
-    ls.mode = CAMERA_MODE_NONE
+    cam = gMarioStates[0].area.camera
 
-    vec3f_copy(curPos, ls.pos)
-    vec3f_copy(curFocus, ls.focus)
-    vec3f_set(moveStep, 0, 0, 0)
-    vec3f_set(focusStep, 0, 0, 0)
+    vec3f_copy(curPos, cam.pos)
+    vec3f_copy(curFocus, cam.focus)
 
     set_mario_action(gMarioStates[0], ACT_KAZE_CUTSCENE, 0)
     hud_hide()
@@ -58,9 +187,9 @@ function kaze_cutscene_end()
     end
 
     gCutsceneActive = false
-    ls.mode = prevCamMode
 
     hud_show()
+    soft_reset_camera(cam)
 
     if not keepMusic then
         stop_background_music(cutsceneMusic)
@@ -70,178 +199,6 @@ function kaze_cutscene_end()
         obj_mark_for_deletion(v)
     end
 end
-
-local function cmd_new_cutscene_obj(model, id, params, anim)
-    if cutsceneObjs[id] then
-        obj_mark_for_deletion(cutsceneObjs[id])
-    end
-
-    local modelId = model or E_MODEL_ERROR_MODEL
-
-    -- sync??
-    local o = spawn_non_sync_object(bhvCutsceneObject, modelId, 0, 0, 0, function(o)
-        o.oBehParams = params
-
-        if type(anim) == "string" then
-            smlua_anim_util_set_animation(o, anim)
-        elseif anim ~= 0 then
-            o.oAnimations = anim
-            obj_init_animation(o, 0)
-        end
-    end)
-
-    cutsceneObjs[id] = o
-end
-
-local function cmd_skip_frames(nFrames)
-    waitTimer = nFrames
-    return true -- yield
-end
-
-local function cmd_obj_spd(id, speed, rotSpd)
-    local o = cutsceneObjs[id] ---@type Object
-
-    if o then
-        o.oForwardVel = speed
-        -- docs say left shift by 10??? that doesnt make sense
-        -- the asm left shifts by 4
-        o.oAngleVelYaw = rotSpd << 4
-    end
-end
-
-local function cmd_obj_rot(id, yRot, zRot)
-    local o = cutsceneObjs[id]
-
-    if o then 
-        o.oFaceAngleYaw = yRot << 8
-        o.oMoveAngleYaw = yRot << 8
-        o.oFaceAngleRoll = zRot << 8
-    end
-end
-
-local function cmd_obj_warp(id, x, y, z)
-    local o = cutsceneObjs[id]
-
-    if o then
-        if x ~= 0 then o.oPosX = x end
-        if y ~= 0 then o.oPosY = y end
-        if z ~= 0 then o.oPosZ = z end
-    end
-end
-
-local function cmd_cam_focus(nFrames, x, y, z)
-    nFrames = math.max(1, nFrames)
-    focusTimer = nFrames
-
-    local dx = (x - curFocus.x) / nFrames
-    local dy = (y - curFocus.y) / nFrames
-    local dz = (z - curFocus.z) / nFrames
-
-    vec3f_set(focusStep, dx, dy, dz)
-end
-
-local function cmd_cam_pos(nFrames, x, y, z)
-    nFrames = math.max(1, nFrames)
-    moveTimer = nFrames
-
-    local dx = (x - curPos.x) / nFrames
-    local dy = (y - curPos.y) / nFrames
-    local dz = (z - curPos.z) / nFrames
-
-    vec3f_set(moveStep, dx, dy, dz)
-end
-
-local function cmd_obj_params(id, params, deactivate)
-    local o = cutsceneObjs[id]
-
-    if o then
-        if deactivate then
-            obj_mark_for_deletion(o)
-            cutsceneObjs[id] = nil
-            return
-        end
-
-        o.oBehParams = params
-    end
-end
-
-local function cmd_obj_scale(id, scale)
-    local o = cutsceneObjs[id]
-
-    if o then
-        obj_scale(o, scale / 100)
-    end
-end
-
-local function cmd_obj_anim(id, anim)
-    local o = cutsceneObjs[id]
-
-    if o then
-        if type(anim) == "string" then
-            smlua_anim_util_set_animation(o, anim)
-            o.header.gfx.animInfo.animFrame = 0
-            o.header.gfx.animInfo.animAccel = 0
-        elseif anim ~= 0 then
-            obj_init_animation(o, anim)
-        end
-    end
-end
-
-local function cmd_play_sound(flags, soundId)
-    if soundId == 0 then
-        local layer = (flags >> 7) & 1
-        local seqId = flags & 0x7F
-
-        stop_background_music(cutsceneMusic)
-        play_music(layer, (0x04 << 8) | seqId, 0)
-
-        cutsceneMusic = seqId
-    else
-        play_sound((soundId << 16) | 0x81, gGlobalSoundSource)
-    end
-end
-
-local function cmd_set_mario(skipAnim, x, y, z, rRot, animSize, animPtr)
-
-end
-
--- tf does daynight do??
--- *(u32*)0x80370008 = daynight;
-local function cmd_cutscene_flags(flags, daynight)
-    if (flags & CUTSCENE_FLAG_KEEP_MUSIC) ~= 0 then keepMusic = true end
-
-    if (flags & CUTSCENE_FLAG_SHOW_HUD) ~= 0 then hud_show() end
-    if (flags & CUTSCENE_FLAG_SKIPABLE) ~= 0 then isSkipable = true end
-    if (flags & CUTSCENE_FLAG_UNSKIPABLE) ~= 0 then isSkipable = false end
-    if (flags & CUTSCENE_FLAG_GREYOUT) ~= 0 then end -- greyout
-    if (flags & CUTSCENE_FLAG_SHAKE) ~= 0 then set_environmental_camera_shake(20) end
-    if (flags & CUTSCENE_FLAG_END) ~= 0 then kaze_cutscene_end() end
-end
-
-local function cmd_show_text(x, y, text)
-end
-
-local function cmd_spawn_obj(modelId, x, y, z, behavior)
-    spawn_non_sync_object(behavior, modelId, x, y, z, nil)
-end
-
-local cmdHandlers = {
-    cutscene_obj = cmd_new_cutscene_obj,
-    skip_frames = cmd_skip_frames,
-    obj_speed = cmd_obj_spd,
-    obj_rot = cmd_obj_rot,
-    obj_warp = cmd_obj_warp,
-    cam_focus = cmd_cam_focus,
-    cam_pos = cmd_cam_pos,
-    obj_params = cmd_obj_params,
-    obj_scale = cmd_obj_scale,
-    obj_anim = cmd_obj_anim,
-    play_sound = cmd_play_sound,
-    set_mario = cmd_set_mario,
-    set_flags = cmd_cutscene_flags,
-    show_text = cmd_show_text,
-    spawn_obj = cmd_spawn_obj,
-}
 
 local function cutscene_update_camera()
     if moveTimer > 0 then
@@ -254,11 +211,12 @@ local function cutscene_update_camera()
         focusTimer = focusTimer - 1
     end
 
-    vec3f_copy(ls.pos, curPos)
-    vec3f_copy(ls.curPos, curPos)
-    vec3f_copy(ls.goalPos, curPos)
-    vec3f_copy(ls.focus, curFocus)
-    vec3f_copy(ls.goalFocus, curFocus)
+    cam.cutscene = -1
+    approach_vec3f_asymptotic(cam.focus, curFocus, 0.6, 0.6, 0.6)
+    approach_vec3f_asymptotic(cam.pos, curPos, 0.9, 0.9, 0.9)
+
+    vec3f_copy(ls.goalPos, cam.pos)
+    vec3f_copy(ls.goalFocus, cam.focus)
 end
 
 local function cutscene_run_frame()
@@ -267,11 +225,10 @@ local function cutscene_run_frame()
 
         if not instr then
             kaze_cutscene_end()
-            error("Cutscene reached EOF!!! Should not happen!!!")
             return
         end
 
-        local handler = cmdHandlers[instr[1]]
+        local handler = cmds[instr[1]]
 
         if not handler then
             kaze_cutscene_end()
@@ -329,7 +286,7 @@ local function draw_overlays()
     end
 end
 
-local function lock_r_if_active(mode)
+local function lock_r_if_active()
     return not gCutsceneActive
 end
 
