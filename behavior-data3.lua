@@ -420,3 +420,35 @@ local function bhv_totwc_entry_light_loop(o)
 end
 
 bhvTOTWCEntryLight = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_totwc_entry_light_init, bhv_totwc_entry_light_loop)
+
+
+
+function bhv_ow1_cutscene_controller_loop(o)
+
+    -- this has to be here because of fucked up file loading order
+    local OW1CutsceneEntries = {
+        {flag = 0x01, numStars = 20, cutscene = CUTSCENE_OW1_GATE_OPEN},
+        {flag = 0x02, numStars = 4, cutscene = CUTSCENE_OW1_BOAT_FIXED},
+        {flag = 0x04, numStars = 15, cutscene = CUTSCENE_OW1_ROCKET_OPEN},
+        {flag = 0x80, numStars = 5, cutscene = CUTSCENE_OW1_MOON},
+        {flag = 0x40, numStars = 0, cutscene = CUTSCENE_INTRO},
+    }
+
+    -- NOTE: original uses file.capArea, but that's not exposed
+    -- so i'm using the 1st byte of the save flags instead
+    local flags = save_file_get_flags() >> 24
+    local count = save_file_get_total_star_count(get_current_save_file_num() - 1, 0, 0x18);
+
+    for _, entry in ipairs(OW1CutsceneEntries) do
+        if ((flags & entry.flag) == 0 and count >= entry.numStars) then
+            kaze_cutscene_play(entry.cutscene)
+            save_file_set_flags(entry.flag << 24)
+
+            break;
+        end
+    end
+
+    obj_mark_for_deletion(o)
+end
+
+bhvOW1CutsceneController = hook_behavior(nil, OBJ_LIST_GENACTOR, true, nil, bhv_ow1_cutscene_controller_loop)

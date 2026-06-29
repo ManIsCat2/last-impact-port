@@ -59,10 +59,11 @@ end
 
 function cmds.obj_rot(id, yRot, zRot)
     local o = cutsceneObjs[id]
+
     if o then
-        o.oFaceAngleYaw = yRot << 8
-        o.oMoveAngleYaw = yRot << 8
-        o.oFaceAngleRoll = zRot << 8
+        o.oFaceAngleYaw = yRot * 256
+        o.oMoveAngleYaw = yRot * 256
+        o.oFaceAngleRoll = zRot * 256
     end
 end
 

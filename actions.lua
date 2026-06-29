@@ -44,7 +44,7 @@ end
 
 local function act_kaze_cutscene(m)
     if not gCutsceneActive then
-        set_mario_action(m, ACT_IDLE, 0)
+        set_mario_action(m, m.prevAction, 0)
     end
 end
 
