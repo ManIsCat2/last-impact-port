@@ -1896,6 +1896,18 @@ CUTSCENE_WF_ANCIENT_ATTACKER_APPEAR = {
 	{"set_flags", CUTSCENE_FLAG_END, 0},
 }
 
+-- CUTSCENE_WF_PUZZLE_PANEL_SOLVED
+
+CUTSCENE_WF_PUZZLE_PANEL_SOLVED = {
+	{"cam_focus", 5, 3551, -313, -14324},
+	{"play_sound", 0x9b, 0x0000},
+	{"cam_pos", 10, 2575, -32, -11844},
+	{"skip_frames", 2},
+	{"play_sound", 0x00, 0x303f},
+	{"skip_frames", 46},
+	{"set_flags", CUTSCENE_FLAG_END, 0},
+}
+
 
 gStarCutscenes = {
     [COURSE_BOB] = {
