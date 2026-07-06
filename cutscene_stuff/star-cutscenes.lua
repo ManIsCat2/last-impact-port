@@ -1,0 +1,87 @@
+gStarCutscenes = {
+    [COURSE_BOB] = {
+        [1] = CUTSCENE_BOB_ACT_1,
+        [2] = CUTSCENE_BOB_ACT_2,
+        [3] = CUTSCENE_BOB_ACT_3,
+        [5] = CUTSCENE_BOB_ACT_5,
+        [6] = CUTSCENE_BOB_ACT_6,
+    },
+    [COURSE_WF] = {
+        [1] = CUTSCENE_WF_ACT_1,
+        [2] = CUTSCENE_WF_ACT_2,
+        [3] = CUTSCENE_WF_ACT_3,
+        [4] = CUTSCENE_WF_ACT_4,
+        [6] = CUTSCENE_WF_ACT_6,
+    },
+    [COURSE_JRB] = {
+        [1] = CUTSCENE_JRB_ACT_1,
+        [2] = CUTSCENE_JRB_ACT_2,
+        [3] = CUTSCENE_JRB_ACT_3,
+        [4] = CUTSCENE_JRB_ACT_4,
+        [5] = CUTSCENE_JRB_ACT_5,
+        [6] = CUTSCENE_JRB_ACT_6,
+    },
+    [COURSE_CCM] = {
+        [1] = CUTSCENE_CCM_ACT_1,
+        [2] = CUTSCENE_CCM_ACT_2,
+        [6] = CUTSCENE_CCM_ACT_6,
+    },
+    [COURSE_BBH] = {
+        [1] = CUTSCENE_BBH_ACT_1,
+        [2] = CUTSCENE_BBH_ACT_2,
+        [4] = CUTSCENE_BBH_ACT_4,
+    },
+    [COURSE_HMC] = {
+        [1] = CUTSCENE_HMC_ACT_1,
+        [2] = CUTSCENE_HMC_ACT_2,
+        [3] = CUTSCENE_HMC_ACT_3,
+        [4] = CUTSCENE_HMC_ACT_4,
+        [6] = CUTSCENE_HMC_ACT_6,
+    },
+    [COURSE_LLL] = {
+        [1] = CUTSCENE_LLL_ACT_1,
+        [3] = CUTSCENE_LLL_ACT_3,
+    },
+    [COURSE_SSL] = {
+        [1] = CUTSCENE_SSL_ACT_1,
+        [2] = CUTSCENE_SSL_ACT_2,
+        [3] = CUTSCENE_SSL_ACT_3,
+        [4] = CUTSCENE_SSL_ACT_4,
+    },
+    [COURSE_DDD] = {
+        [1] = CUTSCENE_DDD_ACT_1,
+        [2] = CUTSCENE_DDD_ACT_2,
+        [5] = CUTSCENE_DDD_ACT_5,
+        [6] = CUTSCENE_DDD_ACT_6,
+    },
+    [COURSE_SL] = {
+        [1] = CUTSCENE_SL_ACT_1,
+        [2] = CUTSCENE_SL_ACT_2,
+        [3] = CUTSCENE_SL_ACT_3,
+        [4] = CUTSCENE_SL_ACT_4,
+        [6] = CUTSCENE_SL_ACT_6,
+    },
+    [COURSE_WDW] = {
+        [1] = CUTSCENE_WDW_ACT_1,
+        [2] = CUTSCENE_WDW_ACT_2,
+        [3] = CUTSCENE_WDW_ACT_3,
+        [4] = CUTSCENE_WDW_ACT_4,
+    },
+    [COURSE_TTM] = {
+        [1] = CUTSCENE_TTM_ACT_1,
+    },
+    [COURSE_THI] = {
+        [1] = CUTSCENE_THI_ACT_1,
+        [2] = CUTSCENE_THI_ACT_2,
+        [3] = CUTSCENE_THI_ACT_3,
+        [4] = CUTSCENE_THI_ACT_4,
+        [6] = CUTSCENE_THI_ACT_6,
+    },
+    [COURSE_TTC] = {
+        [1] = CUTSCENE_TTC_ACT_1,
+        [2] = CUTSCENE_TTC_ACT_2,
+        [3] = CUTSCENE_TTC_ACT_3,
+        [6] = CUTSCENE_TTC_ACT_6,
+    },
+    [COURSE_RR] = {},
+}

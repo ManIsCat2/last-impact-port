@@ -42,6 +42,15 @@ function act_fludd_float(m)
     end
 end
 
+local function act_kaze_cutscene(m)
+    if not gCutsceneActive then
+        set_mario_action(m, m.prevAction, 0)
+    end
+end
+
+ACT_KAZE_CUTSCENE = allocate_mario_action(ACT_FLAG_CUSTOM_ACTION | ACT_FLAG_INTANGIBLE)
+
 hook_mario_action(ACT_BACKWARD_AIR_KB_MODIFIED, { every_frame = act_backward_air_kb_modified })
 hook_mario_action(ACT_BOBOMB_GAURD_DEATH, { every_frame = act_bobomb_gaurd_death })
 hook_mario_action(ACT_FLUDD_FLOAT, { every_frame = act_fludd_float })
+hook_mario_action(ACT_KAZE_CUTSCENE, act_kaze_cutscene)

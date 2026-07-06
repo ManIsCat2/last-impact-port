@@ -1,6 +1,18 @@
 -- Last Impact Hud Port By xLuigiGamerx --
 
 gGlobalSyncTable.playtime = 0
+local hideHud = false
+
+local oldHudHide = _G["hud_hide"]
+local oldHudShow = _G["hud_show"]
+
+_G.hud_hide = function()
+    hideHud = true
+end
+
+_G.hud_show = function()
+    hideHud = false
+end
 
 if network_is_server() then
     gameTime = 0
@@ -120,13 +132,17 @@ function on_hud_render_behind()
     djui_hud_set_color(255, 255, 255, 255)
 
     local inStarSelect = obj_get_nearest_object_with_behavior_id(gMarioStates[0].marioObj, id_bhvActSelector)
-    if not inStarSelect then
-        hud_hide()
-        base_hud()
-    else
+    if inStarSelect then
         djui_hud_print_text("COURSE", (djui_hud_get_screen_width() / 2) - djui_hud_measure_text("COURSE") + 35,
             (djui_hud_get_screen_height() / 2) + 6, 1)
+        return
     end
+
+    if not hideHud then
+        oldHudHide()
+        base_hud()
+    end
+    
     --new_file_hud() unused
 end
 

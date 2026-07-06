@@ -693,26 +693,6 @@ const BehaviorScript bhvWarp[] = {
 };
 ]]
 
----@param o Object
-local function bhv_totwc_entry_light(o)
-    o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
-    o.oIntangibleTimer = 0
-    o.oInteractType = INTERACT_WARP
-    o.hitboxHeight = 10000
-    o.hitboxRadius = 200
-
-    o.hitboxDownOffset = 300
-end
-
-bhvTOTWCEntryLight = hook_behavior(nil, OBJ_LIST_LEVEL, true, bhv_totwc_entry_light,
-    function(o)
-        bhv_warp_loop();
-        if get_curr_star_count() < 12 then
-            obj_mark_for_deletion(o)
-        end
-    end)
-
-
 function bhv_bbh_spinning_meteor_init(o)
     o.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     o.header.gfx.skipInViewCheck = true
@@ -2163,7 +2143,6 @@ local function bhv_virus_boss_loop(o)
             if obj_has_behavior_id(o, bhvVirusBossBlue) ~= 0 then
                 o.oAction = VIRUS_JUMP_TO_MARIO
                 set_background_music(0, 0x3d, 0)
-                audio_stop_all()
             end
         end
     elseif o.oAction == VIRUS_JUMP_TO_MARIO then
@@ -2291,8 +2270,7 @@ local function bhv_virus_boss_loop(o)
 
             if obj_has_behavior_id(o, bhvVirusBossYellow) ~= 0 then
                 obj_mark_for_deletion(o)
-                set_background_music(0, 0, 0)
-                play_seq_streamed(streamed_collosal_circuits)
+                set_background_music(0, 0x3c, 0)
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossBlue))
                 obj_mark_for_deletion(obj_get_nearest_object_with_behavior_id(o, bhvVirusBossRed))
                 spawn_red_coin_cutscene_star(11440, 176, -5130)
